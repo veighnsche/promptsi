@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "617544046156",
+    "project_id": "prompts-game",
+    "storage_bucket": "prompts-game.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617544046156:android:f2ecbc91a1c2bcce9206e9",
+        "android_client_info": {
+          "package_name": "com.veighnsche.prompts_game"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617544046156-rulh2u3p5aj10glnarc2uejr3252thpf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.veighnsche.prompts_game",
+            "certificate_hash": "8cabd740b9928d5d81af33fa316fe70ca8753fc2"
+          }
+        },
+        {
+          "client_id": "617544046156-mtnf416u8tb5fcuou7dvnaeejcuddt03.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC06uC1l8Pk8x20nRsNIgHAqcnwLUPxGbU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "617544046156-mtnf416u8tb5fcuou7dvnaeejcuddt03.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
