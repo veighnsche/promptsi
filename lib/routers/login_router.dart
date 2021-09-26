@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:prompts_game/scaffolds/counter_scaffold.dart';
-import 'package:prompts_game/scaffolds/login_scaffold.dart';
+import 'package:prompts_game/scaffolds/home_scaffold.dart';
+import 'package:prompts_game/scaffolds/sign_in_scaffold.dart';
 
 class LoginRouter extends StatefulWidget {
   const LoginRouter({Key? key}) : super(key: key);
@@ -28,8 +28,8 @@ class _LoginRouterState extends State<LoginRouter> {
     });
 
     if (_isSignedIn) {
-      return const CounterScaffold();
+      return const HomeScaffold();
     }
-    return LoginScaffold();
+    return SignInScaffold();
   }
 }

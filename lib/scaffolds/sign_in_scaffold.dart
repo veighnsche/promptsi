@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class LoginScaffold extends StatelessWidget {
-  LoginScaffold({Key? key}) : super(key: key);
+class SignInScaffold extends StatelessWidget {
+  SignInScaffold({Key? key}) : super(key: key);
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -11,7 +11,7 @@ class LoginScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("you're not logged in")),
+      appBar: AppBar(title: const Text("You're not logged in yet")),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -21,15 +21,18 @@ class LoginScaffold extends StatelessWidget {
               decoration: const InputDecoration(
                 labelText: 'Email',
               ),
+              keyboardType: TextInputType.emailAddress,
             ),
             TextField(
               controller: _passwordController,
               decoration: const InputDecoration(
                 labelText: 'Password',
               ),
+              obscureText: true,
+              keyboardType: TextInputType.visiblePassword,
             ),
             ElevatedButton(
-              child: const Text('Login'),
+              child: const Text('Log in'),
               onPressed: () {
                 FirebaseAuth.instance.signInWithEmailAndPassword(
                     email: _emailController.text,
