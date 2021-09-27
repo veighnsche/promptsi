@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/routers/has_profile_router.dart';
-import 'package:prompts_game/scaffolds/home_scaffold.dart';
 import 'package:prompts_game/scaffolds/sign_in_scaffold.dart';
 
 class IsSignedInRouter extends StatefulWidget {
@@ -27,17 +26,22 @@ class _IsSignedInRouterState extends State<IsSignedInRouter> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _authStateChanges =
+        FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      setSignedIn(user != null);
+    });
+  }
+
+  @override
   void dispose() {
-    _authStateChanges.cancel();
     super.dispose();
+    _authStateChanges.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    _authStateChanges = FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      setSignedIn(user != null);
-    });
-
     if (_isSignedIn) {
       return const HasProfileRouter();
     }

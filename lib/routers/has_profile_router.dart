@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:prompts_game/interfaces/app_profile.dart';
 import 'package:prompts_game/scaffolds/create_profile_scaffold.dart';
 import 'package:prompts_game/scaffolds/error_scaffold.dart';
 import 'package:prompts_game/scaffolds/home_scaffold.dart';
@@ -15,30 +16,43 @@ class HasProfileRouter extends StatefulWidget {
 
 class _HasProfileRouterState extends State<HasProfileRouter> {
   final User? _currentUser = FirebaseAuth.instance.currentUser;
-  final CollectionReference _profiles = FirebaseFirestore.instance
-      .collection('profiles');
-
+  AppProfile? _userProfile;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _profiles.where('email', isEqualTo: _currentUser?.email).get(),
+    if (_userProfile != null) {
+      return HomeScaffold(userProfile: _userProfile!);
+    }
+
+    return StreamBuilder(
+      stream: AppProfile.firestoreRef.snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const ErrorScaffold(message: 'Error loading your profile');
         }
 
-        if (snapshot.connectionState == ConnectionState.done) {
-          print(snapshot);
-          if (snapshot.data!.docs.isNotEmpty) {
-            return const HomeScaffold();
-          }
-          return CreateProfileScaffold();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LoadingScaffold();
+        }
+
+        Iterable<AppProfile> profiles = snapshot.data!.docs.map((d) => d.data() as AppProfile);
+        List<AppProfile> filtered = profiles.where((d) => d.email == _currentUser!.email).toList();
+
+        if (filtered.isEmpty) {
+          return const CreateProfileScaffold();
+        }
+
+        if (filtered.isNotEmpty) {
+          print(filtered.elementAt(0).email);
+          Future.delayed(Duration.zero, () async {
+            setState(() {
+              _userProfile = filtered.elementAt(0);
+            });
+          });
         }
 
         return const LoadingScaffold();
       },
     );
   }
-
 }

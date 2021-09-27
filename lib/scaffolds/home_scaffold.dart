@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:prompts_game/bodies/my_profile_body.dart';
 import 'package:prompts_game/bodies/home_body.dart';
 import 'package:prompts_game/bodies/messages_body.dart';
+import 'package:prompts_game/interfaces/app_profile.dart';
 
 class HomeScaffold extends StatefulWidget {
-  const HomeScaffold({Key? key}) : super(key: key);
+  const HomeScaffold({Key? key, required this.userProfile}) : super(key: key);
+
+  final AppProfile userProfile;
 
   @override
   State<StatefulWidget> createState() => _HomeScaffoldState();
