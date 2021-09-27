@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:prompts_game/bodies/account_body.dart';
+import 'package:prompts_game/bodies/my_profile_body.dart';
 import 'package:prompts_game/bodies/home_body.dart';
 import 'package:prompts_game/bodies/messages_body.dart';
 
@@ -17,12 +17,12 @@ class _HomeScaffoldState extends State<HomeScaffold> {
   static const List<Widget> _bodyOptions = <Widget>[
     HomeBody(),
     MessagesBody(),
-    AccountBody(),
+    MyProfileBody(),
   ];
 
   final List<PreferredSizeWidget> _appBarOptions = <PreferredSizeWidget>[
     AppBar(
-      title: const Text('Prompts game'),
+      title: const Text('Prompts'),
     ),
     AppBar(
       title: const Text("Messages"),
@@ -60,7 +60,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
-            label: 'Account',
+            label: 'Profile',
           ),
         ],
         currentIndex: _selectedIndex,

@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:prompts_game/routers/login_router.dart';
+import 'package:prompts_game/routers/is_signed_in_router.dart';
 import 'package:prompts_game/scaffolds/error_scaffold.dart';
 import 'package:prompts_game/scaffolds/loading_scaffold.dart';
 
@@ -33,7 +33,7 @@ class _AppState extends State<App> {
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
-            return const LoginRouter();
+            return const IsSignedInRouter();
           }
 
           return const LoadingScaffold();
