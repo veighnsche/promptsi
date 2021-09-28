@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ProfileImageForm extends StatefulWidget {
-  const ProfileImageForm({
+class ProfilePictureForm extends StatefulWidget {
+  const ProfilePictureForm({
     Key? key,
     required this.onFileSelected,
     required this.fileUrl,
@@ -15,10 +15,10 @@ class ProfileImageForm extends StatefulWidget {
   final Function(XFile file) onFileSelected;
 
   @override
-  State<StatefulWidget> createState() => _ProfileImageFormState();
+  State<StatefulWidget> createState() => _ProfilePictureFormState();
 }
 
-class _ProfileImageFormState extends State<ProfileImageForm> {
+class _ProfilePictureFormState extends State<ProfilePictureForm> {
   final _picker = ImagePicker();
 
   XFile? _imageFile;

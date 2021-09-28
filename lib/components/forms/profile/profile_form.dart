@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prompts_game/components/forms/profile/profile_age_field.dart';
-import 'package:prompts_game/components/forms/profile/profile_image_form.dart';
-import 'package:prompts_game/components/forms/profile/profile_name_field.dart';
+import 'package:prompts_game/components/forms/profile/fields/profile_age_field.dart';
+import 'package:prompts_game/components/forms/profile/profile_picture_form.dart';
+import 'package:prompts_game/components/forms/profile/fields/profile_name_field.dart';
 import 'package:prompts_game/models/profile_model.dart';
 
 class ProfileForm extends StatefulWidget {
@@ -87,7 +87,7 @@ class _ProfileFormState extends State<ProfileForm> {
           ),
         ),
         const SizedBox(height: 10),
-        ProfileImageForm(
+        ProfilePictureForm(
           fileUrl: widget.profile.imagePath,
           onFileSelected: _setProfilePicture,
         ),

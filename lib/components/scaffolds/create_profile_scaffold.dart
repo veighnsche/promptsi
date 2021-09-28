@@ -22,6 +22,8 @@ class _CreateProfileScaffoldState extends State<CreateProfileScaffold> {
   final User _user = FirebaseAuth.instance.currentUser as User;
   late ProfileModel profile;
 
+  bool _isUploading = false;
+
   @override
   void initState() {
     super.initState();
@@ -30,8 +32,6 @@ class _CreateProfileScaffoldState extends State<CreateProfileScaffold> {
       firstName: StringUtils.getFirstWord(_user.displayName),
     );
   }
-
-  bool _isUploading = false;
 
   Future<void> _createProfile(
     ProfileModel profile,
