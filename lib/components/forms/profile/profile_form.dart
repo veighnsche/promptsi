@@ -32,6 +32,35 @@ class _ProfileFormState extends State<ProfileForm> {
     });
   }
 
+  void _onSubmit() {
+    if (_formKey.currentState!.validate()) {
+      if (_profilePicture != null) {
+        ProfileModel profile = ProfileModel(
+          firstName: _firstName.text,
+          age: _age.text,
+          imagePath:
+          'profiles/${widget.profile.userId}/${DateTime.now()}.jpg',
+          userId: widget.profile.userId,
+        );
+        widget.onProfileSubmit(profile, _profilePicture);
+      } else if (widget.profile.imagePath != '') {
+        ProfileModel profile = ProfileModel(
+          firstName: _firstName.text,
+          age: _age.text,
+          imagePath: widget.profile.imagePath,
+          userId: widget.profile.userId,
+        );
+        widget.onProfileSubmit(profile, null);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please provide with a picture'),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -64,34 +93,7 @@ class _ProfileFormState extends State<ProfileForm> {
         ),
         ElevatedButton(
           child: const Text('Save'),
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              if (_profilePicture != null) {
-                ProfileModel profile = ProfileModel(
-                  firstName: _firstName.text,
-                  age: _age.text,
-                  imagePath:
-                      'profiles/${widget.profile.userId}/${DateTime.now()}.jpg',
-                  userId: widget.profile.userId,
-                );
-                widget.onProfileSubmit(profile, _profilePicture);
-              } else if (widget.profile.imagePath != '') {
-                ProfileModel profile = ProfileModel(
-                  firstName: _firstName.text,
-                  age: _age.text,
-                  imagePath: widget.profile.imagePath,
-                  userId: widget.profile.userId,
-                );
-                widget.onProfileSubmit(profile, null);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please provide with a picture'),
-                  ),
-                );
-              }
-            }
-          },
+          onPressed: _onSubmit,
         ),
       ],
     );
