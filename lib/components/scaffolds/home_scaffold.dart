@@ -1,14 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:prompts_game/bodies/my_profile_body.dart';
-import 'package:prompts_game/bodies/home_body.dart';
-import 'package:prompts_game/bodies/messages_body.dart';
-import 'package:prompts_game/interfaces/app_profile.dart';
+import 'package:prompts_game/components/bodies/home_body.dart';
+import 'package:prompts_game/components/bodies/messages_body.dart';
+import 'package:prompts_game/components/bodies/my_profile_body.dart';
+import 'package:prompts_game/models/profile_model.dart';
 
 class HomeScaffold extends StatefulWidget {
   const HomeScaffold({Key? key, required this.userProfile}) : super(key: key);
 
-  final AppProfile userProfile;
+  final ProfileModel userProfile;
 
   @override
   State<StatefulWidget> createState() => _HomeScaffoldState();
@@ -30,14 +30,11 @@ class _HomeScaffoldState extends State<HomeScaffold> {
     AppBar(
       title: const Text("Messages"),
     ),
-    AppBar(
-      title: const Text('Account'),
-      actions: [
-        IconButton(
-            onPressed: FirebaseAuth.instance.signOut,
-            icon: const Icon(Icons.logout))
-      ]
-    ),
+    AppBar(title: const Text('Account'), actions: [
+      IconButton(
+          onPressed: FirebaseAuth.instance.signOut,
+          icon: const Icon(Icons.logout))
+    ]),
   ];
 
   void _onItemTapped(int index) {

@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:prompts_game/routers/is_signed_in_router.dart';
-import 'package:prompts_game/scaffolds/error_scaffold.dart';
-import 'package:prompts_game/scaffolds/loading_scaffold.dart';
+import 'package:prompts_game/components/routers/is_signed_in_router.dart';
+import 'package:prompts_game/components/scaffolds/error_scaffold.dart';
+import 'package:prompts_game/components/scaffolds/loading_scaffold.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

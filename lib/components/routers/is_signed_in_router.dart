@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:prompts_game/routers/has_profile_router.dart';
-import 'package:prompts_game/scaffolds/sign_in_scaffold.dart';
+import 'package:prompts_game/components/routers/has_profile_router.dart';
+import 'package:prompts_game/components/scaffolds/sign_in_scaffold.dart';
 
 class IsSignedInRouter extends StatefulWidget {
   const IsSignedInRouter({Key? key}) : super(key: key);
