@@ -32,8 +32,9 @@ class _HomeScaffoldState extends State<HomeScaffold> {
     ),
     AppBar(title: const Text('Account'), actions: [
       IconButton(
-          onPressed: FirebaseAuth.instance.signOut,
-          icon: const Icon(Icons.logout))
+        onPressed: FirebaseAuth.instance.signOut,
+        icon: const Icon(Icons.logout),
+      ),
     ]),
   ];
 

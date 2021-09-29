@@ -12,12 +12,12 @@ void main() {
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
 
-  // Create the initialization Future outside of `build`:
   @override
   _AppState createState() => _AppState();
 }
 
 class _AppState extends State<App> {
+  // Create the initialization Future outside of `build`:
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override

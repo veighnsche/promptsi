@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prompts_game/components/decorations/input_decorations.dart';
 
 class PasswordField extends StatelessWidget {
   const PasswordField({
@@ -13,17 +14,17 @@ class PasswordField extends StatelessWidget {
   final bool isSignUp;
 
   String? _validator(value) {
-    if (value!.isEmpty) {
-      return 'Please enter your password';
-    }
-
     if (repeatPassword != null) {
       // check if password and repeat password are the same
       if (value != repeatPassword!.text) {
         return 'Passwords do not match';
       }
+    } else {
+      if (value!.isEmpty) {
+        return 'Please enter your password';
+      }
     }
-    
+
     if (isSignUp) {
       // has to be at least 6 characters
       if (value!.length < 6) {
@@ -53,9 +54,7 @@ class PasswordField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      decoration: const InputDecoration(
-        labelText: 'Password',
-      ),
+      decoration: InputDecorations.outline(labelText: 'Password'),
       controller: controller,
       validator: _validator,
       obscureText: true,

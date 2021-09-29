@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prompts_game/components/decorations/input_decorations.dart';
 
 class EmailField extends StatelessWidget {
   const EmailField({Key? key, required this.controller}) : super(key: key);
@@ -18,12 +19,9 @@ class EmailField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      decoration: const InputDecoration(
-        labelText: 'Email',
-      ),
       controller: controller,
+      decoration: InputDecorations.outline(labelText: 'Email'),
       validator: _validator,
-      keyboardType: TextInputType.emailAddress,
     );
   }
 }

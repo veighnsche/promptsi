@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prompts_game/components/forms/sign_in/buttons/email_sign_in_button.dart';
 import 'package:prompts_game/components/forms/sign_in/fields/email_field.dart';
 import 'package:prompts_game/components/forms/sign_in/fields/password_field.dart';
 
@@ -27,6 +28,7 @@ class SignInForm extends StatelessWidget {
       child: Column(
         children: [
           EmailField(controller: _email),
+          const SizedBox(height: 16),
           PasswordField(
             controller: _password,
             isSignUp: isSignUp,
@@ -36,10 +38,8 @@ class SignInForm extends StatelessWidget {
               controller: _passwordRepeat,
               repeatPassword: _password,
             ),
-          ElevatedButton(
-            child: const Text('Log in'),
-            onPressed: _onSubmit,
-          ),
+          const SizedBox(height: 16),
+          EmailSignInButton(onSubmit: _onSubmit),
         ],
       ),
     );

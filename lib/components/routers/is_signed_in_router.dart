@@ -45,6 +45,6 @@ class _IsSignedInRouterState extends State<IsSignedInRouter> {
     if (_isSignedIn) {
       return const HasProfileRouter();
     }
-    return SignInScaffold();
+    return const SignInScaffold();
   }
 }
