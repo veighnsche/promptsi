@@ -26,6 +26,17 @@ class _ProfileFormState extends State<ProfileForm> {
 
   XFile? _profilePicture;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.profile.firstName != '') {
+      _firstName.text = widget.profile.firstName;
+    }
+    if (widget.profile.age != '') {
+      _age.text = widget.profile.age;
+    }
+  }
+
   void _setProfilePicture(XFile file) {
     setState(() {
       _profilePicture = file;
@@ -62,40 +73,24 @@ class _ProfileFormState extends State<ProfileForm> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.profile.firstName != '') {
-      _firstName.text = widget.profile.firstName;
-    }
-    if (widget.profile.age != '') {
-      _age.text = widget.profile.age;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ProfileNameField(controller: _firstName),
-              ProfileAgeField(controller: _age),
-            ],
+    return Form(
+      key: _formKey,
+      child: ListView(
+        children: <Widget>[
+          ProfileNameField(controller: _firstName),
+          ProfileAgeField(controller: _age),
+          const SizedBox(height: 10),
+          ProfilePictureForm(
+            fileUrl: widget.profile.imagePath,
+            onFileSelected: _setProfilePicture,
           ),
-        ),
-        const SizedBox(height: 10),
-        ProfilePictureForm(
-          fileUrl: widget.profile.imagePath,
-          onFileSelected: _setProfilePicture,
-        ),
-        ElevatedButton(
-          child: const Text('Save'),
-          onPressed: _onSubmit,
-        ),
-      ],
+          ElevatedButton(
+            child: const Text('Save'),
+            onPressed: _onSubmit,
+          ),
+        ],
+      ),
     );
   }
 }

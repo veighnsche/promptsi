@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prompts_game/models/profile_model.dart';
+import 'package:prompts_game/services/apis/storage_api.dart';
 
 class ProfileApi {
   static CollectionReference firestoreRef = FirebaseFirestore.instance
@@ -29,12 +27,7 @@ class ProfileApi {
     ProfileModel profile,
     XFile profilePicture,
   ) async {
-    final FirebaseStorage _storage = FirebaseStorage.instance;
-    return _storage
-        .ref()
-        .child(profile.imagePath)
-        .putFile(File(profilePicture.path))
-        .then((_) {
+    return StorageApi.uploadImage(profile.imagePath, profilePicture).then((_) {
       return firestoreRef
           .add(profile)
           .then((DocumentReference value) => value.get())
