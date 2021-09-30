@@ -24,10 +24,20 @@ class _SignInScaffoldState extends State<SignInScaffold> {
     });
   }
 
+  String get _inOrUp {
+    return _isSignUp ? 'up' : 'in';
+  }
+
+  Function(String, String) get _inOrUpFn {
+    return _isSignUp ? AuthApi.signUp : AuthApi.email;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign in to Prompts!')),
+      appBar: AppBar(
+        title: Text('Sign $_inOrUp to Prompts!'),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -46,9 +56,7 @@ class _SignInScaffoldState extends State<SignInScaffold> {
                               ? 'Already have an account?'
                               : 'Don\'t have an account?',
                         ),
-                        Text(
-                          _isSignUp ? 'Sign in instead!' : 'Sign up instead!',
-                        ),
+                        Text('Sign $_inOrUp instead!'),
                       ],
                     ),
                   ),
@@ -57,8 +65,7 @@ class _SignInScaffoldState extends State<SignInScaffold> {
               Column(
                 children: [
                   SignInForm(
-                    onSignInWithEmail:
-                        _isSignUp ? AuthApi.signUp : AuthApi.email,
+                    onSignInWithEmail: _inOrUpFn,
                     isSignUp: _isSignUp,
                   ),
                   const SizedBox(height: 32),
@@ -71,9 +78,7 @@ class _SignInScaffoldState extends State<SignInScaffold> {
                     },
                     child: Column(
                       children: [
-                        DividerText(
-                          _isSignUp ? 'or sign up with' : 'or sign in with',
-                        ),
+                        DividerText('or sign $_inOrUp with'),
                         const SizedBox(height: 32),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
