@@ -59,17 +59,9 @@ class _CreateProfileScaffoldState extends State<CreateProfileScaffold> {
       appBar: AppBar(
         title: const Text('Create Profile'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
-        child: ListView(
-          children: [
-            const SizedBox(height: 40),
-            ProfileForm(
-              profile: profile,
-              onProfileSubmit: _createProfile,
-            ),
-          ],
-        ),
+      body: ProfileForm(
+        profile: profile,
+        onProfileSubmit: _createProfile,
       ),
     );
   }

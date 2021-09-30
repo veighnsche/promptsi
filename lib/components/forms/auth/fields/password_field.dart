@@ -13,8 +13,12 @@ class PasswordField extends StatelessWidget {
   final TextEditingController? repeatPassword;
   final bool isSignUp;
 
+  bool get _isRepeatPassword {
+    return repeatPassword != null;
+  }
+
   String? _validator(value) {
-    if (repeatPassword != null) {
+    if (_isRepeatPassword) {
       // check if password and repeat password are the same
       if (value != repeatPassword!.text) {
         return 'Passwords do not match';
@@ -54,7 +58,9 @@ class PasswordField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      decoration: InputDecorations.outline(labelText: 'Password'),
+      decoration: InputDecorations.outline(
+        labelText: _isRepeatPassword ? 'Repeat password' : 'Password',
+      ),
       controller: controller,
       validator: _validator,
       obscureText: true,

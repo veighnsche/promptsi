@@ -1,12 +1,37 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthApi {
-  static Future<void> email(String email, String password) async {
-    FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+  static StreamSubscription isSingedInStream(
+    Function(bool isSignedIn) callback,
+  ) {
+    return FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      callback(user != null);
+    });
+  }
+
+  static Future<UserCredential> signUp(String email, String password) {
+    try {
+      return FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<UserCredential> email(String email, String password) {
+    try {
+      return FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (_) {
+      rethrow;
+    }
   }
 
   static Future<void> google() async {
