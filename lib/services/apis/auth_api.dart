@@ -34,19 +34,23 @@ class AuthApi {
     }
   }
 
-  static Future<void> google() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser != null) {
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser.authentication;
-
+  static Future<UserCredential> google() async {
+    return GoogleSignIn().signIn().then<GoogleSignInAuthentication?>(
+      (GoogleSignInAccount? googleUser) {
+        if (googleUser != null) {
+          return googleUser.authentication;
+        }
+        throw 'No Google sign in account';
+      },
+    ).then((GoogleSignInAuthentication? googleAuth) {
       if (googleAuth != null) {
         final OAuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-        FirebaseAuth.instance.signInWithCredential(credential);
+        return FirebaseAuth.instance.signInWithCredential(credential);
       }
-    }
+      throw 'No Google sign in authentication';
+    });
   }
 }

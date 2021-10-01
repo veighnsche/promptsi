@@ -6,32 +6,35 @@ import 'package:prompts_game/services/apis/storage_api.dart';
 class ProfileApi {
   static CollectionReference firestoreRef = FirebaseFirestore.instance
       .collection('profiles')
-      .withConverter<ProfileModel>(
-        fromFirestore: (snapshot, _) => ProfileModel.fromJson(snapshot.data()!),
-        toFirestore: (ProfileModel profile, _) => profile.toJson(),
+      .withConverter<AppProfile>(
+        fromFirestore: (snapshot, _) => AppProfile.fromJson(snapshot.data()!),
+        toFirestore: (AppProfile profile, _) => profile.toJson(),
       );
 
-  static Future<ProfileModel?> has(String userId) {
-    return firestoreRef
-        .where('userId', isEqualTo: userId)
-        .get()
-        .then((QuerySnapshot snapshot) {
-      if (snapshot.docs.isEmpty) {
-        return null;
-      }
-      return snapshot.docs.elementAt(0).data() as ProfileModel;
-    });
+  static Future<AppProfile?> fetchProfile(String userId) {
+    return firestoreRef.where('userId', isEqualTo: userId).get().then(
+      (QuerySnapshot snapshot) {
+        if (snapshot.docs.isEmpty) {
+          return null;
+        }
+        return snapshot.docs.elementAt(0).data() as AppProfile;
+      },
+    );
   }
 
-  static Future<ProfileModel?> create(
-    ProfileModel profile,
-    XFile profilePicture,
+  static Future<AppProfile?> create(
+    AppProfile profile,
+    XFile pictureFile,
   ) async {
-    return StorageApi.uploadImage(profile.imagePath, profilePicture).then((_) {
-      return firestoreRef
-          .add(profile)
-          .then((DocumentReference value) => value.get())
-          .then((DocumentSnapshot profile) => profile.data() as ProfileModel);
-    });
+    AppProfile profileRes = await firestoreRef
+        .add(profile)
+        .then((DocumentReference ref) => ref.get())
+        .then((DocumentSnapshot snapshot) => snapshot.data() as AppProfile)
+        .catchError((e) => throw e);
+
+    String imagePath = '${profileRes.uid}/${DateTime.now()}.jpg';
+
+    await StorageApi.uploadImage(imagePath, pictureFile);
+    return profileRes;
   }
 }

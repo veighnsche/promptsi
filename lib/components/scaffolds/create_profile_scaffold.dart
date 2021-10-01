@@ -12,29 +12,29 @@ class CreateProfileScaffold extends StatefulWidget {
   const CreateProfileScaffold({Key? key, required this.onProfileCreated})
       : super(key: key);
 
-  final Function(ProfileModel appProfile) onProfileCreated;
+  final Function(AppProfile appProfile) onProfileCreated;
 
   @override
   State<StatefulWidget> createState() => _CreateProfileScaffoldState();
 }
 
 class _CreateProfileScaffoldState extends State<CreateProfileScaffold> {
-  final User _user = FirebaseAuth.instance.currentUser as User;
-  late ProfileModel profile;
+  final User? _user = FirebaseAuth.instance.currentUser;
+  late AppProfile profile;
 
   bool _isUploading = false;
 
   @override
   void initState() {
     super.initState();
-    profile = ProfileModel.create(
-      userId: _user.uid,
-      firstName: StringUtils.getFirstWord(_user.displayName),
+    profile = AppProfile.create(
+      userId: _user!.uid,
+      firstName: StringUtils.getFirstWord(_user!.displayName),
     );
   }
 
   Future<void> _createProfile(
-    ProfileModel profile,
+    AppProfile profile,
     XFile? profilePicture,
   ) async {
     if (profilePicture != null) {
@@ -42,7 +42,7 @@ class _CreateProfileScaffoldState extends State<CreateProfileScaffold> {
         _isUploading = true;
       });
 
-      ProfileApi.create(profile, profilePicture).then((ProfileModel? profile) {
+      ProfileApi.create(profile, profilePicture).then((AppProfile? profile) {
         if (profile != null) {
           widget.onProfileCreated(profile);
         }

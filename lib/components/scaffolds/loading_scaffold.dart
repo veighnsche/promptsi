@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prompts_game/components/bodies/loading_body.dart';
 
 class LoadingScaffold extends StatelessWidget {
   const LoadingScaffold({Key? key}) : super(key: key);
@@ -7,9 +8,7 @@ class LoadingScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Loading')),
-      body: const Center(
-        child: CircularProgressIndicator(),
-      ),
+      body: const LoadingBody(),
     );
   }
 

@@ -12,8 +12,8 @@ class ProfileForm extends StatefulWidget {
     required this.onProfileSubmit,
   }) : super(key: key);
 
-  final ProfileModel profile;
-  final Function(ProfileModel profile, XFile? profilePicture) onProfileSubmit;
+  final AppProfile profile;
+  final Function(AppProfile profile, XFile? profilePicture) onProfileSubmit;
 
   @override
   State<StatefulWidget> createState() => _ProfileFormState();
@@ -46,22 +46,12 @@ class _ProfileFormState extends State<ProfileForm> {
   void _onSubmit() {
     if (_formKey.currentState!.validate()) {
       if (_profilePicture != null) {
-        ProfileModel profile = ProfileModel(
+        AppProfile profile = AppProfile(
+          userId: widget.profile.userId,
           firstName: _firstName.text,
           age: _age.text,
-          imagePath:
-          'profiles/${widget.profile.userId}/${DateTime.now()}.jpg',
-          userId: widget.profile.userId,
         );
         widget.onProfileSubmit(profile, _profilePicture);
-      } else if (widget.profile.imagePath != '') {
-        ProfileModel profile = ProfileModel(
-          firstName: _firstName.text,
-          age: _age.text,
-          imagePath: widget.profile.imagePath,
-          userId: widget.profile.userId,
-        );
-        widget.onProfileSubmit(profile, null);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -82,7 +72,6 @@ class _ProfileFormState extends State<ProfileForm> {
           ProfileAgeField(controller: _age),
           const SizedBox(height: 10),
           ProfilePictureForm(
-            fileUrl: widget.profile.imagePath,
             onFileSelected: _setProfilePicture,
           ),
           ElevatedButton(

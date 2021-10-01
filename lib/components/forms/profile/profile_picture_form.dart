@@ -8,10 +8,8 @@ class ProfilePictureForm extends StatefulWidget {
   const ProfilePictureForm({
     Key? key,
     required this.onFileSelected,
-    required this.fileUrl,
   }) : super(key: key);
 
-  final String fileUrl;
   final Function(XFile file) onFileSelected;
 
   @override
@@ -77,7 +75,8 @@ class _ProfilePictureFormState extends State<ProfilePictureForm> {
             // todo: link the fileURL here,
             'https://thesocialstudies.co/wp-content/uploads/2021/06/placeholder-1-1.jpg',
           ),
-        if (_imageFileCropped != null) Image.file(File(_imageFileCropped!.path)),
+        if (_imageFileCropped != null)
+          Image.file(File(_imageFileCropped!.path)),
         Row(
           children: <Widget>[
             IconButton(

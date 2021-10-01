@@ -51,12 +51,12 @@ class _SignInScaffoldState extends State<SignInScaffold> {
                     onPressed: _toggleSignUp,
                     child: Column(
                       children: [
-                        Text(
-                          _isSignUp
-                              ? 'Already have an account?'
-                              : 'Don\'t have an account?',
-                        ),
-                        Text('Sign $_inOrUp instead!'),
+                        Text(_isSignUp
+                            ? 'Already have an account?'
+                            : 'Don\'t have an account?'),
+                        Text(_isSignUp
+                            ? 'Sign in instead!'
+                            : 'Sign up instead!'),
                       ],
                     ),
                   ),

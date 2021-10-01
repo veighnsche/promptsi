@@ -15,10 +15,10 @@ class HasProfileRouter extends StatefulWidget {
 }
 
 class _HasProfileRouterState extends State<HasProfileRouter> {
-  final User _user = FirebaseAuth.instance.currentUser as User;
-  ProfileModel? _profile;
+  final User? _user = FirebaseAuth.instance.currentUser;
+  AppProfile? _profile;
 
-  void setProfile(ProfileModel appProfile) {
+  void setProfile(AppProfile appProfile) {
     setState(() {
       _profile = appProfile;
     });
@@ -26,14 +26,10 @@ class _HasProfileRouterState extends State<HasProfileRouter> {
 
   @override
   Widget build(BuildContext context) {
-    if (_profile != null) {
-      return HomeScaffold(
-        userProfile: _profile!,
-      );
-    }
     return FutureBuilder(
-      future: ProfileApi.has(_user.uid),
-      builder: (BuildContext context, AsyncSnapshot<ProfileModel?> snapshot) {
+      future: ProfileApi.fetchProfile(_user!.uid),
+      initialData: _profile,
+      builder: (BuildContext context, AsyncSnapshot<AppProfile?> snapshot) {
         if (snapshot.hasError) {
           return ErrorScaffold(message: snapshot.error.toString());
         }
