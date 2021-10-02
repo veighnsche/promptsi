@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prompts_game/components/forms/pictures/picture_field.dart';
@@ -5,9 +6,9 @@ import 'package:prompts_game/services/apis/auth_api.dart';
 import 'package:prompts_game/services/apis/storage_api.dart';
 
 class PictureForm extends StatefulWidget {
-  const PictureForm({Key? key, required this.pictures}) : super(key: key);
+  const PictureForm({Key? key, required this.pictureRefs}) : super(key: key);
 
-  final List<String> pictures;
+  final List<Reference> pictureRefs;
 
   @override
   State<PictureForm> createState() => _PictureFormState();
@@ -19,41 +20,41 @@ class _PictureFormState extends State<PictureForm> {
   static const int _rows = 2;
   static const int _columns = 3;
 
-  late List<String> _pictureCache;
+  late List<Reference> _pictureRefCache;
 
   @override
   void initState() {
     super.initState();
-    _pictureCache = widget.pictures;
+    _pictureRefCache = widget.pictureRefs;
   }
 
   void _onPictureSelected(XFile pictureFile) {
-    StorageApi.uploadPicture(_user.uid, pictureFile).then((String picture) {
+    StorageApi.uploadPicture(_user.uid, pictureFile).then((Reference ref) {
       setState(() {
-        _pictureCache.add(picture);
+        _pictureRefCache.add(ref);
       });
     });
   }
 
   Function() _onPictureRemoved(int idx) {
     return () {
-      if (idx < 0 || idx >= _pictureCache.length) {
+      if (idx < 0 || idx >= _pictureRefCache.length) {
         return;
       }
 
-      StorageApi.deletePicture(_user.uid, _pictureCache[idx]).whenComplete(() {
+      StorageApi.deletePicture(_pictureRefCache[idx]).whenComplete(() {
         setState(() {
-          _pictureCache.removeAt(idx);
+          _pictureRefCache.removeAt(idx);
         });
       });
     };
   }
 
-  String? _getPictureAt(int idx) {
-    if (idx >= _pictureCache.length) {
+  Future<String>? _getPictureAt(int idx) {
+    if (idx >= _pictureRefCache.length) {
       return null;
     }
-    return _pictureCache[idx];
+    return _pictureRefCache[idx].getDownloadURL();
   }
 
   @override
@@ -66,7 +67,7 @@ class _PictureFormState extends State<PictureForm> {
             return PictureField(
               onFileSelected: _onPictureSelected,
               onFileRemoved: _onPictureRemoved(idx),
-              imageFile: _getPictureAt(idx),
+              imageUrl: _getPictureAt(idx),
             );
           }),
         );

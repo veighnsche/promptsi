@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/error_body.dart';
 import 'package:prompts_game/components/bodies/loading_body.dart';
@@ -16,14 +17,14 @@ class _PictureFormFutureBuilderState extends State<PictureFormFutureBuilder> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: StorageApi.fetchPictureUrls(AuthApi.currentUser.uid),
-      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+      future: StorageApi.fetchPictureRefs(AuthApi.currentUser.uid),
+      builder: (BuildContext context, AsyncSnapshot<List<Reference>> snapshot) {
         if (snapshot.hasError) {
           return ErrorBody(snapshot.error.toString());
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          return PictureForm(pictures: snapshot.data!);
+          return PictureForm(pictureRefs: snapshot.data!);
         }
 
         return const LoadingBody();
