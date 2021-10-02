@@ -65,9 +65,10 @@ class _PictureFormState extends State<PictureForm> {
           children: List.generate(_columns, (int columnIdx) {
             final idx = rowIdx * _columns + columnIdx;
             return PictureField(
+              context: context,
               onFileSelected: _onPictureSelected,
               onFileRemoved: _onPictureRemoved(idx),
-              imageUrl: _getPictureAt(idx),
+              pictureRef: _getPictureAt(idx),
             );
           }),
         );

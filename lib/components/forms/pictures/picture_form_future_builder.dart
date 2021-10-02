@@ -6,14 +6,9 @@ import 'package:prompts_game/components/forms/pictures/picture_form.dart';
 import 'package:prompts_game/services/apis/auth_api.dart';
 import 'package:prompts_game/services/apis/storage_api.dart';
 
-class PictureFormFutureBuilder extends StatefulWidget {
+class PictureFormFutureBuilder extends StatelessWidget {
   const PictureFormFutureBuilder({Key? key}) : super(key: key);
 
-  @override
-  State<PictureFormFutureBuilder> createState() => _PictureFormFutureBuilderState();
-}
-
-class _PictureFormFutureBuilderState extends State<PictureFormFutureBuilder> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(

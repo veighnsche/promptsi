@@ -7,23 +7,19 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prompts_game/components/bodies/loading_body.dart';
 
-class PictureField extends StatefulWidget {
-  const PictureField({
+class PictureField extends StatelessWidget {
+  PictureField({
     Key? key,
+    required this.context,
     required this.onFileSelected,
     required this.onFileRemoved,
-    this.imageUrl,
+    this.pictureRef,
   }) : super(key: key);
 
+  final BuildContext context;
   final Function(XFile file) onFileSelected;
   final Function() onFileRemoved;
-  final Future<String>? imageUrl;
-
-  @override
-  State<StatefulWidget> createState() => _PictureFieldState();
-}
-
-class _PictureFieldState extends State<PictureField> {
+  final Future<String>? pictureRef;
   final _picker = ImagePicker();
 
   set imageFileUnCropped(XFile? file) {
@@ -35,7 +31,7 @@ class _PictureFieldState extends State<PictureField> {
   set imageFile(File? file) {
     if (file != null) {
       XFile xFile = XFile(file.path);
-      widget.onFileSelected(xFile);
+      onFileSelected(xFile);
     }
   }
 
@@ -96,7 +92,7 @@ class _PictureFieldState extends State<PictureField> {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Column(
-        children: widget.imageUrl == null
+        children: pictureRef == null
             ? [
                 CachedNetworkImage(
                   // todo: save asset to app
@@ -112,10 +108,10 @@ class _PictureFieldState extends State<PictureField> {
                 ),
               ]
             : [
-                _PictureRef(widget: widget),
+                _PictureRef(pictureRef: pictureRef!),
                 IconButton(
                   icon: const FaIcon(FontAwesomeIcons.timesCircle),
-                  onPressed: widget.onFileRemoved,
+                  onPressed: onFileRemoved,
                 ),
               ],
       ),
@@ -126,15 +122,15 @@ class _PictureFieldState extends State<PictureField> {
 class _PictureRef extends StatelessWidget {
   const _PictureRef({
     Key? key,
-    required this.widget,
+    required this.pictureRef,
   }) : super(key: key);
 
-  final PictureField widget;
+  final Future<String> pictureRef;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: widget.imageUrl!,
+      future: pictureRef,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return CachedNetworkImage(

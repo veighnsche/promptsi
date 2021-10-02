@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/scaffolds/create_profile_scaffold.dart';
-import 'package:prompts_game/components/scaffolds/error_scaffold.dart';
 import 'package:prompts_game/components/scaffolds/home_scaffold.dart';
 import 'package:prompts_game/components/scaffolds/loading_scaffold.dart';
 import 'package:prompts_game/models/profile_model.dart';
@@ -27,11 +26,12 @@ class _HasProfileSwitchState extends State<HasProfileSwitch> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: ProfileApi.fetchProfile(_user!.uid),
       initialData: _profile,
+      future: ProfileApi.fetchProfile(_user!.uid),
       builder: (BuildContext context, AsyncSnapshot<AppProfile?> snapshot) {
         if (snapshot.hasError) {
-          return ErrorScaffold(message: snapshot.error.toString());
+          throw snapshot.error!;
+          // return ErrorScaffold(message: snapshot.error.toString());
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
