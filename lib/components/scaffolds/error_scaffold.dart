@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prompts_game/components/bodies/error_body.dart';
 
 class ErrorScaffold extends StatelessWidget {
   const ErrorScaffold({Key? key, required this.message}) : super(key: key);
@@ -9,7 +10,7 @@ class ErrorScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Error')),
-      body: Center(child: Text(message)),
+      body: ErrorBody(message),
     );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:prompts_game/components/scaffolds/loading_scaffold.dart';
 import 'package:prompts_game/models/profile_model.dart';
+import 'package:prompts_game/services/apis/auth_api.dart';
 import 'package:prompts_game/services/apis/profile_api.dart';
 import 'package:prompts_game/utils/string_utils.dart';
 
@@ -19,7 +19,6 @@ class CreateProfileScaffold extends StatefulWidget {
 }
 
 class _CreateProfileScaffoldState extends State<CreateProfileScaffold> {
-  final User? _user = FirebaseAuth.instance.currentUser;
   late AppProfile profile;
 
   bool _isUploading = false;
@@ -27,27 +26,24 @@ class _CreateProfileScaffoldState extends State<CreateProfileScaffold> {
   @override
   void initState() {
     super.initState();
+
+    final User user = AuthApi.currentUser;
     profile = AppProfile.create(
-      userId: _user!.uid,
-      firstName: StringUtils.getFirstWord(_user!.displayName),
+      userId: user.uid,
+      firstName: StringUtils.getFirstWord(user.displayName),
     );
   }
 
-  Future<void> _createProfile(
-    AppProfile profile,
-    XFile? profilePicture,
-  ) async {
-    if (profilePicture != null) {
-      setState(() {
-        _isUploading = true;
-      });
+  Future<void> _createProfile(AppProfile profile) async {
+    setState(() {
+      _isUploading = true;
+    });
 
-      ProfileApi.create(profile, profilePicture).then((AppProfile? profile) {
-        if (profile != null) {
-          widget.onProfileCreated(profile);
-        }
-      });
-    }
+    ProfileApi.create(profile).then((AppProfile? profile) {
+      if (profile != null) {
+        widget.onProfileCreated(profile);
+      }
+    });
   }
 
   @override
@@ -60,6 +56,7 @@ class _CreateProfileScaffoldState extends State<CreateProfileScaffold> {
         title: const Text('Create Profile'),
       ),
       body: ProfileForm(
+        isCreate: true,
         profile: profile,
         onProfileSubmit: _createProfile,
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prompts_game/components/decorations/input_decorations.dart';
+import 'package:prompts_game/components/utils/decorations/input_decorations.dart';
 
 class PasswordField extends StatelessWidget {
   const PasswordField({

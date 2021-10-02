@@ -13,14 +13,6 @@ class MyProfileBody extends StatefulWidget {
 }
 
 class _MyProfileBodyState extends State<MyProfileBody> {
-  String get name {
-    return widget.profile.firstName;
-  }
-
-  String get age {
-    return widget.profile.age;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,7 +20,7 @@ class _MyProfileBodyState extends State<MyProfileBody> {
         AspectRatio(
           aspectRatio: 1,
           child: FutureBuilder(
-            future: StorageApi.fetchUserPictureUrls(widget.profile.userId),
+            future: StorageApi.fetchPictureUrls(widget.profile.userId),
             builder:
                 (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
               if (snapshot.hasError) {
@@ -53,7 +45,7 @@ class _MyProfileBodyState extends State<MyProfileBody> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                '$name, $age',
+                '${widget.profile.firstName}, ${widget.profile.age}',
                 style: Theme.of(context).textTheme.headline5,
               ),
             ],

@@ -7,14 +7,14 @@ import 'package:prompts_game/components/scaffolds/loading_scaffold.dart';
 import 'package:prompts_game/models/profile_model.dart';
 import 'package:prompts_game/services/apis/profile_api.dart';
 
-class HasProfileRouter extends StatefulWidget {
-  const HasProfileRouter({Key? key}) : super(key: key);
+class HasProfileSwitch extends StatefulWidget {
+  const HasProfileSwitch({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _HasProfileRouterState();
+  State<StatefulWidget> createState() => _HasProfileSwitchState();
 }
 
-class _HasProfileRouterState extends State<HasProfileRouter> {
+class _HasProfileSwitchState extends State<HasProfileSwitch> {
   final User? _user = FirebaseAuth.instance.currentUser;
   AppProfile? _profile;
 

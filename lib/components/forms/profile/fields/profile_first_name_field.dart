@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:prompts_game/components/utils/decorations/input_decorations.dart';
 
-class ProfileNameField extends StatelessWidget {
-  const ProfileNameField({Key? key, required this.controller})
+class ProfileFirstNameField extends StatelessWidget {
+  const ProfileFirstNameField({Key? key, required this.controller})
       : super(key: key);
 
   final TextEditingController controller;
@@ -18,8 +19,8 @@ class ProfileNameField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       validator: _validator,
-      decoration: const InputDecoration(
-        labelText: 'First Name',
+      decoration: InputDecorations.outline(
+        labelText: 'First name',
       ),
       keyboardType: TextInputType.text,
     );

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:prompts_game/components/forms/pictures/picture_form_future_builder.dart';
 import 'package:prompts_game/components/forms/profile/fields/profile_age_field.dart';
-import 'package:prompts_game/components/forms/profile/profile_picture_form.dart';
-import 'package:prompts_game/components/forms/profile/fields/profile_name_field.dart';
+import 'package:prompts_game/components/forms/profile/fields/profile_first_name_field.dart';
 import 'package:prompts_game/models/profile_model.dart';
 
 class ProfileForm extends StatefulWidget {
   const ProfileForm({
     Key? key,
+    this.isCreate = false,
     required this.profile,
     required this.onProfileSubmit,
   }) : super(key: key);
 
+  final bool isCreate;
   final AppProfile profile;
-  final Function(AppProfile profile, XFile? profilePicture) onProfileSubmit;
+  final Function(AppProfile) onProfileSubmit;
 
   @override
   State<StatefulWidget> createState() => _ProfileFormState();
@@ -21,10 +22,8 @@ class ProfileForm extends StatefulWidget {
 
 class _ProfileFormState extends State<ProfileForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _firstName = TextEditingController();
-  final _age = TextEditingController();
-
-  XFile? _profilePicture;
+  final TextEditingController _firstName = TextEditingController();
+  final TextEditingController _age = TextEditingController();
 
   @override
   void initState() {
@@ -37,48 +36,55 @@ class _ProfileFormState extends State<ProfileForm> {
     }
   }
 
-  void _setProfilePicture(XFile file) {
-    setState(() {
-      _profilePicture = file;
-    });
-  }
-
   void _onSubmit() {
     if (_formKey.currentState!.validate()) {
-      if (_profilePicture != null) {
-        AppProfile profile = AppProfile(
-          userId: widget.profile.userId,
-          firstName: _firstName.text,
-          age: _age.text,
-        );
-        widget.onProfileSubmit(profile, _profilePicture);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please provide with a picture'),
-          ),
-        );
-      }
+      AppProfile profile = widget.isCreate
+          ? AppProfile.create(
+              userId: widget.profile.userId,
+              firstName: _firstName.text,
+              age: _age.text,
+            )
+          : AppProfile.edit(
+              widget.profile,
+              firstName: _firstName.text,
+              age: _age.text,
+            );
+      widget.onProfileSubmit(profile);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: ListView(
-        children: <Widget>[
-          ProfileNameField(controller: _firstName),
-          ProfileAgeField(controller: _age),
-          const SizedBox(height: 10),
-          ProfilePictureForm(
-            onFileSelected: _setProfilePicture,
-          ),
-          ElevatedButton(
-            child: const Text('Save'),
-            onPressed: _onSubmit,
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 28),
+      child: Form(
+        key: _formKey,
+        child: ListView(
+          children: <Widget>[
+            const SizedBox(height: 32),
+            const PictureFormFutureBuilder(),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Column(
+                children: [
+                  ProfileFirstNameField(controller: _firstName),
+                  const SizedBox(height: 16),
+                  ProfileAgeField(controller: _age),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    child: const Text(
+                      'Save',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    onPressed: _onSubmit,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

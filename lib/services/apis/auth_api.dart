@@ -4,17 +4,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthApi {
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  static User get currentUser {
+    return _auth.currentUser!;
+  }
+
   static StreamSubscription isSingedInStream(
     Function(bool isSignedIn) callback,
   ) {
-    return FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    return _auth.authStateChanges().listen((User? user) {
       callback(user != null);
     });
   }
 
   static Future<UserCredential> signUp(String email, String password) {
     try {
-      return FirebaseAuth.instance.createUserWithEmailAndPassword(
+      return _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -25,7 +31,7 @@ class AuthApi {
 
   static Future<UserCredential> email(String email, String password) {
     try {
-      return FirebaseAuth.instance.signInWithEmailAndPassword(
+      return _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -48,7 +54,7 @@ class AuthApi {
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-        return FirebaseAuth.instance.signInWithCredential(credential);
+        return _auth.signInWithCredential(credential);
       }
       throw 'No Google sign in authentication';
     });
