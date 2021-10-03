@@ -10,15 +10,15 @@ class PromptsApi {
         toFirestore: (AppPrompt prompt, _) => prompt.toJson(),
       );
 
-  static Future<List<AppPrompt>?> fetchPreMadePrompts() {
-    return _promptsRef.where('isPreMade', isEqualTo: true).get().then(
-      (QuerySnapshot snapshot) async {
+  static Future<List<AppPrompt>?> queryPrompts(Query query) {
+    return query.get().then(
+          (QuerySnapshot snapshot) async {
         if (snapshot.docs.isEmpty) {
           return null;
         }
 
         return Future.wait(snapshot.docs.map<Future<AppPrompt>>(
-          (DocumentSnapshot doc) async {
+              (DocumentSnapshot doc) async {
             AppPrompt prompt = doc.data() as AppPrompt;
             prompt.reference = doc.reference;
             await prompt.fetchMadeByProfile();
@@ -29,6 +29,14 @@ class PromptsApi {
     );
   }
 
+  static Future<List<AppPrompt>?> fetchPreMadePrompts() {
+    return queryPrompts(_promptsRef.where('isPreMade', isEqualTo: true));
+  }
+
+  static Future<List<AppPrompt>?> fetchUserPrompts(String userId) {
+    return queryPrompts(_promptsRef.where('userId', isEqualTo: userId));
+  }
+
   static Future<void> createListFromPreMade(
     AppProfile profile,
     List<AppPrompt> preMadePrompts,
@@ -37,7 +45,7 @@ class PromptsApi {
       return createRePrompt(
         profile,
         preMadePrompt.prompt,
-        preMadePrompt.madeBy,
+        preMadePrompt.madeByUserId,
       );
     }));
   }
@@ -50,7 +58,7 @@ class PromptsApi {
     AppPrompt prompt = AppPrompt(
       userId: profile.userId,
       prompt: promptText,
-      madeBy: madeByUserId,
+      madeByUserId: madeByUserId,
     );
 
     return _promptsRef

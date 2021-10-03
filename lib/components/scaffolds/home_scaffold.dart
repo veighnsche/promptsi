@@ -87,7 +87,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
       AppBar(title: const Text('Promptsy')),
       AppBar(title: const Text("Messages")),
       AppBar(
-        title: const Text('Account'),
+        title: Text(_userProfile.firstName),
         actions: [
           IconButton(
             onPressed: _onProfileEditPress,

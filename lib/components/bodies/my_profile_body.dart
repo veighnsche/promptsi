@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/loading_body.dart';
+import 'package:prompts_game/components/columns/my_prompts_column.dart';
 import 'package:prompts_game/components/widgets/picture_carousel.dart';
 import 'package:prompts_game/models/app_profile.dart';
+import 'package:prompts_game/models/app_prompt.dart';
+import 'package:prompts_game/services/apis/prompts_api.dart';
 import 'package:prompts_game/services/apis/storage_api.dart';
 
 class MyProfileBody extends StatefulWidget {
@@ -16,7 +19,7 @@ class MyProfileBody extends StatefulWidget {
 class _MyProfileBodyState extends State<MyProfileBody> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: [
         FutureBuilder(
           future: StorageApi.fetchPictureUrls(widget.profile.userId),
@@ -38,18 +41,29 @@ class _MyProfileBodyState extends State<MyProfileBody> {
           },
         ),
         const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                '${widget.profile.firstName}, ${widget.profile.age}',
-                style: Theme.of(context).textTheme.headline5,
-              ),
-            ],
-          ),
+        FutureBuilder(
+          future: PromptsApi.fetchUserPrompts(widget.profile.userId),
+          builder: (
+            BuildContext context,
+            AsyncSnapshot<List<AppPrompt>?> snapshot,
+          ) {
+            if (snapshot.hasError) {
+              throw snapshot.error!;
+              // return Text(snapshot.error.toString());
+            }
+
+            if (snapshot.connectionState == ConnectionState.done) {
+              return MyPromptsColumn(prompts: snapshot.data!);
+            }
+
+            return const LoadingBody();
+          },
         ),
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              children: [],
+            )),
       ],
     );
   }

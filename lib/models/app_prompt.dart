@@ -6,37 +6,41 @@ class AppPrompt {
   AppPrompt({
     required this.userId,
     required this.prompt,
-    required this.madeBy,
+    required this.madeByUserId,
     this.isPreMade,
   });
 
   final String userId;
   final String prompt;
-  final String madeBy;
+  final String madeByUserId;
   final bool? isPreMade;
 
   DocumentReference? reference;
-  AppProfile? madeByProfile;
+  AppProfile? madeBy;
+
+  String get madeByString {
+    return 'Made by ${madeBy!.firstName}';
+  }
 
   Future<void> fetchMadeByProfile() {
-    return ProfileApi.fetchProfile(madeBy).then((AppProfile? profile) {
+    return ProfileApi.fetchProfile(madeByUserId).then((AppProfile? profile) {
       if (profile == null) {
         throw 'no profile';
       }
-      madeByProfile = profile;
+      madeBy = profile;
     });
   }
 
   AppPrompt.fromJson(Map<String, dynamic> json)
       : userId = json['userId'],
         prompt = json['prompt'],
-        madeBy = json['madeBy'],
+        madeByUserId = json['madeBy'],
         isPreMade = json['isPreMade'];
 
   Map<String, dynamic> toJson() => {
     'userId': userId,
     'prompt': prompt,
-    'madeBy': madeBy,
+    'madeBy': madeByUserId,
     'isPreMade': isPreMade,
   };
 }

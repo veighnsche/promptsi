@@ -108,7 +108,8 @@ class _FutureBuilderDoneState extends State<_FutureBuilderDone> {
         const SizedBox(height: 32),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50.0),
-          child: Text('Select your first $currentAmount/${widget.minimumAmount} prompts that your candidates can respond to'),
+          child: Text(
+              'Select your first $currentAmount/${widget.minimumAmount} prompts that your candidates can respond to'),
         ),
         const SizedBox(height: 32),
         Column(
@@ -122,8 +123,7 @@ class _FutureBuilderDoneState extends State<_FutureBuilderDone> {
                   child: ListTile(
                     leading: _leadingCheckBox(prompt),
                     title: Text(prompt.prompt),
-                    subtitle:
-                        Text('made by ${prompt.madeByProfile!.firstName}'),
+                    subtitle: Text(prompt.madeByString),
                   ),
                 ),
               ),
