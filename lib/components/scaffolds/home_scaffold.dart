@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:prompts_game/components/bodies/home_body.dart';
 import 'package:prompts_game/components/bodies/messages_body.dart';
-import 'package:prompts_game/components/bodies/my_profile_body.dart';
+import 'package:prompts_game/components/bodies/profile_body.dart';
 import 'package:prompts_game/components/scaffolds/profile_edit_scaffold.dart';
 import 'package:prompts_game/models/app_profile.dart';
 
@@ -30,7 +30,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) {
+        builder: (BuildContext context) {
           return ProfileEditScaffold(
             onProfileEdited: _setUserProfile,
             userProfile: _userProfile,
@@ -100,7 +100,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
     final _bodyOptions = <Widget>[
       const HomeBody(),
       const MessagesBody(),
-      MyProfileBody(profile: _userProfile),
+      ProfileBody.currentUser(profile: _userProfile),
     ];
 
     return WillPopScope(

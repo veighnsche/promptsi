@@ -1,3 +1,5 @@
+import 'package:prompts_game/services/apis/storage_api.dart';
+
 class AppProfile {
   AppProfile({
     required this.userId,
@@ -14,6 +16,10 @@ class AppProfile {
   final List<AppGenders> interestedIn;
 
   String? profilePictureUrl;
+
+  Future<List<String>> fetchPictures() {
+    return StorageApi.fetchPictureUrls(userId);
+  }
 
   AppProfile.create({
     required this.userId,

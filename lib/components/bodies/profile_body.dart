@@ -1,22 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/loading_body.dart';
 import 'package:prompts_game/components/columns/my_prompts_column.dart';
+import 'package:prompts_game/components/columns/prompts_column.dart';
 import 'package:prompts_game/components/widgets/picture_carousel.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/services/apis/prompts_api.dart';
 import 'package:prompts_game/services/apis/storage_api.dart';
 
-class MyProfileBody extends StatefulWidget {
-  const MyProfileBody({Key? key, required this.profile}) : super(key: key);
+class ProfileBody extends StatefulWidget {
+  const ProfileBody({
+    Key? key,
+    required this.profile,
+    required this.type,
+  }) : super(key: key);
+
+  const ProfileBody.currentUser({
+    Key? key,
+    required this.profile,
+    this.type = AppProfileType.currentUser,
+  }) : super(key: key);
+
+  const ProfileBody.profile({
+    Key? key,
+    required this.profile,
+    this.type = AppProfileType.profile,
+  }) : super(key: key);
 
   final AppProfile profile;
+  final AppProfileType type;
 
   @override
-  State<StatefulWidget> createState() => _MyProfileBodyState();
+  State<StatefulWidget> createState() => _ProfileBodyState();
 }
 
-class _MyProfileBodyState extends State<MyProfileBody> {
+class _ProfileBodyState extends State<ProfileBody> {
+  Widget _promptsColumn(List<AppPrompt> prompts) {
+    switch (widget.type) {
+      case AppProfileType.currentUser:
+        return MyPromptsColumn(prompts: prompts);
+
+      case AppProfileType.profile:
+        return PromptsColumn(
+          prompts: prompts,
+          withPictures: false,
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -53,7 +84,7 @@ class _MyProfileBodyState extends State<MyProfileBody> {
             }
 
             if (snapshot.connectionState == ConnectionState.done) {
-              return MyPromptsColumn(prompts: snapshot.data!);
+              return _promptsColumn(snapshot.data!);
             }
 
             return const LoadingBody();
@@ -62,4 +93,9 @@ class _MyProfileBodyState extends State<MyProfileBody> {
       ],
     );
   }
+}
+
+enum AppProfileType {
+  currentUser,
+  profile,
 }
