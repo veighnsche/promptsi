@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/loading_body.dart';
 import 'package:prompts_game/components/widgets/picture_carousel.dart';
-import 'package:prompts_game/models/profile_model.dart';
+import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/services/apis/storage_api.dart';
 
 class MyProfileBody extends StatefulWidget {

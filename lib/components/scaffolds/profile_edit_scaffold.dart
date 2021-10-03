@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/scaffolds/loading_scaffold.dart';
-import 'package:prompts_game/models/profile_model.dart';
+import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/services/apis/profile_api.dart';
 
 import '../forms/profile/profile_form.dart';

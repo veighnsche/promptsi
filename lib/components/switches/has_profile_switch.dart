@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:prompts_game/components/scaffolds/profile_create_scaffold.dart';
 import 'package:prompts_game/components/scaffolds/home_scaffold.dart';
 import 'package:prompts_game/components/scaffolds/loading_scaffold.dart';
-import 'package:prompts_game/models/profile_model.dart';
+import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/services/apis/profile_api.dart';
 
 class HasProfileSwitch extends StatefulWidget {

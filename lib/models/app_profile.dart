@@ -39,9 +39,9 @@ class AppProfile {
   AppProfile.fromJson(Map<String, dynamic> json)
       : userId = json['userId'],
         firstName = json['firstName'],
-        age = json['age'],
-        gender = AppGenders.values.elementAt(json['gender']),
-        interestedIn = json['interestedIn']
+        age = json['age'] ?? '',
+        gender = AppGenders.values.elementAt(json['gender'] ?? 0),
+        interestedIn = (json['interestedIn'] ?? [])
             .map<AppGenders>((val) => AppGenders.values.elementAt(val))
             .toList();
 

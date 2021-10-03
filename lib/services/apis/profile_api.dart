@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:prompts_game/models/profile_model.dart';
+import 'package:prompts_game/models/app_profile.dart';
 
 class ProfileApi {
-  static final CollectionReference _profileRef = FirebaseFirestore.instance
+  static final CollectionReference _profilesRef = FirebaseFirestore.instance
       .collection('profiles')
       .withConverter<AppProfile>(
         fromFirestore: (snapshot, _) => AppProfile.fromJson(snapshot.data()!),
@@ -10,15 +10,15 @@ class ProfileApi {
       );
 
   static Future<DocumentSnapshot?> fetchProfileSnapshot(String userId) {
-    return _profileRef
-        .where('userId', isEqualTo: userId)
-        .get()
-        .then((QuerySnapshot snapshot) {
-      if (snapshot.docs.isEmpty) {
-        return null;
-      }
-      return snapshot.docs.elementAt(0);
-    });
+    return _profilesRef.where('userId', isEqualTo: userId).get().then(
+      (QuerySnapshot snapshot) {
+        if (snapshot.docs.isEmpty) {
+          // throw 'profile snapshot docs is empty userId: $userId';
+          return null;
+        }
+        return snapshot.docs.elementAt(0);
+      },
+    );
   }
 
   static Future<DocumentReference?> fetchProfileRef(String userId) {
@@ -31,6 +31,7 @@ class ProfileApi {
   }
 
   static Future<AppProfile?> fetchProfile(String userId) {
+    print(userId);
     return fetchProfileSnapshot(userId).then((DocumentSnapshot? snapshot) {
       if (snapshot == null) {
         return null;
@@ -40,18 +41,20 @@ class ProfileApi {
   }
 
   static Future<AppProfile?> create(AppProfile profile) {
-    return _profileRef
+    return _profilesRef
         .add(profile)
         .then((DocumentReference ref) => ref.get())
         .then((DocumentSnapshot snapshot) => snapshot.data() as AppProfile);
   }
 
   static Future<void> edit(AppProfile profile) {
-    return fetchProfileRef(profile.userId).then((DocumentReference? profileRef) {
-      if (profileRef == null) {
-        return null;
-      }
-      return profileRef.update(profile.toJson());
-    });
+    return fetchProfileRef(profile.userId).then(
+      (DocumentReference? profileRef) {
+        if (profileRef == null) {
+          return null;
+        }
+        return profileRef.update(profile.toJson());
+      },
+    );
   }
 }

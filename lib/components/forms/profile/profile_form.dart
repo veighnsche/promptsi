@@ -5,7 +5,7 @@ import 'package:prompts_game/components/forms/profile/fields/profile_first_name_
 import 'package:prompts_game/components/forms/profile/fields/profile_gender.dart';
 import 'package:prompts_game/components/forms/profile/fields/profile_interested_in.dart';
 import 'package:prompts_game/components/widgets/divider_text.dart';
-import 'package:prompts_game/models/profile_model.dart';
+import 'package:prompts_game/models/app_profile.dart';
 
 class ProfileForm extends StatefulWidget {
   const ProfileForm({

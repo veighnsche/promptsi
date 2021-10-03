@@ -4,7 +4,7 @@ import 'package:prompts_game/components/bodies/home_body.dart';
 import 'package:prompts_game/components/bodies/messages_body.dart';
 import 'package:prompts_game/components/bodies/my_profile_body.dart';
 import 'package:prompts_game/components/scaffolds/profile_edit_scaffold.dart';
-import 'package:prompts_game/models/profile_model.dart';
+import 'package:prompts_game/models/app_profile.dart';
 
 class HomeScaffold extends StatefulWidget {
   const HomeScaffold({Key? key, required this.userProfile}) : super(key: key);
@@ -84,7 +84,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
   @override
   Widget build(BuildContext context) {
     final _appBarOptions = <PreferredSizeWidget>[
-      AppBar(title: const Text('Prompts')),
+      AppBar(title: const Text('Promptsy')),
       AppBar(title: const Text("Messages")),
       AppBar(
         title: const Text('Account'),
