@@ -12,16 +12,17 @@ class PromptsApi {
 
   static Future<List<AppPrompt>?> queryPrompts(Query query) {
     return query.get().then(
-          (QuerySnapshot snapshot) async {
+      (QuerySnapshot snapshot) async {
         if (snapshot.docs.isEmpty) {
           return null;
         }
 
         return Future.wait(snapshot.docs.map<Future<AppPrompt>>(
-              (DocumentSnapshot doc) async {
+          (DocumentSnapshot doc) async {
             AppPrompt prompt = doc.data() as AppPrompt;
             prompt.reference = doc.reference;
             await prompt.fetchMadeByProfile();
+            await prompt.fetchOwnerProfile();
             return prompt;
           },
         ).toList());
@@ -35,6 +36,10 @@ class PromptsApi {
 
   static Future<List<AppPrompt>?> fetchUserPrompts(String userId) {
     return queryPrompts(_promptsRef.where('userId', isEqualTo: userId));
+  }
+
+  static Future<List<AppPrompt>?> fetchPrompts() {
+    return queryPrompts(_promptsRef.where('isPreMade', isEqualTo: false));
   }
 
   static Future<void> createListFromPreMade(
@@ -56,7 +61,7 @@ class PromptsApi {
     String madeByUserId,
   ) {
     AppPrompt prompt = AppPrompt(
-      userId: profile.userId,
+      ownerId: profile.userId,
       prompt: promptText,
       madeByUserId: madeByUserId,
     );

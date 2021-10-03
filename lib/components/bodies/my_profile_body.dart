@@ -31,7 +31,7 @@ class _MyProfileBodyState extends State<MyProfileBody> {
             }
 
             if (snapshot.connectionState == ConnectionState.done) {
-              return PictureCarousel(pictures: snapshot.data!);
+              return PictureCarousel.profile(pictures: snapshot.data!);
             }
 
             return const AspectRatio(
@@ -59,11 +59,6 @@ class _MyProfileBodyState extends State<MyProfileBody> {
             return const LoadingBody();
           },
         ),
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Column(
-              children: [],
-            )),
       ],
     );
   }

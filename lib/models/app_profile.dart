@@ -13,6 +13,8 @@ class AppProfile {
   final AppGenders gender;
   final List<AppGenders> interestedIn;
 
+  String? profilePictureUrl;
+
   AppProfile.create({
     required this.userId,
     String? firstName,

@@ -4,18 +4,19 @@ import 'package:prompts_game/services/apis/profile_api.dart';
 
 class AppPrompt {
   AppPrompt({
-    required this.userId,
+    required this.ownerId,
     required this.prompt,
     required this.madeByUserId,
     this.isPreMade,
   });
 
-  final String userId;
+  final String ownerId;
   final String prompt;
   final String madeByUserId;
   final bool? isPreMade;
 
   DocumentReference? reference;
+  AppProfile? owner;
   AppProfile? madeBy;
 
   String get madeByString {
@@ -31,16 +32,26 @@ class AppPrompt {
     });
   }
 
+  Future<void> fetchOwnerProfile() {
+    return ProfileApi.fetchProfile(ownerId).then((AppProfile? profile) {
+      if (profile == null) {
+        throw 'no profile';
+      }
+      owner = profile;
+    });
+  }
+
   AppPrompt.fromJson(Map<String, dynamic> json)
-      : userId = json['userId'],
+      : ownerId = json['ownerId'] ?? json['userId'],
+        // @deprecated 'userId'
         prompt = json['prompt'],
         madeByUserId = json['madeBy'],
         isPreMade = json['isPreMade'];
 
   Map<String, dynamic> toJson() => {
-    'userId': userId,
-    'prompt': prompt,
-    'madeBy': madeByUserId,
-    'isPreMade': isPreMade,
-  };
+        'ownerId': ownerId,
+        'prompt': prompt,
+        'madeBy': madeByUserId,
+        'isPreMade': isPreMade,
+      };
 }
