@@ -38,24 +38,31 @@ class _PictureCarouselState extends State<PictureCarousel> {
     });
   }
 
+  double get _aspectRatio {
+    switch (widget.type) {
+      case PictureCarouselType.profile:
+        return 1;
+      case PictureCarouselType.home:
+        return 3 / 2;
+    }
+  }
+
   CarouselOptions get _options {
     switch (widget.type) {
       case PictureCarouselType.profile:
         return CarouselOptions(
-          aspectRatio: 1,
+          aspectRatio: _aspectRatio,
           viewportFraction: 1,
           enableInfiniteScroll: false,
           onPageChanged: _onPageChanged,
         );
       case PictureCarouselType.home:
         return CarouselOptions(
-          aspectRatio: 3 / 2,
+          aspectRatio: _aspectRatio,
           viewportFraction: 0.7,
           enableInfiniteScroll: false,
           onPageChanged: _onPageChanged,
         );
-      default:
-        return CarouselOptions();
     }
   }
 
@@ -66,8 +73,14 @@ class _PictureCarouselState extends State<PictureCarousel> {
         CarouselSlider(
             items: widget.pictures.map((url) {
               return CachedNetworkImage(
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    CircularProgressIndicator(value: downloadProgress.progress),
+                progressIndicatorBuilder: (context, url, downloadProgress) {
+                  return AspectRatio(
+                    aspectRatio: _aspectRatio,
+                    child: CircularProgressIndicator(
+                      value: downloadProgress.progress,
+                    ),
+                  );
+                },
                 imageUrl: url,
               );
             }).toList(),
