@@ -8,17 +8,17 @@ import 'package:prompts_game/utils/string_utils.dart';
 
 import '../forms/profile/profile_form.dart';
 
-class CreateProfileScaffold extends StatefulWidget {
-  const CreateProfileScaffold({Key? key, required this.onProfileCreated})
+class ProfileCreateScaffold extends StatefulWidget {
+  const ProfileCreateScaffold({Key? key, required this.onProfileCreated})
       : super(key: key);
 
   final Function(AppProfile appProfile) onProfileCreated;
 
   @override
-  State<StatefulWidget> createState() => _CreateProfileScaffoldState();
+  State<StatefulWidget> createState() => _ProfileCreateScaffoldState();
 }
 
-class _CreateProfileScaffoldState extends State<CreateProfileScaffold> {
+class _ProfileCreateScaffoldState extends State<ProfileCreateScaffold> {
   late AppProfile profile;
 
   bool _isUploading = false;

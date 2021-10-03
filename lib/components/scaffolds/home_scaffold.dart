@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:prompts_game/components/bodies/home_body.dart';
 import 'package:prompts_game/components/bodies/messages_body.dart';
 import 'package:prompts_game/components/bodies/my_profile_body.dart';
+import 'package:prompts_game/components/scaffolds/profile_edit_scaffold.dart';
 import 'package:prompts_game/models/profile_model.dart';
 
 class HomeScaffold extends StatefulWidget {
@@ -18,21 +18,27 @@ class HomeScaffold extends StatefulWidget {
 class _HomeScaffoldState extends State<HomeScaffold> {
   int _selectedIndex = 0;
 
-  late final List<Widget> _bodyOptions;
+  late AppProfile _userProfile;
 
-  final List<PreferredSizeWidget> _appBarOptions = <PreferredSizeWidget>[
-    AppBar(title: const Text('Prompts')),
-    AppBar(title: const Text("Messages")),
-    AppBar(
-      title: const Text('Account'),
-      actions: [
-        IconButton(
-          onPressed: FirebaseAuth.instance.signOut,
-          icon: const FaIcon(FontAwesomeIcons.edit),
-        ),
-      ],
-    ),
-  ];
+  void _setUserProfile(AppProfile userProfile) {
+    setState(() {
+      _userProfile = userProfile;
+    });
+  }
+
+  void _onProfileEditPress() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return ProfileEditScaffold(
+            onProfileEdited: _setUserProfile,
+            userProfile: _userProfile,
+          );
+        },
+      ),
+    );
+  }
 
   void _setSelectedIndex(int index) {
     setState(() {
@@ -43,11 +49,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
   @override
   void initState() {
     super.initState();
-    _bodyOptions = <Widget>[
-      const HomeBody(),
-      const MessagesBody(),
-      MyProfileBody(profile: widget.userProfile),
-    ];
+    _userProfile = widget.userProfile;
   }
 
   Future<bool> _onWillPop() async {
@@ -81,6 +83,26 @@ class _HomeScaffoldState extends State<HomeScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    final _appBarOptions = <PreferredSizeWidget>[
+      AppBar(title: const Text('Prompts')),
+      AppBar(title: const Text("Messages")),
+      AppBar(
+        title: const Text('Account'),
+        actions: [
+          IconButton(
+            onPressed: _onProfileEditPress,
+            icon: const FaIcon(FontAwesomeIcons.edit),
+          ),
+        ],
+      ),
+    ];
+
+    final _bodyOptions = <Widget>[
+      const HomeBody(),
+      const MessagesBody(),
+      MyProfileBody(profile: _userProfile),
+    ];
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(

@@ -9,15 +9,34 @@ class ProfileApi {
         toFirestore: (AppProfile profile, _) => profile.toJson(),
       );
 
+  static Future<DocumentSnapshot?> fetchProfileSnapshot(String userId) {
+    return _profileRef
+        .where('userId', isEqualTo: userId)
+        .get()
+        .then((QuerySnapshot snapshot) {
+      if (snapshot.docs.isEmpty) {
+        return null;
+      }
+      return snapshot.docs.elementAt(0);
+    });
+  }
+
+  static Future<DocumentReference?> fetchProfileRef(String userId) {
+    return fetchProfileSnapshot(userId).then((DocumentSnapshot? snapshot) {
+      if (snapshot == null) {
+        return null;
+      }
+      return snapshot.reference;
+    });
+  }
+
   static Future<AppProfile?> fetchProfile(String userId) {
-    return _profileRef.where('userId', isEqualTo: userId).get().then(
-      (QuerySnapshot snapshot) {
-        if (snapshot.docs.isEmpty) {
-          return null;
-        }
-        return snapshot.docs.elementAt(0).data() as AppProfile;
-      },
-    );
+    return fetchProfileSnapshot(userId).then((DocumentSnapshot? snapshot) {
+      if (snapshot == null) {
+        return null;
+      }
+      return snapshot.data() as AppProfile;
+    });
   }
 
   static Future<AppProfile?> create(AppProfile profile) {
@@ -25,5 +44,14 @@ class ProfileApi {
         .add(profile)
         .then((DocumentReference ref) => ref.get())
         .then((DocumentSnapshot snapshot) => snapshot.data() as AppProfile);
+  }
+
+  static Future<void> edit(AppProfile profile) {
+    return fetchProfileRef(profile.userId).then((DocumentReference? profileRef) {
+      if (profileRef == null) {
+        return null;
+      }
+      return profileRef.update(profile.toJson());
+    });
   }
 }

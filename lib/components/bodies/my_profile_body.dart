@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/loading_body.dart';
+import 'package:prompts_game/components/widgets/picture_carousel.dart';
 import 'package:prompts_game/models/profile_model.dart';
 import 'package:prompts_game/services/apis/storage_api.dart';
 
@@ -17,26 +18,24 @@ class _MyProfileBodyState extends State<MyProfileBody> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        AspectRatio(
-          aspectRatio: 1,
-          child: FutureBuilder(
-            future: StorageApi.fetchPictureUrls(widget.profile.userId),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-              if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              }
+        FutureBuilder(
+          future: StorageApi.fetchPictureUrls(widget.profile.userId),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+            if (snapshot.hasError) {
+              throw snapshot.error!;
+              // return Text(snapshot.error.toString());
+            }
 
-              if (snapshot.connectionState == ConnectionState.done) {
-                final List<String> listResult = snapshot.data!;
-                return Column(
-                  children: listResult.map((e) => Image.network(e)).toList(),
-                );
-              }
+            if (snapshot.connectionState == ConnectionState.done) {
+              return PictureCarousel(pictures: snapshot.data!);
+            }
 
-              return const LoadingBody();
-            },
-          ),
+            return const AspectRatio(
+              aspectRatio: 1,
+              child: LoadingBody(),
+            );
+          },
         ),
         const SizedBox(height: 16),
         Padding(

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:prompts_game/components/scaffolds/create_profile_scaffold.dart';
+import 'package:prompts_game/components/scaffolds/profile_create_scaffold.dart';
 import 'package:prompts_game/components/scaffolds/home_scaffold.dart';
 import 'package:prompts_game/components/scaffolds/loading_scaffold.dart';
 import 'package:prompts_game/models/profile_model.dart';
@@ -40,7 +40,7 @@ class _HasProfileSwitchState extends State<HasProfileSwitch> {
               userProfile: snapshot.data!,
             );
           } else {
-            return CreateProfileScaffold(
+            return ProfileCreateScaffold(
               onProfileCreated: setProfile,
             );
           }
