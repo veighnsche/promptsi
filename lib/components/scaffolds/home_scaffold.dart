@@ -63,7 +63,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Are you sure?'),
-          content: const Text('Do you want to exit Prompts?'),
+          content: const Text('Do you want to exit Promptsi?'),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -84,7 +84,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
   @override
   Widget build(BuildContext context) {
     final _appBarOptions = <PreferredSizeWidget>[
-      AppBar(title: const Text('Promptsy')),
+      AppBar(title: const Text('promptsi')),
       AppBar(title: const Text("Messages")),
       AppBar(
         title: Text(_userProfile.firstName),

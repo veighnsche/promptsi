@@ -24,7 +24,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Prompts game',
+      title: 'Promptsi',
       theme: themeData,
       home: FutureBuilder(
         future: _initialization,

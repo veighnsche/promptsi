@@ -36,7 +36,7 @@ class _SignInScaffoldState extends State<SignInScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign $_inOrUp to Prompts!'),
+        title: Text('Sign $_inOrUp to Promptsi!'),
       ),
       body: Center(
         child: Padding(
