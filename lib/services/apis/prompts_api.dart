@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
+import 'package:prompts_game/services/apis/auth_api.dart';
 
 class PromptsApi {
   static final CollectionReference _promptsRef = FirebaseFirestore.instance
@@ -10,10 +11,12 @@ class PromptsApi {
         toFirestore: (AppPrompt prompt, _) => prompt.toJson(),
       );
 
-  static final CollectionReference _promptsPreMadeRef = FirebaseFirestore.instance
+  static final CollectionReference _promptsPreMadeRef = FirebaseFirestore
+      .instance
       .collection('prompts pre-made')
       .withConverter<AppPrompt>(
-        fromFirestore: (snapshot, _) => AppPrompt.fromJsonPreMade(snapshot.data()!),
+        fromFirestore: (snapshot, _) =>
+            AppPrompt.fromJsonPreMade(snapshot.data()!),
         toFirestore: (AppPrompt prompt, _) => prompt.toJsonPreMade(),
       );
 
@@ -43,7 +46,9 @@ class PromptsApi {
   }
 
   static Future<List<AppPrompt>?> fetchPrompts() {
-    return queryPrompts(_promptsRef);
+    return queryPrompts(
+      _promptsRef.where('ownerId', isNotEqualTo: AuthApi.uid),
+    );
   }
 
   static Future<void> createListFromPreMade(

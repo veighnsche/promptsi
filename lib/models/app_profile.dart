@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/services/apis/prompts_api.dart';
 import 'package:prompts_game/services/apis/storage_api.dart';
@@ -17,19 +18,36 @@ class AppProfile {
   final AppGenders gender;
   final List<AppGenders> interestedIn;
 
+  DocumentReference? reference;
   List<String>? pictures;
   List<AppPrompt>? prompts;
 
+  String? get profilePicture {
+    if (pictures == null) {
+      return null;
+    }
+    return pictures!.isEmpty
+      ? 'https://thesocialstudies.co/wp-content/uploads/2021/06/placeholder-1-1.jpg'
+      : pictures?.elementAt(0);
+  }
+
+  Future<AppProfile> hydrate(DocumentReference ref) async {
+    reference = ref;
+    await fetchPictureUrls();
+    // await fetchPrompts();
+    return this;
+  }
+
   Future<List<String>> fetchPictureUrls() async {
     if (pictures != null) {
-      return Future.value(pictures);
+      return pictures!;
     }
     return pictures = await StorageApi.fetchPictureUrls(userId);
   }
 
   Future<List<AppPrompt>?> fetchPrompts() async {
     if (prompts != null) {
-      return Future.value(prompts);
+      return prompts;
     }
     return prompts = await PromptsApi.fetchUserPrompts(userId);
   }

@@ -27,7 +27,7 @@ class _HomeBodyState extends State<HomeBody> {
 
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data == null || snapshot.data!.isEmpty) {
-            throw 'home body prompts are empty';
+            throw 'home feed prompts are empty';
           }
 
           return SingleChildScrollView(

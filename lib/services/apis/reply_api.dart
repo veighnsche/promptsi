@@ -13,12 +13,13 @@ class ReplyApi {
   static Future<AppReply> create(
     DocumentReference promptRef,
     String replyText,
-  ) {
-    AppReply reply = AppReply.create(replyText);
-    return _repliesRef(promptRef)
-        .add(reply)
-        .then((DocumentReference ref) => ref.get())
-        .then((DocumentSnapshot snapshot) => snapshot.data() as AppReply);
+  ) async {
+    AppReply replyBody = AppReply.create(replyText);
+    DocumentReference ref = await _repliesRef(promptRef).add(replyBody);
+    AppReply reply = await ref.get().then(
+          (DocumentSnapshot snapshot) => snapshot.data() as AppReply,
+        );
+    return reply.hydrate(ref);
   }
 
   static Future<AppReply?> querySingleReply(Query query) {

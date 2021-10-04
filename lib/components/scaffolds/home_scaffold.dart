@@ -84,7 +84,13 @@ class _HomeScaffoldState extends State<HomeScaffold> {
   @override
   Widget build(BuildContext context) {
     final _appBarOptions = <PreferredSizeWidget>[
-      AppBar(title: const Text('promptsi')),
+      AppBar(
+        title: const Text('promptsi'),
+        actions: const [
+          // todo: _onCreatePromptClick
+          
+        ],
+      ),
       AppBar(title: const Text("Messages")),
       AppBar(
         title: Text(_userProfile.firstName),

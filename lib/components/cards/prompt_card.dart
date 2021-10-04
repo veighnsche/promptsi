@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prompts_game/components/forms/prompts/reply_form.dart';
 import 'package:prompts_game/components/scaffolds/profile_scaffold.dart';
 import 'package:prompts_game/components/widgets/picture_carousel.dart';
+import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/app_reply.dart';
@@ -71,15 +72,27 @@ class _PromptCardState extends State<PromptCard> {
                 subtitle: const Text('future location'),
               ),
               ListTile(
+                leading: ProfilePicture(
+                  imageUrl: widget.owner.profilePicture!,
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.share),
+                  onPressed: () {
+                    // todo: reprompt
+                    print('reprompt this!');
+                  },
+                ),
                 title: Text(widget.prompt.prompt),
-                subtitle: Text(widget.prompt.madeByString),
               ),
               myReply == null
                   ? ReplyForm(onReplySend: _addReply)
                   : ListTile(
-                      title: Text(myReply!.reply),
-                      subtitle: const Text('future relative date'),
-                    ),
+                leading: ProfilePicture(
+                  imageUrl: myReply!.owner!.profilePicture!,
+                ),
+                title: Text(myReply!.reply),
+                subtitle: const Text('future relative date'),
+              ),
             ],
           ),
         ),

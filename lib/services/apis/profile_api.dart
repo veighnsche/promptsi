@@ -40,19 +40,17 @@ class ProfileApi {
           return null;
         }
         AppProfile profile = snapshot.data() as AppProfile;
-        if (withPictures) {
-          await profile.fetchPictureUrls();
-        }
-        return profile;
+        return profile.hydrate(snapshot.reference);
       },
     );
   }
 
-  static Future<AppProfile?> create(AppProfile profile) {
-    return _profilesRef
-        .add(profile)
-        .then((DocumentReference ref) => ref.get())
-        .then((DocumentSnapshot snapshot) => snapshot.data() as AppProfile);
+  static Future<AppProfile?> create(AppProfile profileBody) async {
+    DocumentReference ref = await _profilesRef.add(profileBody);
+    AppProfile profile = await ref.get().then(
+          (DocumentSnapshot snapshot) => snapshot.data() as AppProfile,
+    );
+    return profile.hydrate(ref);
   }
 
   static Future<void> edit(AppProfile profile) {

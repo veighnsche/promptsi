@@ -4,11 +4,13 @@ class InputDecorations {
   static InputDecoration outline({
     required String labelText,
     double borderRadius = 10,
+    Widget? prefix,
     Widget? suffixIcon,
   }) {
     return InputDecoration(
       labelText: labelText,
       labelStyle: const TextStyle(color: Colors.grey),
+      prefix: prefix,
       suffixIcon: suffixIcon,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(borderRadius),
