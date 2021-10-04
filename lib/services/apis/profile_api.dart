@@ -31,7 +31,6 @@ class ProfileApi {
   }
 
   static Future<AppProfile?> fetchProfile(String userId) {
-    print(userId);
     return fetchProfileSnapshot(userId).then((DocumentSnapshot? snapshot) {
       if (snapshot == null) {
         return null;

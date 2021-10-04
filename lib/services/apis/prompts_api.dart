@@ -10,6 +10,13 @@ class PromptsApi {
         toFirestore: (AppPrompt prompt, _) => prompt.toJson(),
       );
 
+  static final CollectionReference _promptsPreMadeRef = FirebaseFirestore.instance
+      .collection('prompts pre-made')
+      .withConverter<AppPrompt>(
+        fromFirestore: (snapshot, _) => AppPrompt.fromJsonPreMade(snapshot.data()!),
+        toFirestore: (AppPrompt prompt, _) => prompt.toJsonPreMade(),
+      );
+
   static Future<List<AppPrompt>?> queryPrompts(Query query) {
     return query.get().then(
       (QuerySnapshot snapshot) async {
@@ -21,8 +28,8 @@ class PromptsApi {
           (DocumentSnapshot doc) async {
             AppPrompt prompt = doc.data() as AppPrompt;
             prompt.reference = doc.reference;
-            await prompt.fetchMadeByProfile();
-            await prompt.fetchOwnerProfile();
+            prompt.madeBy = await prompt.fetchMadeByProfile();
+            prompt.owner = await prompt.fetchOwnerProfile();
             return prompt;
           },
         ).toList());
@@ -31,15 +38,15 @@ class PromptsApi {
   }
 
   static Future<List<AppPrompt>?> fetchPreMadePrompts() {
-    return queryPrompts(_promptsRef.where('isPreMade', isEqualTo: true));
+    return queryPrompts(_promptsPreMadeRef);
   }
 
   static Future<List<AppPrompt>?> fetchUserPrompts(String userId) {
-    return queryPrompts(_promptsRef.where('userId', isEqualTo: userId));
+    return queryPrompts(_promptsRef.where('ownerId', isEqualTo: userId));
   }
 
   static Future<List<AppPrompt>?> fetchPrompts() {
-    return queryPrompts(_promptsRef.where('isPreMade', isEqualTo: false));
+    return queryPrompts(_promptsRef);
   }
 
   static Future<void> createListFromPreMade(
@@ -50,7 +57,7 @@ class PromptsApi {
       return createRePrompt(
         profile,
         preMadePrompt.prompt,
-        preMadePrompt.madeByUserId,
+        preMadePrompt.madeById,
       );
     }));
   }
@@ -63,7 +70,7 @@ class PromptsApi {
     AppPrompt prompt = AppPrompt(
       ownerId: profile.userId,
       prompt: promptText,
-      madeByUserId: madeByUserId,
+      madeById: madeByUserId,
     );
 
     return _promptsRef

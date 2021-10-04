@@ -5,15 +5,13 @@ import 'package:prompts_game/services/apis/profile_api.dart';
 class AppPrompt {
   AppPrompt({
     required this.ownerId,
+    required this.madeById,
     required this.prompt,
-    required this.madeByUserId,
-    this.isPreMade,
   });
 
   final String ownerId;
+  final String madeById;
   final String prompt;
-  final String madeByUserId;
-  final bool? isPreMade;
 
   DocumentReference? reference;
   AppProfile? owner;
@@ -23,35 +21,42 @@ class AppPrompt {
     return 'Made by ${madeBy!.firstName}';
   }
 
-  Future<void> fetchMadeByProfile() {
-    return ProfileApi.fetchProfile(madeByUserId).then((AppProfile? profile) {
+  Future<AppProfile?> fetchMadeByProfile() {
+    return ProfileApi.fetchProfile(madeById).then((AppProfile? profile) {
       if (profile == null) {
         throw 'no profile';
       }
-      madeBy = profile;
+      return profile;
     });
   }
 
-  Future<void> fetchOwnerProfile() {
+  Future<AppProfile?> fetchOwnerProfile() {
     return ProfileApi.fetchProfile(ownerId).then((AppProfile? profile) {
       if (profile == null) {
         throw 'no profile';
       }
-      owner = profile;
+      return profile;
     });
   }
 
   AppPrompt.fromJson(Map<String, dynamic> json)
-      : ownerId = json['ownerId'] ?? json['userId'],
-        // @deprecated 'userId'
-        prompt = json['prompt'],
-        madeByUserId = json['madeBy'],
-        isPreMade = json['isPreMade'];
+      : ownerId = json['ownerId'],
+        madeById = json['madeById'],
+        prompt = json['prompt'];
+
+  AppPrompt.fromJsonPreMade(Map<String, dynamic> json)
+      : ownerId = json['madeById'],
+        madeById = json['madeById'],
+        prompt = json['prompt'];
 
   Map<String, dynamic> toJson() => {
         'ownerId': ownerId,
+        'madeById': madeById,
         'prompt': prompt,
-        'madeBy': madeByUserId,
-        'isPreMade': isPreMade,
+      };
+
+  Map<String, dynamic> toJsonPreMade() => {
+        'madeById': madeById,
+        'prompt': prompt,
       };
 }
