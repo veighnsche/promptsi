@@ -88,7 +88,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
         title: const Text('promptsi'),
         actions: const [
           // todo: _onCreatePromptClick
-          
+
         ],
       ),
       AppBar(title: const Text("Messages")),
