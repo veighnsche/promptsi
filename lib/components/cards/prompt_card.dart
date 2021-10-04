@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:prompts_game/components/forms/prompts/reply_form.dart';
 import 'package:prompts_game/components/scaffolds/profile_scaffold.dart';
-import 'package:prompts_game/components/utils/decorations/input_decorations.dart';
 import 'package:prompts_game/components/widgets/picture_carousel.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
+import 'package:prompts_game/models/app_reply.dart';
 
 class PromptCard extends StatefulWidget {
   const PromptCard({
@@ -22,8 +23,7 @@ class PromptCard extends StatefulWidget {
 }
 
 class _PromptCardState extends State<PromptCard> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _reply = TextEditingController();
+  late AppReply? myReply;
 
   void _goToProfile(AppProfile owner) {
     Navigator.push(
@@ -36,6 +36,19 @@ class _PromptCardState extends State<PromptCard> {
         },
       ),
     );
+  }
+
+  void _addReply(String reply) async {
+    AppReply response = await widget.prompt.addReply(reply);
+    setState(() {
+      myReply = response;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    myReply = widget.prompt.myReply;
   }
 
   @override
@@ -61,23 +74,12 @@ class _PromptCardState extends State<PromptCard> {
                 title: Text(widget.prompt.prompt),
                 subtitle: Text(widget.prompt.madeByString),
               ),
-              Form(
-                key: _formKey,
-                child: TextFormField(
-                  controller: _reply,
-                  // validator: _validator,
-                  decoration: InputDecorations.outline(
-                    labelText: 'Reply',
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () {
-                        print('send pressed');
-                      },
+              myReply == null
+                  ? ReplyForm(onReplySend: _addReply)
+                  : ListTile(
+                      title: Text(myReply!.reply),
+                      subtitle: const Text('future relative date'),
                     ),
-                  ),
-                  keyboardType: TextInputType.text,
-                ),
-              )
             ],
           ),
         ),

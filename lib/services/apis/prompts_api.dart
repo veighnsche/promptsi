@@ -25,12 +25,9 @@ class PromptsApi {
         }
 
         return Future.wait(snapshot.docs.map<Future<AppPrompt>>(
-          (DocumentSnapshot doc) async {
+          (DocumentSnapshot doc) {
             AppPrompt prompt = doc.data() as AppPrompt;
-            prompt.reference = doc.reference;
-            await prompt.fetchMadeByProfile();
-            await prompt.fetchOwnerProfile();
-            return prompt;
+            return prompt.hydrate(doc.reference);
           },
         ).toList());
       },

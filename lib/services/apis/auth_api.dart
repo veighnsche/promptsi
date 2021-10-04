@@ -14,6 +14,10 @@ class AuthApi {
     return _auth.currentUser!;
   }
 
+  static String get uid {
+    return currentUser.uid;
+  }
+
   static StreamSubscription isSingedInStream(
     Function(bool isSignedIn) callback,
   ) {
