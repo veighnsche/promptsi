@@ -6,6 +6,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthApi {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  static bool get isSignedIn {
+    return FirebaseAuth.instance.currentUser != null;
+  }
+
   static User get currentUser {
     return _auth.currentUser!;
   }

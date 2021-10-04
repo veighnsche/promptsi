@@ -1,3 +1,5 @@
+import 'package:prompts_game/models/app_prompt.dart';
+import 'package:prompts_game/services/apis/prompts_api.dart';
 import 'package:prompts_game/services/apis/storage_api.dart';
 
 class AppProfile {
@@ -15,10 +17,21 @@ class AppProfile {
   final AppGenders gender;
   final List<AppGenders> interestedIn;
 
-  String? profilePictureUrl;
+  List<String>? pictures;
+  List<AppPrompt>? prompts;
 
-  Future<List<String>> fetchPictures() {
-    return StorageApi.fetchPictureUrls(userId);
+  Future<List<String>> fetchPictureUrls() async {
+    if (pictures != null) {
+      return Future.value(pictures);
+    }
+    return pictures = await StorageApi.fetchPictureUrls(userId);
+  }
+
+  Future<List<AppPrompt>?> fetchPrompts() async {
+    if (prompts != null) {
+      return Future.value(prompts);
+    }
+    return prompts = await PromptsApi.fetchUserPrompts(userId);
   }
 
   AppProfile.create({

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:prompts_game/components/bodies/loading_body.dart';
 import 'package:prompts_game/components/scaffolds/profile_scaffold.dart';
 import 'package:prompts_game/components/utils/decorations/input_decorations.dart';
 import 'package:prompts_game/components/widgets/picture_carousel.dart';
@@ -52,25 +51,7 @@ class _PromptCardState extends State<PromptCard> {
           child: Column(
             children: [
               if (widget.withPictures)
-                FutureBuilder(
-                  future: widget.owner.fetchPictures(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<String>> snapshot) {
-                    if (snapshot.hasError) {
-                      throw snapshot.error!;
-                      // return Text(snapshot.error.toString());
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return PictureCarousel.home(pictures: snapshot.data!);
-                    }
-
-                    return const AspectRatio(
-                      aspectRatio: (3 / 2),
-                      child: LoadingBody(),
-                    );
-                  },
-                ),
+                PictureCarousel.home(pictures: widget.owner.pictures!),
               ListTile(
                 onTap: () => _goToProfile(widget.owner),
                 title: Text('${widget.owner.firstName}, ${widget.owner.age}'),

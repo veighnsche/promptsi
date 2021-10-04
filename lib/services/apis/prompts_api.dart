@@ -28,8 +28,8 @@ class PromptsApi {
           (DocumentSnapshot doc) async {
             AppPrompt prompt = doc.data() as AppPrompt;
             prompt.reference = doc.reference;
-            prompt.madeBy = await prompt.fetchMadeByProfile();
-            prompt.owner = await prompt.fetchOwnerProfile();
+            await prompt.fetchMadeByProfile();
+            await prompt.fetchOwnerProfile();
             return prompt;
           },
         ).toList());

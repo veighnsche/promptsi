@@ -21,8 +21,14 @@ class AppPrompt {
     return 'Made by ${madeBy!.firstName}';
   }
 
-  Future<AppProfile?> fetchMadeByProfile() {
-    return ProfileApi.fetchProfile(madeById).then((AppProfile? profile) {
+  Future<AppProfile?> fetchOwnerProfile() async {
+    if (owner != null) {
+      return Future.value(owner);
+    }
+    return owner = await ProfileApi.fetchProfile(
+      ownerId,
+      withPictures: true,
+    ).then((AppProfile? profile) {
       if (profile == null) {
         throw 'no profile';
       }
@@ -30,13 +36,18 @@ class AppPrompt {
     });
   }
 
-  Future<AppProfile?> fetchOwnerProfile() {
-    return ProfileApi.fetchProfile(ownerId).then((AppProfile? profile) {
-      if (profile == null) {
-        throw 'no profile';
-      }
-      return profile;
-    });
+  Future<AppProfile?> fetchMadeByProfile() async {
+    if (madeBy != null) {
+      return Future.value(madeBy);
+    }
+    return madeBy = await ProfileApi.fetchProfile(madeById).then(
+      (AppProfile? profile) {
+        if (profile == null) {
+          throw 'no profile';
+        }
+        return profile;
+      },
+    );
   }
 
   AppPrompt.fromJson(Map<String, dynamic> json)

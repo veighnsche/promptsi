@@ -5,8 +5,6 @@ import 'package:prompts_game/components/columns/prompts_column.dart';
 import 'package:prompts_game/components/widgets/picture_carousel.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
-import 'package:prompts_game/services/apis/prompts_api.dart';
-import 'package:prompts_game/services/apis/storage_api.dart';
 
 class ProfileBody extends StatefulWidget {
   const ProfileBody({
@@ -53,7 +51,7 @@ class _ProfileBodyState extends State<ProfileBody> {
     return ListView(
       children: [
         FutureBuilder(
-          future: StorageApi.fetchPictureUrls(widget.profile.userId),
+          future: widget.profile.fetchPictureUrls(),
           builder:
               (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
             if (snapshot.hasError) {
@@ -73,7 +71,7 @@ class _ProfileBodyState extends State<ProfileBody> {
         ),
         const SizedBox(height: 16),
         FutureBuilder(
-          future: PromptsApi.fetchUserPrompts(widget.profile.userId),
+          future: widget.profile.fetchPrompts(),
           builder: (
             BuildContext context,
             AsyncSnapshot<List<AppPrompt>?> snapshot,

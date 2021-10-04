@@ -30,13 +30,22 @@ class ProfileApi {
     });
   }
 
-  static Future<AppProfile?> fetchProfile(String userId) {
-    return fetchProfileSnapshot(userId).then((DocumentSnapshot? snapshot) {
-      if (snapshot == null) {
-        return null;
-      }
-      return snapshot.data() as AppProfile;
-    });
+  static Future<AppProfile?> fetchProfile(
+    String userId, {
+    bool withPictures = false,
+  }) {
+    return fetchProfileSnapshot(userId).then(
+      (DocumentSnapshot? snapshot) async {
+        if (snapshot == null) {
+          return null;
+        }
+        AppProfile profile = snapshot.data() as AppProfile;
+        if (withPictures) {
+          await profile.fetchPictureUrls();
+        }
+        return profile;
+      },
+    );
   }
 
   static Future<AppProfile?> create(AppProfile profile) {

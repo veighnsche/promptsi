@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:prompts_game/components/switches/has_profile_switch.dart';
 import 'package:prompts_game/components/scaffolds/sign_in_scaffold.dart';
+import 'package:prompts_game/components/switches/has_profile_switch.dart';
 import 'package:prompts_game/services/apis/auth_api.dart';
 
 class IsSignedInSwitch extends StatefulWidget {
@@ -14,7 +13,7 @@ class IsSignedInSwitch extends StatefulWidget {
 }
 
 class _IsSignedInSwitchState extends State<IsSignedInSwitch> {
-  bool _isSignedIn = FirebaseAuth.instance.currentUser != null;
+  bool _isSignedIn = AuthApi.isSignedIn;
 
   late StreamSubscription _authStateChanges;
 
