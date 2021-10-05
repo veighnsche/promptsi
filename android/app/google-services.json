@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "617544046156",
+    "firebase_url": "https://prompts-game-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "prompts-game",
     "storage_bucket": "prompts-game.appspot.com"
   },

@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/app_prompt.dart';
+import 'package:prompts_game/models/mixins/with_document_reference.dart';
 import 'package:prompts_game/services/apis/prompts_api.dart';
 import 'package:prompts_game/services/apis/storage_api.dart';
 
-class AppProfile {
+class AppProfile with WithDocumentReference {
   AppProfile({
     required this.userId,
     required this.firstName,
@@ -18,38 +18,30 @@ class AppProfile {
   final AppGenders gender;
   final List<AppGenders> interestedIn;
 
-  DocumentReference? reference;
-  List<String>? pictures;
-  List<AppPrompt>? prompts;
+  List<String>? _pictures;
+  List<AppPrompt>? _prompts;
 
-  String? get profilePicture {
-    if (pictures == null) {
-      return null;
+  Future<String> get picture async {
+    if (_pictures == null) {
+      await pictures;
     }
-    return pictures!.isEmpty
-      ? 'https://thesocialstudies.co/wp-content/uploads/2021/06/placeholder-1-1.jpg'
-      : pictures?.elementAt(0);
+    return _pictures!.isEmpty
+        ? 'https://thesocialstudies.co/wp-content/uploads/2021/06/placeholder-1-1.jpg'
+        : _pictures!.elementAt(0);
   }
 
-  Future<AppProfile> hydrate(DocumentReference ref) async {
-    reference = ref;
-    await fetchPictureUrls();
-    // await fetchPrompts();
-    return this;
+  Future<List<String>> get pictures async {
+    if (_pictures != null) {
+      return _pictures!;
+    }
+    return _pictures = await StorageApi.fetchPictureUrls(userId);
   }
 
-  Future<List<String>> fetchPictureUrls() async {
-    if (pictures != null) {
-      return pictures!;
+  Future<List<AppPrompt>> get prompts async {
+    if (_prompts != null) {
+      return _prompts!;
     }
-    return pictures = await StorageApi.fetchPictureUrls(userId);
-  }
-
-  Future<List<AppPrompt>?> fetchPrompts() async {
-    if (prompts != null) {
-      return prompts;
-    }
-    return prompts = await PromptsApi.fetchUserPrompts(userId);
+    return _prompts = await PromptsApi.fetchUserPrompts(userId);
   }
 
   AppProfile.create({

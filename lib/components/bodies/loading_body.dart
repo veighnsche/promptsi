@@ -11,7 +11,11 @@ class _LoadingBodyState extends State<LoadingBody> {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: CircularProgressIndicator(),
+      child: SizedBox(
+        width: 10,
+        height: 10,
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }

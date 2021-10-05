@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/loading_body.dart';
+import 'package:prompts_game/components/cards/prompt_card.dart';
 import 'package:prompts_game/components/columns/my_prompts_column.dart';
 import 'package:prompts_game/components/columns/prompts_column.dart';
 import 'package:prompts_game/components/widgets/picture_carousel.dart';
@@ -41,7 +42,7 @@ class _ProfileBodyState extends State<ProfileBody> {
       case AppProfileType.profile:
         return PromptsColumn(
           prompts: prompts,
-          withPictures: false,
+          promptCardType: PromptCardType.onProfile,
         );
     }
   }
@@ -50,28 +51,10 @@ class _ProfileBodyState extends State<ProfileBody> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        FutureBuilder(
-          future: widget.profile.fetchPictureUrls(),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-            if (snapshot.hasError) {
-              throw snapshot.error!;
-              // return Text(snapshot.error.toString());
-            }
-
-            if (snapshot.connectionState == ConnectionState.done) {
-              return PictureCarousel.profile(pictures: snapshot.data!);
-            }
-
-            return const AspectRatio(
-              aspectRatio: 1,
-              child: LoadingBody(),
-            );
-          },
-        ),
+        PictureCarousel.profile(asyncPictures: widget.profile.pictures),
         const SizedBox(height: 16),
         FutureBuilder(
-          future: widget.profile.fetchPrompts(),
+          future: widget.profile.prompts,
           builder: (
             BuildContext context,
             AsyncSnapshot<List<AppPrompt>?> snapshot,

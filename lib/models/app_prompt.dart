@@ -1,61 +1,31 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_reply.dart';
+import 'package:prompts_game/models/mixins/with_document_reference.dart';
+import 'package:prompts_game/models/mixins/with_owner.dart';
 import 'package:prompts_game/services/apis/profile_api.dart';
 import 'package:prompts_game/services/apis/reply_api.dart';
 
-class AppPrompt {
+class AppPrompt with WithDocumentReference, WithOwner {
   AppPrompt({
     required this.ownerId,
     required this.madeById,
     required this.prompt,
   });
 
+  @override
   final String ownerId;
   final String madeById;
   final String prompt;
 
-  DocumentReference? reference;
-  AppProfile? owner;
-  AppProfile? madeBy;
-  AppReply? myReply;
-  List<AppReply>? replies;
+  AppProfile? _madeBy;
+  AppReply? _myReply;
+  List<AppReply>? _replies;
 
-  @override
-  String toString() {
-    return reference!.id;
-  }
-
-  String get madeByString {
-    return 'Made by ${madeBy!.firstName}';
-  }
-
-  Future<AppPrompt> hydrate(DocumentReference ref) async {
-    reference = ref;
-    await fetchMadeByProfile();
-    await fetchOwnerProfile();
-    await fetchMyReply();
-    return this;
-  }
-
-  Future<AppProfile?> fetchOwnerProfile() async {
-    if (owner != null) {
-      return owner;
+  Future<AppProfile> get madeBy async {
+    if (_madeBy != null) {
+      return _madeBy!;
     }
-    return owner = await ProfileApi.fetchProfile(ownerId, withPictures: true)
-        .then((AppProfile? profile) {
-      if (profile == null) {
-        throw 'no owner profile';
-      }
-      return profile;
-    });
-  }
-
-  Future<AppProfile?> fetchMadeByProfile() async {
-    if (madeBy != null) {
-      return madeBy;
-    }
-    return madeBy = await ProfileApi.fetchProfile(madeById).then(
+    return _madeBy = await ProfileApi.fetchProfile(madeById).then<AppProfile>(
       (AppProfile? profile) {
         if (profile == null) {
           throw 'no made by profile';
@@ -65,15 +35,16 @@ class AppPrompt {
     );
   }
 
-  Future<AppReply?> fetchMyReply() async {
-    if (myReply != null) {
-      return myReply;
+  /// can be null, if user has never replied to this prompt
+  Future<AppReply?> get myReply async {
+    if (_myReply != null) {
+      return _myReply;
     }
-    return myReply = await ReplyApi.fetchMyReply(reference!);
+    return _myReply = await ReplyApi.fetchMyReply(reference);
   }
 
   Future<AppReply> addReply(String reply) async {
-    return myReply = await ReplyApi.create(reference!, reply);
+    return _myReply = await ReplyApi.create(reference, reply);
   }
 
   AppPrompt.fromJson(Map<String, dynamic> json)

@@ -27,7 +27,7 @@ class _HasProfileSwitchState extends State<HasProfileSwitch> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       initialData: _profile,
-      future: ProfileApi.fetchProfile(_user!.uid, withPictures: true),
+      future: ProfileApi.fetchProfile(_user!.uid),
       builder: (BuildContext context, AsyncSnapshot<AppProfile?> snapshot) {
         if (snapshot.hasError) {
           throw snapshot.error!;

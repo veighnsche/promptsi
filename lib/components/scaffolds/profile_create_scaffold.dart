@@ -37,9 +37,9 @@ class _ProfileCreateScaffoldState extends State<ProfileCreateScaffold> {
       userId: user.uid,
       firstName: StringUtils.getFirstWord(user.displayName),
       // DEV DEV
-      age: '31',
-      gender: AppGenders.man,
-      interestedIn: [AppGenders.woman, AppGenders.neutral],
+      // age: '31',
+      // gender: AppGenders.man,
+      // interestedIn: [AppGenders.woman, AppGenders.neutral],
       // DEV DEV
     );
   }

@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:prompts_game/components/widgets/app_future_builder.dart';
 
 class ProfilePicture extends StatelessWidget {
   const ProfilePicture({
     Key? key,
-    required this.imageUrl,
+    required this.asyncPicture,
   }) : super(key: key);
 
-  final String imageUrl;
+  final Future<String> asyncPicture;
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +16,24 @@ class ProfilePicture extends StatelessWidget {
       scale: 0.6,
       child: AspectRatio(
         aspectRatio: 1,
-        child: CachedNetworkImage(
-          imageUrl: imageUrl,
-          imageBuilder: (context, imageProvider) {
-            return Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                ),
-              ),
+        child: AppFutureBuilder(
+          future: asyncPicture,
+          builder: (context, String picture) {
+            return CachedNetworkImage(
+              imageUrl: picture,
+              imageBuilder: (context, imageProvider) {
+                return Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
             );
-          },
+          }
         ),
       ),
     );

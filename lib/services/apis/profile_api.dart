@@ -30,17 +30,15 @@ class ProfileApi {
     });
   }
 
-  static Future<AppProfile?> fetchProfile(
-    String userId, {
-    bool withPictures = false,
-  }) {
+  static Future<AppProfile?> fetchProfile(String userId) {
     return fetchProfileSnapshot(userId).then(
       (DocumentSnapshot? snapshot) async {
         if (snapshot == null) {
           return null;
         }
         AppProfile profile = snapshot.data() as AppProfile;
-        return profile.hydrate(snapshot.reference);
+        profile.reference = snapshot.reference;
+        return profile;
       },
     );
   }
@@ -49,8 +47,9 @@ class ProfileApi {
     DocumentReference ref = await _profilesRef.add(profileBody);
     AppProfile profile = await ref.get().then(
           (DocumentSnapshot snapshot) => snapshot.data() as AppProfile,
-    );
-    return profile.hydrate(ref);
+        );
+    profile.reference = ref;
+    return profile;
   }
 
   static Future<void> edit(AppProfile profile) {

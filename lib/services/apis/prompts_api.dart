@@ -27,12 +27,13 @@ class PromptsApi {
           return null;
         }
 
-        return Future.wait(snapshot.docs.map<Future<AppPrompt>>(
+        return snapshot.docs.map(
           (DocumentSnapshot doc) {
             AppPrompt prompt = doc.data() as AppPrompt;
-            return prompt.hydrate(doc.reference);
+            prompt.reference = doc.reference;
+            return prompt;
           },
-        ).toList());
+        ).toList();
       },
     );
   }
@@ -41,8 +42,13 @@ class PromptsApi {
     return queryPrompts(_promptsPreMadeRef);
   }
 
-  static Future<List<AppPrompt>?> fetchUserPrompts(String userId) {
-    return queryPrompts(_promptsRef.where('ownerId', isEqualTo: userId));
+  static Future<List<AppPrompt>> fetchUserPrompts(String userId) {
+    return queryPrompts(_promptsRef.where('ownerId', isEqualTo: userId)).then((List<AppPrompt>? prompts) {
+      if (prompts == null) {
+        throw 'user doesn\'t have any prompts';
+      }
+      return prompts;
+    });
   }
 
   static Future<List<AppPrompt>?> fetchPrompts() {

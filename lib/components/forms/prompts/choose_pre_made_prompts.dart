@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/scaffolds/loading_scaffold.dart';
+import 'package:prompts_game/components/widgets/app_future_builder.dart';
+import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/services/apis/prompts_api.dart';
 
@@ -66,13 +68,10 @@ class _FutureBuilderDoneState extends State<_FutureBuilderDone> {
   }
 
   bool _inSelectedPrompt(AppPrompt prompt) {
-    if (prompt.reference == null) {
-      throw 'no reference in prompt model "${prompt.prompt}"';
-    }
 
     return selectedPrompts
-        .map((s) => s.reference!.id)
-        .contains(prompt.reference!.id);
+        .map((s) => s.reference.id)
+        .contains(prompt.reference.id);
   }
 
   Function() _onPreMadePromptTap(AppPrompt prompt) {
@@ -80,7 +79,7 @@ class _FutureBuilderDoneState extends State<_FutureBuilderDone> {
       setState(() {
         if (_inSelectedPrompt(prompt)) {
           selectedPrompts.removeWhere(
-              (element) => element.reference!.id == prompt.reference!.id);
+              (element) => element.reference.id == prompt.reference.id);
         } else {
           selectedPrompts.add(prompt);
         }
@@ -120,10 +119,22 @@ class _FutureBuilderDoneState extends State<_FutureBuilderDone> {
                 onTap: _onPreMadePromptTap(prompt),
                 child: SizedBox(
                   width: 300,
-                  child: ListTile(
-                    leading: _leadingCheckBox(prompt),
-                    title: Text(prompt.prompt),
-                    subtitle: Text(prompt.madeByString),
+                  child: AppFutureBuilder(
+                    future: prompt.owner,
+                    builder: (BuildContext context, AppProfile? owner) {
+                      return ListTile(
+                        leading: _leadingCheckBox(prompt),
+                        title: Text(prompt.prompt),
+                        subtitle: RichText(
+                          text: TextSpan(
+                            children: [
+                              const TextSpan(text: 'Made by'),
+                              TextSpan(text: owner!.firstName),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),

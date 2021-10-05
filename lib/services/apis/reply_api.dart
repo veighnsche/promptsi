@@ -19,7 +19,8 @@ class ReplyApi {
     AppReply reply = await ref.get().then(
           (DocumentSnapshot snapshot) => snapshot.data() as AppReply,
         );
-    return reply.hydrate(ref);
+    reply.reference = ref;
+    return reply;
   }
 
   static Future<AppReply?> querySingleReply(Query query) {
@@ -30,7 +31,8 @@ class ReplyApi {
 
       DocumentSnapshot doc = snapshot.docs.elementAt(0);
       AppReply reply = doc.data() as AppReply;
-      return reply.hydrate(doc.reference);
+      reply.reference = doc.reference;
+      return reply;
     });
   }
 
