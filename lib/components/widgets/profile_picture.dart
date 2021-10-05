@@ -13,7 +13,7 @@ class ProfilePicture extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Transform.scale(
-      scale: 0.6,
+      scale: 3 / 4,
       child: AspectRatio(
         aspectRatio: 1,
         child: AppFutureBuilder(
@@ -33,7 +33,7 @@ class ProfilePicture extends StatelessWidget {
                 );
               },
             );
-          }
+          },
         ),
       ),
     );

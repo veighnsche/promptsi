@@ -16,20 +16,25 @@ class _ReplyFormState extends State<ReplyForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: TextFormField(
-        controller: _reply,
-        // validator: _validator,
-        decoration: InputDecorations.outline(
-          labelText: 'Reply',
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () => widget.onReplySend(_reply.text),
+    return Column(
+      children: [
+        const SizedBox(height: 8),
+        Form(
+          key: _formKey,
+          child: TextFormField(
+            controller: _reply,
+            // validator: _validator,
+            decoration: InputDecorations.outline(
+              labelText: 'Reply',
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.send),
+                onPressed: () => widget.onReplySend(_reply.text),
+              ),
+            ),
+            keyboardType: TextInputType.text,
           ),
         ),
-        keyboardType: TextInputType.text,
-      ),
+      ],
     );
   }
 }

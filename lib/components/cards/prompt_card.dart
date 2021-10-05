@@ -1,3 +1,5 @@
+import 'package:bubble/bubble.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/forms/replies/reply_form.dart';
 import 'package:prompts_game/components/scaffolds/profile_scaffold.dart';
@@ -68,25 +70,60 @@ class _PromptCardState extends State<PromptCard> {
               builder: (context, AppProfile owner) {
                 return Column(
                   children: [
-                    if (widget.type == PromptCardType.onFeed)
+                    if (widget.type == PromptCardType.onFeed) ...[
                       PictureCarousel.home(asyncPictures: owner.pictures),
-                    ListTile(
-                      onTap: () => _goToProfile(owner),
-                      title: Text('${owner.firstName}, ${owner.age}'),
-                      subtitle: const Text('future location'),
-                    ),
-                    ListTile(
-                      leading: ProfilePicture(
-                        asyncPicture: owner.picture,
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.share),
-                        onPressed: () {
-                          // todo: reprompt
-                          print('reprompt this!');
-                        },
-                      ),
-                      title: Text(widget.prompt.prompt),
+                      const SizedBox(height: 16),
+                    ],
+                    Row(
+                      children: [
+                        const SizedBox(width: 16),
+                        Flexible(
+                          child: Bubble(
+                            nip: BubbleNip.leftTop,
+                            color: Colors.white38,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${owner.firstName}, ${owner.age}',
+                                  textAlign: TextAlign.start,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Text(
+                                  'future location',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  widget.prompt.prompt,
+                                  textAlign: TextAlign.start,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Transform.scale(
+                          scale: 3 / 4,
+                          child: IconButton(
+                            icon: const Icon(Icons.share),
+                            onPressed: () {
+                              // todo: reprompt
+                              print('reprompt this!');
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 );
@@ -99,8 +136,21 @@ class _PromptCardState extends State<PromptCard> {
                   return ReplyForm(onReplySend: _addReply);
                 }
                 return ListTile(
-                  title: Text(myReply.reply),
-                  leading: AppFutureBuilder(
+                  title: Bubble(
+                    alignment: Alignment.centerRight,
+                    nip: BubbleNip.rightBottom,
+                    color: Colors.blue,
+                    child: Text(
+                      myReply.reply,
+                      textAlign: TextAlign.end,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  trailing: AppFutureBuilder(
                     future: myReply.owner,
                     builder: (context, AppProfile owner) {
                       return ProfilePicture(
