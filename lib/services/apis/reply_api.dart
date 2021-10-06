@@ -16,29 +16,47 @@ class ReplyApi {
   ) async {
     AppReply replyBody = AppReply.create(replyText);
     DocumentReference ref = await _repliesRef(promptRef).add(replyBody);
-    AppReply reply = await ref.get().then(
-          (DocumentSnapshot snapshot) => snapshot.data() as AppReply,
-        );
-    reply.reference = ref;
-    return reply;
+    return ref.get().then(
+      (DocumentSnapshot snapshot) {
+        return snapshot.data() as AppReply..reference = ref;
+      },
+    );
   }
 
-  static Future<AppReply?> querySingleReply(Query query) {
+  static Future<List<AppReply>?> _queryReplies(Query query) {
     return query.get().then((QuerySnapshot snapshot) async {
       if (snapshot.docs.isEmpty) {
+        /// could be nullable, because prompt doesn't have any replies
+        return null;
+      }
+
+      return snapshot.docs.map(
+        (DocumentSnapshot doc) {
+          return doc.data() as AppReply..reference = doc.reference;
+        },
+      ).toList();
+    });
+  }
+
+  static Future<AppReply?> _queryReply(Query query) {
+    return query.get().then((QuerySnapshot snapshot) async {
+      if (snapshot.docs.isEmpty) {
+        /// could be nullable, because user hasn't replied to a prompt
         return null;
       }
 
       DocumentSnapshot doc = snapshot.docs.elementAt(0);
-      AppReply reply = doc.data() as AppReply;
-      reply.reference = doc.reference;
-      return reply;
+      return doc.data() as AppReply..reference = doc.reference;
     });
   }
 
   static Future<AppReply?> fetchMyReply(DocumentReference promptRef) {
-    return querySingleReply(
+    return _queryReply(
       _repliesRef(promptRef).where('ownerId', isEqualTo: AuthApi.uid),
     );
+  }
+
+  static Future<List<AppReply>?> fetchReplies(DocumentReference promptRef) {
+    return _queryReplies(_repliesRef(promptRef));
   }
 }

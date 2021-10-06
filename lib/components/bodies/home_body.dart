@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/loading_body.dart';
-import 'package:prompts_game/components/cards/prompt_card.dart';
-import 'package:prompts_game/components/columns/prompts_column.dart';
+import 'package:prompts_game/components/cards/prompt_replier_card.dart';
+import 'package:prompts_game/components/columns/prompts_replier_column.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/services/apis/prompts_api.dart';
 
@@ -32,9 +32,9 @@ class _HomeBodyState extends State<HomeBody> {
           }
 
           return SingleChildScrollView(
-            child: PromptsColumn(
+            child: PromptsReplierColumn(
               prompts: snapshot.data!,
-              promptCardType: PromptCardType.onFeed,
+              promptCardType: PromptReplierCardType.onFeed,
             ),
           );
         }

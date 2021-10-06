@@ -5,10 +5,12 @@ class AppFutureBuilder<T> extends StatelessWidget {
     Key? key,
     required this.future,
     required this.builder,
+    this.initialData,
     this.loader = const SizedBox.shrink(),
   }) : super(key: key);
 
   final Future<T> future;
+  final T? initialData;
   final Widget Function(BuildContext, T) builder;
   final Widget loader;
 
@@ -16,6 +18,7 @@ class AppFutureBuilder<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: future,
+      initialData: initialData,
       builder: (context, AsyncSnapshot<T> snapshot) {
         if (snapshot.hasError) {
           throw snapshot.error.toString();
@@ -25,7 +28,7 @@ class AppFutureBuilder<T> extends StatelessWidget {
           return builder(context, snapshot.data as T);
         }
 
-        return const SizedBox.shrink();
+        return loader;
       },
     );
   }

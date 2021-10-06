@@ -5,6 +5,14 @@ mixin WithOwner {
   String get ownerId;
   AppProfile? _owner;
 
+  Future<String> get ownerPicture {
+    return owner.then((AppProfile profile) => profile.picture);
+  }
+
+  Future<List<String>> get ownerPictures {
+    return owner.then((AppProfile profile) => profile.pictures);
+  }
+
   Future<AppProfile> get owner async {
     if (_owner != null) {
       return _owner!;

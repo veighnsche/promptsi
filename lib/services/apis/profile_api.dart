@@ -9,36 +9,21 @@ class ProfileApi {
         toFirestore: (AppProfile profile, _) => profile.toJson(),
       );
 
-  static Future<DocumentSnapshot?> fetchProfileSnapshot(String userId) {
+  static Future<DocumentSnapshot> fetchProfileSnapshot(String userId) {
     return _profilesRef.where('userId', isEqualTo: userId).get().then(
       (QuerySnapshot snapshot) {
         if (snapshot.docs.isEmpty) {
-          // throw 'profile snapshot docs is empty userId: $userId';
-          return null;
+          throw 'profile snapshot docs is empty userId: $userId';
         }
         return snapshot.docs.elementAt(0);
       },
     );
   }
 
-  static Future<DocumentReference?> fetchProfileRef(String userId) {
-    return fetchProfileSnapshot(userId).then((DocumentSnapshot? snapshot) {
-      if (snapshot == null) {
-        return null;
-      }
-      return snapshot.reference;
-    });
-  }
-
-  static Future<AppProfile?> fetchProfile(String userId) {
+  static Future<AppProfile> fetchProfile(String userId) {
     return fetchProfileSnapshot(userId).then(
-      (DocumentSnapshot? snapshot) async {
-        if (snapshot == null) {
-          return null;
-        }
-        AppProfile profile = snapshot.data() as AppProfile;
-        profile.reference = snapshot.reference;
-        return profile;
+      (DocumentSnapshot snapshot) async {
+        return snapshot.data() as AppProfile..reference = snapshot.reference;
       },
     );
   }
@@ -48,18 +33,10 @@ class ProfileApi {
     AppProfile profile = await ref.get().then(
           (DocumentSnapshot snapshot) => snapshot.data() as AppProfile,
         );
-    profile.reference = ref;
-    return profile;
+    return profile..reference = ref;
   }
 
   static Future<void> edit(AppProfile profile) {
-    return fetchProfileRef(profile.userId).then(
-      (DocumentReference? profileRef) {
-        if (profileRef == null) {
-          return null;
-        }
-        return profileRef.update(profile.toJson());
-      },
-    );
+    return profile.reference.update(profile.toJson());
   }
 }

@@ -5,10 +5,10 @@ import 'package:prompts_game/components/widgets/app_future_builder.dart';
 class ProfilePicture extends StatelessWidget {
   const ProfilePicture({
     Key? key,
-    required this.asyncPicture,
+    required this.pictureAsync,
   }) : super(key: key);
 
-  final Future<String> asyncPicture;
+  final Future<String> pictureAsync;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class ProfilePicture extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 1,
         child: AppFutureBuilder(
-          future: asyncPicture,
+          future: pictureAsync,
           builder: (context, String picture) {
             return CachedNetworkImage(
               imageUrl: picture,

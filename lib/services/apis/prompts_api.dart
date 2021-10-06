@@ -20,38 +20,38 @@ class PromptsApi {
         toFirestore: (AppPrompt prompt, _) => prompt.toJsonPreMade(),
       );
 
-  static Future<List<AppPrompt>?> queryPrompts(Query query) {
+  static Future<List<AppPrompt>> queryPrompts(Query query) {
     return query.get().then(
       (QuerySnapshot snapshot) async {
         if (snapshot.docs.isEmpty) {
-          return null;
+          throw 'no prompts found: $query';
         }
 
         return snapshot.docs.map(
           (DocumentSnapshot doc) {
-            AppPrompt prompt = doc.data() as AppPrompt;
-            prompt.reference = doc.reference;
-            return prompt;
+            return doc.data() as AppPrompt..reference = doc.reference;
           },
         ).toList();
       },
     );
   }
 
-  static Future<List<AppPrompt>?> fetchPreMadePrompts() {
+  static Future<List<AppPrompt>> fetchPreMadePrompts() {
     return queryPrompts(_promptsPreMadeRef);
   }
 
   static Future<List<AppPrompt>> fetchUserPrompts(String userId) {
-    return queryPrompts(_promptsRef.where('ownerId', isEqualTo: userId)).then((List<AppPrompt>? prompts) {
-      if (prompts == null) {
-        throw 'user doesn\'t have any prompts';
-      }
-      return prompts;
-    });
+    return queryPrompts(_promptsRef.where('ownerId', isEqualTo: userId)).then(
+      (List<AppPrompt>? prompts) {
+        if (prompts == null) {
+          throw 'user doesn\'t have any prompts';
+        }
+        return prompts;
+      },
+    );
   }
 
-  static Future<List<AppPrompt>?> fetchPrompts() {
+  static Future<List<AppPrompt>> fetchPrompts() {
     return queryPrompts(
       _promptsRef.where('ownerId', isNotEqualTo: AuthApi.uid),
     );
@@ -70,20 +70,20 @@ class PromptsApi {
     }));
   }
 
-  static Future<AppPrompt?> createRePrompt(
+  static Future<AppPrompt> createRePrompt(
     AppProfile profile,
     String promptText,
     String madeByUserId,
-  ) {
+  ) async {
     AppPrompt prompt = AppPrompt(
       ownerId: profile.userId,
       prompt: promptText,
       madeById: madeByUserId,
     );
 
-    return _promptsRef
-        .add(prompt)
-        .then((DocumentReference ref) => ref.get())
-        .then((DocumentSnapshot snapshot) => snapshot.data() as AppPrompt);
+    DocumentReference reference = await _promptsRef.add(prompt);
+    return reference.get().then((DocumentSnapshot snapshot) {
+      return snapshot.data() as AppPrompt..reference = reference;
+    });
   }
 }

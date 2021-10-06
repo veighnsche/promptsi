@@ -7,23 +7,23 @@ import 'package:prompts_game/components/widgets/app_future_builder.dart';
 class PictureCarousel extends StatefulWidget {
   const PictureCarousel({
     Key? key,
-    required this.asyncPictures,
+    required this.picturesAsync,
     required this.type,
   }) : super(key: key);
 
   const PictureCarousel.profile({
     Key? key,
-    required this.asyncPictures,
+    required this.picturesAsync,
     this.type = PictureCarouselType.onProfile,
   }) : super(key: key);
 
   const PictureCarousel.home({
     Key? key,
-    required this.asyncPictures,
+    required this.picturesAsync,
     this.type = PictureCarouselType.onFeed,
   }) : super(key: key);
 
-  final Future<List<String>> asyncPictures;
+  final Future<List<String>> picturesAsync;
   final PictureCarouselType type;
 
   @override
@@ -88,7 +88,7 @@ class _PictureCarouselState extends State<PictureCarousel> {
   Widget build(BuildContext context) {
     return _wrapper(
       child: AppFutureBuilder(
-        future: widget.asyncPictures,
+        future: widget.picturesAsync,
         builder: (context, List<String> pictures) {
           return Column(
             children: [

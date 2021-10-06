@@ -35,7 +35,7 @@ class AppPrompt with WithDocumentReference, WithOwner {
     );
   }
 
-  /// can be null, if user has never replied to this prompt
+  /// can be null if user has never replied to this prompt
   Future<AppReply?> get myReply async {
     if (_myReply != null) {
       return _myReply;
@@ -45,6 +45,15 @@ class AppPrompt with WithDocumentReference, WithOwner {
 
   Future<AppReply> addReply(String reply) async {
     return _myReply = await ReplyApi.create(reference, reply);
+  }
+
+
+  /// can be null, if there are no replies
+  Future<List<AppReply>?> get replies async {
+    if (_replies != null) {
+      return _replies!;
+    }
+    return _replies = await ReplyApi.fetchReplies(reference);
   }
 
   AppPrompt.fromJson(Map<String, dynamic> json)

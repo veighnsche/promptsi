@@ -112,6 +112,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        // backgroundColor: Colors.blueGrey,
         appBar: _appBarOptions.elementAt(_selectedIndex),
         body: _bodyOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
