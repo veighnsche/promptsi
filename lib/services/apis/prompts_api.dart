@@ -57,6 +57,37 @@ class PromptsApi {
     );
   }
 
+  static Future<AppPrompt> createPrompt(
+    AppProfile profile,
+    String promptText,
+    String? madeById,
+  ) async {
+    AppPrompt prompt = AppPrompt(
+      ownerId: profile.userId,
+      madeById: madeById ?? profile.userId,
+      prompt: promptText,
+    );
+
+    DocumentReference reference = await _promptsRef.add(prompt);
+    return reference.get().then((DocumentSnapshot snapshot) {
+      return snapshot.data() as AppPrompt..reference = reference;
+    });
+  }
+
+  static Future<AppPrompt> Function(String) createPromptC(AppProfile profile) {
+    return (String promptText) {
+      return createPrompt(profile, promptText, null);
+    };
+  }
+
+  static Future<AppPrompt> createRePrompt(
+    AppProfile profile,
+    String promptText,
+    String madeById,
+  ) async {
+    return createPrompt(profile, promptText, madeById);
+  }
+
   static Future<void> createListFromPreMade(
     AppProfile profile,
     List<AppPrompt> preMadePrompts,
@@ -68,22 +99,5 @@ class PromptsApi {
         preMadePrompt.madeById,
       );
     }));
-  }
-
-  static Future<AppPrompt> createRePrompt(
-    AppProfile profile,
-    String promptText,
-    String madeByUserId,
-  ) async {
-    AppPrompt prompt = AppPrompt(
-      ownerId: profile.userId,
-      prompt: promptText,
-      madeById: madeByUserId,
-    );
-
-    DocumentReference reference = await _promptsRef.add(prompt);
-    return reference.get().then((DocumentSnapshot snapshot) {
-      return snapshot.data() as AppPrompt..reference = reference;
-    });
   }
 }

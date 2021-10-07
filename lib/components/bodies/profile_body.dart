@@ -7,7 +7,7 @@ import 'package:prompts_game/components/widgets/picture_carousel.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 
-class ProfileBody extends StatefulWidget {
+class ProfileBody extends StatelessWidget {
   const ProfileBody({
     Key? key,
     required this.profile,
@@ -29,15 +29,13 @@ class ProfileBody extends StatefulWidget {
   final AppProfile profile;
   final AppProfileType type;
 
-  @override
-  State<StatefulWidget> createState() => _ProfileBodyState();
-}
-
-class _ProfileBodyState extends State<ProfileBody> {
   Widget _promptsColumn(List<AppPrompt> prompts) {
-    switch (widget.type) {
+    switch (type) {
       case AppProfileType.currentUser:
-        return PromptsPosterColumn(prompts: prompts);
+        return PromptsPosterColumn(
+          profile: profile,
+          prompts: prompts,
+        );
 
       case AppProfileType.profile:
         return PromptsReplierColumn(
@@ -51,10 +49,10 @@ class _ProfileBodyState extends State<ProfileBody> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        PictureCarousel.profile(picturesAsync: widget.profile.pictures),
+        PictureCarousel.profile(picturesAsync: profile.pictures),
         const SizedBox(height: 16),
         FutureBuilder(
-          future: widget.profile.prompts,
+          future: profile.prompts,
           builder: (
             BuildContext context,
             AsyncSnapshot<List<AppPrompt>?> snapshot,

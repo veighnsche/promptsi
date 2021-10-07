@@ -62,23 +62,28 @@ class _PromptPosterCardState extends State<PromptPosterCard> {
               children: replies.map((AppReply reply) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 16),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        height: 65,
-                        width: 65,
-                        child: ProfilePicture(
-                          pictureAsync: reply.ownerPicture,
+                  child: GestureDetector(
+                    onTap: () {
+                      print('normal tap');
+                    },
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          height: 65,
+                          width: 65,
+                          child: ProfilePicture(
+                            pictureAsync: reply.ownerPicture,
+                          ),
                         ),
-                      ),
-                      Flexible(
-                        child: BubbleOtherUser(
-                          text: reply.reply,
-                          profileAsync: reply.owner,
+                        Flexible(
+                          child: BubbleOtherUser(
+                            text: reply.reply,
+                            profileAsync: reply.owner,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                    ],
+                        const SizedBox(width: 16),
+                      ],
+                    ),
                   ),
                 );
               }).toList(),
