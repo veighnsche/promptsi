@@ -4,13 +4,11 @@ import 'package:prompts_game/components/cards/prompt_replier_card.dart';
 import 'package:prompts_game/components/columns/prompts_poster_column.dart';
 import 'package:prompts_game/components/columns/prompts_replier_column.dart';
 import 'package:prompts_game/components/forms/prompts/prompt_form.dart';
-import 'package:prompts_game/components/forms/replies/reply_form.dart';
 import 'package:prompts_game/components/widgets/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/carousel_pictures.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/services/apis/prompts_api.dart';
-import 'package:prompts_game/services/apis/reply_api.dart';
 
 class ProfileBody extends StatelessWidget {
   const ProfileBody({
@@ -52,12 +50,12 @@ class ProfileBody extends StatelessWidget {
     return ListView(
       reverse: true,
       children: [
+        CarouselPictures(picturesAsync: profile.pictures),
         if (type == ProfileBodyType.onFeed)
           ListTile(
             title: Text('${profile.firstName}, ${profile.age}'),
             subtitle: const Text('0 Km away (hardcoded)'),
           ),
-        CarouselPictures(picturesAsync: profile.pictures),
         if (type == ProfileBodyType.onMyProfile)
           Padding(
             padding: const EdgeInsets.all(8),

@@ -10,11 +10,17 @@ class ReplyApi {
   final DocumentReference promptRef;
 
   Future<List<AppReply>?> get replies {
-    return _repliesRef.get().then(_handleSnapshot);
+    return _repliesRef
+        .orderBy('createdOn')
+        .get()
+        .then(_handleSnapshot);
   }
 
   Stream<List<AppReply>?> get replyStream {
-    return _repliesRef.snapshots().map(_handleSnapshot);
+    return _repliesRef
+        .orderBy('createdOn')
+        .snapshots()
+        .map(_handleSnapshot);
   }
 
   CollectionReference get _repliesRef {

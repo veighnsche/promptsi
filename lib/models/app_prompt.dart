@@ -65,5 +65,6 @@ class AppPrompt with WithDocumentReference {
   Map<String, dynamic> toJson() => {
         'madeById': madeById,
         'prompt': prompt,
+        'createdOn': DateTime.now().millisecondsSinceEpoch,
       };
 }

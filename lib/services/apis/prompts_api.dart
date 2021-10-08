@@ -32,12 +32,18 @@ class PromptsApi {
 
   Future<List<AppPrompt>?> get prompts {
     /// can be nullable if the user doesn't have any prompts
-    return _promptsRef.get().then(_handleQuerySnapshot);
+    return _promptsRef
+        .orderBy('createdOn')
+        .get()
+        .then(_handleQuerySnapshot);
   }
 
   Stream<List<AppPrompt>?> get promptStream {
     /// can be nullable if the user doesn't have any prompts
-    return _promptsRef.snapshots().map(_handleQuerySnapshot);
+    return _promptsRef
+        .orderBy('createdOn')
+        .snapshots()
+        .map(_handleQuerySnapshot);
   }
 
   Future<AppPrompt> createPrompt(String promptText, {String? madeById}) {

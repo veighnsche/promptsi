@@ -18,5 +18,6 @@ class AppReply with WithDocumentReference, WithOwner {
   Map<String, dynamic> toJson() => {
         'ownerId': ownerId,
         'reply': reply,
+        'createdOn': DateTime.now().millisecondsSinceEpoch,
       };
 }
