@@ -5,14 +5,12 @@ import 'package:prompts_game/services/apis/storage_api.dart';
 
 class AppProfile with WithDocumentReference {
   AppProfile({
-    required this.userId,
     required this.firstName,
     required this.age,
     required this.gender,
     required this.interestedIn,
   });
 
-  final String userId;
   final String firstName;
   final String age;
   final AppGenders gender;
@@ -20,6 +18,12 @@ class AppProfile with WithDocumentReference {
 
   List<String>? _pictures;
   List<AppPrompt>? _prompts;
+
+  List<int> get listedInterestedIn {
+    return interestedIn.map((AppGenders g) => g.index).toList();
+  }
+
+  PromptsApi get _promptsApi => PromptsApi(reference);
 
   Future<String> get picture async {
     if (_pictures == null) {
@@ -31,21 +35,24 @@ class AppProfile with WithDocumentReference {
   }
 
   Future<List<String>> get pictures async {
-    if (_pictures != null) {
-      return _pictures!;
+    if (_pictures == null) {
+      return _pictures = await StorageApi.fetchPictureUrls(reference.id);
     }
-    return _pictures = await StorageApi.fetchPictureUrls(userId);
+    return _pictures!;
   }
 
-  Future<List<AppPrompt>> get prompts async {
-    if (_prompts != null) {
-      return _prompts!;
+  Future<List<AppPrompt>?> get prompts async {
+    if (_prompts == null) {
+      return _prompts = await _promptsApi.prompts;
     }
-    return _prompts = await PromptsApi.fetchUserPrompts(userId);
+    return _prompts!;
+  }
+
+  Stream<List<AppPrompt>?> get promptStream {
+    return _promptsApi.promptStream;
   }
 
   AppProfile.create({
-    required this.userId,
     String? firstName,
     String? age,
     AppGenders? gender,
@@ -61,15 +68,13 @@ class AppProfile with WithDocumentReference {
     String? age,
     AppGenders? gender,
     List<AppGenders>? interestedIn,
-  })  : userId = profile.firstName,
-        firstName = firstName ?? profile.firstName,
+  })  : firstName = firstName ?? profile.firstName,
         age = age ?? profile.age,
         gender = gender ?? profile.gender,
         interestedIn = interestedIn ?? profile.interestedIn;
 
   AppProfile.fromJson(Map<String, dynamic> json)
-      : userId = json['userId'],
-        firstName = json['firstName'],
+      : firstName = json['firstName'],
         age = json['age'] ?? '',
         gender = AppGenders.values.elementAt(json['gender'] ?? 0),
         interestedIn = (json['interestedIn'] ?? [])
@@ -77,11 +82,10 @@ class AppProfile with WithDocumentReference {
             .toList();
 
   Map<String, dynamic> toJson() => {
-        'userId': userId,
         'firstName': firstName,
         'age': age,
         'gender': gender.index,
-        'interestedIn': interestedIn.map((AppGenders g) => g.index).toList(),
+        'interestedIn': listedInterestedIn,
       };
 }
 

@@ -1,62 +1,63 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/app_reply.dart';
 import 'package:prompts_game/services/apis/auth_api.dart';
 
 class ReplyApi {
-  static CollectionReference _repliesRef(DocumentReference promptRef) {
-    return promptRef.collection('replies').withConverter<AppReply>(
-          fromFirestore: (snapshot, _) => AppReply.fromJson(snapshot.data()!),
+  ReplyApi(DocumentReference promptRef) {
+    _repliesRef = promptRef.collection('replies').withConverter<AppReply>(
           toFirestore: (AppReply reply, _) => reply.toJson(),
+          fromFirestore: (snapshot, _) {
+            return AppReply.fromJson(snapshot.data()!)
+              ..reference = snapshot.reference;
+          },
         );
   }
 
-  static Future<AppReply> create(
-    DocumentReference promptRef,
-    String replyText,
-  ) async {
-    AppReply replyBody = AppReply.create(replyText);
-    DocumentReference ref = await _repliesRef(promptRef).add(replyBody);
+  late CollectionReference _repliesRef;
+
+  Future<AppReply> create(String replyText) async {
+    final AppReply replyBody = AppReply.create(replyText);
+    final DocumentReference ref = _repliesRef.doc(AuthApi.uid);
+    await ref.set(replyBody);
     return ref.get().then(
       (DocumentSnapshot snapshot) {
-        return snapshot.data() as AppReply..reference = ref;
+        return snapshot.data() as AppReply;
       },
     );
   }
 
-  static Future<List<AppReply>?> _queryReplies(Query query) {
-    return query.get().then((QuerySnapshot snapshot) async {
-      if (snapshot.docs.isEmpty) {
-        /// could be nullable, because prompt doesn't have any replies
-        return null;
-      }
-
-      return snapshot.docs.map(
-        (DocumentSnapshot doc) {
-          return doc.data() as AppReply..reference = doc.reference;
-        },
-      ).toList();
-    });
-  }
-
-  static Future<AppReply?> _queryReply(Query query) {
-    return query.get().then((QuerySnapshot snapshot) async {
-      if (snapshot.docs.isEmpty) {
+  Future<AppReply?> get myReply {
+    return _repliesRef.doc(AuthApi.uid).get().then((DocumentSnapshot snapshot) {
+      if (!snapshot.exists) {
         /// could be nullable, because user hasn't replied to a prompt
         return null;
       }
 
-      DocumentSnapshot doc = snapshot.docs.elementAt(0);
-      return doc.data() as AppReply..reference = doc.reference;
+      return snapshot.data() as AppReply;
     });
   }
 
-  static Future<AppReply?> fetchMyReply(DocumentReference promptRef) {
-    return _queryReply(
-      _repliesRef(promptRef).where('ownerId', isEqualTo: AuthApi.uid),
-    );
+  List<AppReply>? _handleSnapshot(QuerySnapshot snapshot) {
+    if (snapshot.docs.isEmpty) {
+      /// could be nullable, because prompt doesn't have any replies
+      return null;
+    }
+
+    return snapshot.docs.map(
+          (DocumentSnapshot doc) {
+        return doc.data() as AppReply;
+      },
+    ).toList();
   }
 
-  static Future<List<AppReply>?> fetchReplies(DocumentReference promptRef) {
-    return _queryReplies(_repliesRef(promptRef));
+  Future<List<AppReply>?> get replies {
+    return _repliesRef.get().then(_handleSnapshot);
   }
+
+  Stream<List<AppReply>?> get replyStream {
+    return _repliesRef.snapshots().map(_handleSnapshot);
+  }
+
+
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bubbles/bubble_current_user.dart';
 import 'package:prompts_game/components/bubbles/bubble_other_user.dart';
 import 'package:prompts_game/components/scaffolds/profile_scaffold.dart';
-import 'package:prompts_game/components/widgets/app_future_builder.dart';
+import 'package:prompts_game/components/widgets/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
@@ -22,10 +22,6 @@ class PromptPosterCard extends StatefulWidget {
 }
 
 class _PromptPosterCardState extends State<PromptPosterCard> {
-  Future<List<String>> get ownerPicturesAsync {
-    return widget.prompt.owner.then((o) => o.pictures);
-  }
-
   void _goToProfile(AppProfile owner) {
     Navigator.push(
       context,
@@ -51,8 +47,8 @@ class _PromptPosterCardState extends State<PromptPosterCard> {
             text: widget.prompt.prompt,
           ),
         ),
-        AppFutureBuilder(
-          future: widget.prompt.replies,
+        AppStreamBuilder(
+          stream: widget.prompt.replyStream,
           builder: (context, List<AppReply>? replies) {
             if (replies == null) {
               return const SizedBox.shrink();
@@ -76,7 +72,7 @@ class _PromptPosterCardState extends State<PromptPosterCard> {
                           ),
                         ),
                         Flexible(
-                          child: BubbleOtherUser(
+                          child: BubbleOtherUser.onMyProfile(
                             text: reply.reply,
                             profileAsync: reply.owner,
                           ),

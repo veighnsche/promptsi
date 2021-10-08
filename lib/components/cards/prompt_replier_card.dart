@@ -5,7 +5,6 @@ import 'package:prompts_game/components/bubbles/bubble_other_user.dart';
 import 'package:prompts_game/components/forms/replies/reply_form.dart';
 import 'package:prompts_game/components/scaffolds/profile_scaffold.dart';
 import 'package:prompts_game/components/widgets/app_future_builder.dart';
-import 'package:prompts_game/components/widgets/picture_carousel.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
@@ -68,18 +67,12 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (isOnFeed) ...[
-          const SizedBox(height: 16),
-          PictureCarousel.home(picturesAsync: widget.prompt.ownerPictures),
-          const SizedBox(height: 16),
-        ],
         Row(
           children: [
             const SizedBox(width: 16),
             Flexible(
-              child: BubbleOtherUser(
+              child: BubbleOtherUser.onFeed(
                 text: widget.prompt.prompt,
-                profileAsync: widget.prompt.owner,
               ),
             ),
             Transform.scale(
@@ -125,7 +118,6 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
             );
           },
         ),
-        Container(height: 16, color: Colors.blueGrey),
       ],
     );
   }

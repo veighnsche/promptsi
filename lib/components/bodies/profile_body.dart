@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:prompts_game/components/bodies/loading_body.dart';
+import 'package:prompts_game/components/bodies/error_body.dart';
 import 'package:prompts_game/components/cards/prompt_replier_card.dart';
 import 'package:prompts_game/components/columns/prompts_poster_column.dart';
 import 'package:prompts_game/components/columns/prompts_replier_column.dart';
-import 'package:prompts_game/components/widgets/picture_carousel.dart';
+import 'package:prompts_game/components/forms/prompts/prompt_form.dart';
+import 'package:prompts_game/components/widgets/app_stream_builder.dart';
+import 'package:prompts_game/components/widgets/carousel_pictures.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
+import 'package:prompts_game/services/apis/prompts_api.dart';
 
 class ProfileBody extends StatelessWidget {
   const ProfileBody({
@@ -14,33 +17,30 @@ class ProfileBody extends StatelessWidget {
     required this.type,
   }) : super(key: key);
 
-  const ProfileBody.currentUser({
+  const ProfileBody.onMyProfile({
     Key? key,
     required this.profile,
-    this.type = AppProfileType.currentUser,
+    this.type = ProfileBodyType.onMyProfile,
   }) : super(key: key);
 
   const ProfileBody.profile({
     Key? key,
     required this.profile,
-    this.type = AppProfileType.profile,
+    this.type = ProfileBodyType.onFeed,
   }) : super(key: key);
 
   final AppProfile profile;
-  final AppProfileType type;
+  final ProfileBodyType type;
 
   Widget _promptsColumn(List<AppPrompt> prompts) {
     switch (type) {
-      case AppProfileType.currentUser:
-        return PromptsPosterColumn(
-          profile: profile,
-          prompts: prompts,
-        );
+      case ProfileBodyType.onMyProfile:
+        return PromptsPosterColumn(prompts: prompts);
 
-      case AppProfileType.profile:
+      case ProfileBodyType.onFeed:
         return PromptsReplierColumn(
           prompts: prompts,
-          promptCardType: PromptReplierCardType.onProfile,
+          promptCardType: PromptReplierCardType.onFeed,
         );
     }
   }
@@ -48,25 +48,28 @@ class ProfileBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      reverse: true,
       children: [
-        PictureCarousel.profile(picturesAsync: profile.pictures),
-        const SizedBox(height: 16),
-        FutureBuilder(
-          future: profile.prompts,
-          builder: (
-            BuildContext context,
-            AsyncSnapshot<List<AppPrompt>?> snapshot,
-          ) {
-            if (snapshot.hasError) {
-              throw snapshot.error!;
-              // return Text(snapshot.error.toString());
+        if (type == ProfileBodyType.onFeed)
+          ListTile(
+            title: Text('${profile.firstName}, ${profile.age}'),
+            subtitle: const Text('0 Km away (hardcoded)'),
+          ),
+        CarouselPictures(picturesAsync: profile.pictures),
+        if (type == ProfileBodyType.onMyProfile)
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: PromptForm(
+              onReplySend: PromptsApi(profile.reference).createPrompt,
+            ),
+          ),
+        AppStreamBuilder(
+          stream: profile.promptStream,
+          builder: (context, List<AppPrompt>? prompts) {
+            if (prompts == null) {
+              return const ErrorBody('No prompts yet');
             }
-
-            if (snapshot.connectionState == ConnectionState.done) {
-              return _promptsColumn(snapshot.data!);
-            }
-
-            return const LoadingBody();
+            return _promptsColumn(prompts);
           },
         ),
       ],
@@ -74,7 +77,7 @@ class ProfileBody extends StatelessWidget {
   }
 }
 
-enum AppProfileType {
-  currentUser,
-  profile,
+enum ProfileBodyType {
+  onMyProfile,
+  onFeed,
 }

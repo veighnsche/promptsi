@@ -18,11 +18,11 @@ class HomeScaffold extends StatefulWidget {
 class _HomeScaffoldState extends State<HomeScaffold> {
   int _selectedIndex = 0;
 
-  late AppProfile _userProfile;
+  late AppProfile _profile;
 
   void _setUserProfile(AppProfile userProfile) {
     setState(() {
-      _userProfile = userProfile;
+      _profile = userProfile;
     });
   }
 
@@ -33,7 +33,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
         builder: (BuildContext context) {
           return ProfileEditScaffold(
             onProfileEdited: _setUserProfile,
-            userProfile: _userProfile,
+            userProfile: _profile,
           );
         },
       ),
@@ -49,7 +49,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
   @override
   void initState() {
     super.initState();
-    _userProfile = widget.userProfile;
+    _profile = widget.userProfile;
   }
 
   Future<bool> _onWillPop() async {
@@ -93,7 +93,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
       ),
       AppBar(title: const Text("Messages")),
       AppBar(
-        title: Text(_userProfile.firstName),
+        title: Text(_profile.firstName),
         actions: [
           IconButton(
             onPressed: _onProfileEditPress,
@@ -104,9 +104,9 @@ class _HomeScaffoldState extends State<HomeScaffold> {
     ];
 
     final _bodyOptions = <Widget>[
-      const HomeBody(),
+      HomeBody(profile: _profile),
       const MessagesBody(),
-      ProfileBody.currentUser(profile: _userProfile),
+      ProfileBody.onMyProfile(profile: _profile),
     ];
 
     return WillPopScope(

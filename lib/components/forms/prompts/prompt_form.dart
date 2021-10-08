@@ -4,7 +4,7 @@ import 'package:prompts_game/components/utils/decorations/input_decorations.dart
 class PromptForm extends StatefulWidget {
   const PromptForm({Key? key, required this.onReplySend}) : super(key: key);
 
-  final Function(String) onReplySend;
+  final Future<void> Function(String) onReplySend;
 
   @override
   State<PromptForm> createState() => _PromptFormState();
@@ -13,6 +13,10 @@ class PromptForm extends StatefulWidget {
 class _PromptFormState extends State<PromptForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _reply = TextEditingController();
+
+  void _onReplySend() {
+    widget.onReplySend(_reply.text).whenComplete(() => _reply.clear());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,7 @@ class _PromptFormState extends State<PromptForm> {
           labelText: 'Prompt',
           suffixIcon: IconButton(
             icon: const Icon(Icons.send),
-            onPressed: () => widget.onReplySend(_reply.text),
+            onPressed: _onReplySend,
           ),
         ),
         keyboardType: TextInputType.text,

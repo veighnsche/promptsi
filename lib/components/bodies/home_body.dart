@@ -1,45 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:prompts_game/components/bodies/loading_body.dart';
-import 'package:prompts_game/components/cards/prompt_replier_card.dart';
-import 'package:prompts_game/components/columns/prompts_replier_column.dart';
-import 'package:prompts_game/models/app_prompt.dart';
-import 'package:prompts_game/services/apis/prompts_api.dart';
+import 'package:prompts_game/components/bodies/error_body.dart';
+import 'package:prompts_game/components/widgets/app_future_builder.dart';
+import 'package:prompts_game/components/widgets/carousel_profiles.dart';
+import 'package:prompts_game/models/app_profile.dart';
+import 'package:prompts_game/services/apis/profile_api.dart';
 
-class HomeBody extends StatefulWidget {
-  const HomeBody({Key? key}) : super(key: key);
+class HomeBody extends StatelessWidget {
+  const HomeBody({Key? key, required this.profile}) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => _HomeBodyState();
-}
+  final AppProfile profile;
 
-class _HomeBodyState extends State<HomeBody> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: PromptsApi.fetchPrompts(),
-      builder: (
-        BuildContext context,
-        AsyncSnapshot<List<AppPrompt>?> snapshot,
-      ) {
-        if (snapshot.hasError) {
-          throw snapshot.error!;
-          // return Text(snapshot.error.toString());
+    return AppFutureBuilder(
+      future: ProfileApi.fetchMatchingProfiles(profile),
+      builder: (context, List<AppProfile>? profiles) {
+        if (profiles == null) {
+          return const ErrorBody('No profiles');
         }
-
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.data == null || snapshot.data!.isEmpty) {
-            throw 'home feed prompts are empty';
-          }
-
-          return SingleChildScrollView(
-            child: PromptsReplierColumn(
-              prompts: snapshot.data!,
-              promptCardType: PromptReplierCardType.onFeed,
-            ),
-          );
-        }
-
-        return const LoadingBody();
+        return CarouselProfiles(profiles: profiles);
       },
     );
   }

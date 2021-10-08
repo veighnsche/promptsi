@@ -84,7 +84,6 @@ class _ProfileFormState extends State<ProfileForm> {
       widget.onProfileSubmit(
         widget.isCreate
             ? AppProfile.create(
-                userId: widget.profile.userId,
                 firstName: _firstName.text,
                 age: _age.text,
                 gender: _gender,
