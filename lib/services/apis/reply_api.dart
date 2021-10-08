@@ -1,11 +1,24 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/app_reply.dart';
 import 'package:prompts_game/services/apis/auth_api.dart';
 
 class ReplyApi {
-  ReplyApi(DocumentReference promptRef) {
-    _repliesRef = promptRef.collection('replies').withConverter<AppReply>(
+  ReplyApi(this.promptRef);
+
+  final DocumentReference promptRef;
+
+  Future<List<AppReply>?> get replies {
+    return _repliesRef.get().then(_handleSnapshot);
+  }
+
+  Stream<List<AppReply>?> get replyStream {
+    return _repliesRef.snapshots().map(_handleSnapshot);
+  }
+
+  CollectionReference get _repliesRef {
+    return promptRef.collection('replies').withConverter<AppReply>(
           toFirestore: (AppReply reply, _) => reply.toJson(),
           fromFirestore: (snapshot, _) {
             return AppReply.fromJson(snapshot.data()!)
@@ -13,8 +26,6 @@ class ReplyApi {
           },
         );
   }
-
-  late CollectionReference _repliesRef;
 
   Future<AppReply> create(String replyText) async {
     final AppReply replyBody = AppReply.create(replyText);
@@ -45,19 +56,9 @@ class ReplyApi {
     }
 
     return snapshot.docs.map(
-          (DocumentSnapshot doc) {
+      (DocumentSnapshot doc) {
         return doc.data() as AppReply;
       },
     ).toList();
   }
-
-  Future<List<AppReply>?> get replies {
-    return _repliesRef.get().then(_handleSnapshot);
-  }
-
-  Stream<List<AppReply>?> get replyStream {
-    return _repliesRef.snapshots().map(_handleSnapshot);
-  }
-
-
 }

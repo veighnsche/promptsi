@@ -3,8 +3,12 @@ import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/services/apis/auth_api.dart';
 
 class PromptsApi {
-  PromptsApi(DocumentReference profileRef) {
-    _promptsRef = profileRef.collection('prompts').withConverter<AppPrompt>(
+  PromptsApi(this.profileRef);
+
+  final DocumentReference profileRef;
+
+  CollectionReference get _promptsRef {
+    return profileRef.collection('prompts').withConverter<AppPrompt>(
           toFirestore: (AppPrompt prompt, _) => prompt.toJson(),
           fromFirestore: (snapshot, _) {
             return AppPrompt.fromJson(snapshot.data()!)
@@ -12,8 +16,6 @@ class PromptsApi {
           },
         );
   }
-
-  late CollectionReference _promptsRef;
 
   static AppPrompt _handleDocumentSnapshot(DocumentSnapshot doc) {
     return doc.data() as AppPrompt;
@@ -33,7 +35,6 @@ class PromptsApi {
     return _promptsRef.get().then(_handleQuerySnapshot);
   }
 
-  /// PLEASE DON'T FORGET TO STOP THE STREAM ON DESTROY!
   Stream<List<AppPrompt>?> get promptStream {
     /// can be nullable if the user doesn't have any prompts
     return _promptsRef.snapshots().map(_handleQuerySnapshot);

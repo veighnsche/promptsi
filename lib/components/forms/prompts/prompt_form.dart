@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:prompts_game/components/utils/decorations/input_decorations.dart';
 
 class PromptForm extends StatefulWidget {
-  const PromptForm({Key? key, required this.onReplySend}) : super(key: key);
+  const PromptForm({Key? key, required this.onPromptSend}) : super(key: key);
 
-  final Future<void> Function(String) onReplySend;
+  final Future<void> Function(String) onPromptSend;
 
   @override
   State<PromptForm> createState() => _PromptFormState();
@@ -15,7 +15,7 @@ class _PromptFormState extends State<PromptForm> {
   final TextEditingController _reply = TextEditingController();
 
   void _onReplySend() {
-    widget.onReplySend(_reply.text).whenComplete(() => _reply.clear());
+    widget.onPromptSend(_reply.text).whenComplete(() => _reply.clear());
   }
 
   @override

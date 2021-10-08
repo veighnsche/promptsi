@@ -45,6 +45,9 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
     return widget.type == PromptReplierCardType.onProfile;
   }
 
+  bool _isOpen = false;
+  AppReply? _myReply;
+
   void _goToProfile(AppProfile owner) {
     Navigator.push(
       context,
@@ -63,6 +66,14 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
     setState(() {});
   }
 
+  void _toggleOpen() {
+    if (_myReply == null) {
+      setState(() {
+        _isOpen = !_isOpen;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -71,14 +82,20 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
           children: [
             const SizedBox(width: 16),
             Flexible(
-              child: BubbleOtherUser.onFeed(
-                text: widget.prompt.prompt,
+              child: GestureDetector(
+                onTap: _toggleOpen,
+                child: BubbleOtherUser.onFeed(
+                  text: widget.prompt.prompt,
+                ),
               ),
             ),
             Transform.scale(
               scale: 6 / 8,
               child: IconButton(
-                icon: const Icon(Icons.share),
+                icon: const Icon(
+                  Icons.share,
+                  color: Colors.black26,
+                ),
                 onPressed: () {
                   // todo: reprompt
                   print('reprompt this!');
@@ -88,13 +105,20 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
           ],
         ),
         AppFutureBuilder(
-          future: widget.prompt.myReply,
+          future: widget.prompt.myReply.then((AppReply? myReply) {
+            _myReply = myReply;
+            return myReply;
+          }),
           builder: (context, AppReply? myReply) {
             if (myReply == null) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ReplyForm(onReplySend: _addReply),
-              );
+              if (_isOpen) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ReplyForm(onReplySend: _addReply),
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
             }
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
