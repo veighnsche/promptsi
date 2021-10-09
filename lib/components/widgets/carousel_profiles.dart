@@ -17,19 +17,24 @@ class _CarouselProfilesState extends State<CarouselProfiles> {
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      items: widget.profiles.map((AppProfile profile) {
-        return ProfileBody(
-          profile: profile,
-          type: ProfileBodyType.onFeed,
-        );
-      }).toList(),
-      options: CarouselOptions(
-        viewportFraction: 1,
-        height: double.infinity,
-        onPageChanged: (idx, _) {
-          _currentProfileIdx = idx;
-        },
+    return Container(
+      color: Colors.blueGrey,
+      child: CarouselSlider(
+        items: widget.profiles.map((AppProfile profile) {
+          return Card(
+            child: ProfileBody(
+              profile: profile,
+              type: ProfileBodyType.onFeed,
+            ),
+          );
+        }).toList(),
+        options: CarouselOptions(
+          viewportFraction: 0.95,
+          height: double.infinity,
+          onPageChanged: (idx, _) {
+            _currentProfileIdx = idx;
+          },
+        ),
       ),
     );
   }

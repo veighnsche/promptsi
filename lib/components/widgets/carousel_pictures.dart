@@ -41,7 +41,7 @@ class _CarouselPicturesState extends State<CarouselPictures> {
                   return CachedNetworkImage(imageUrl: url);
                 }).toList(),
                 options: CarouselOptions(
-                  scrollDirection: Axis.vertical,
+                  // scrollDirection: Axis.vertical,
                   aspectRatio: 1,
                   viewportFraction: 1,
                   enableInfiniteScroll: false,

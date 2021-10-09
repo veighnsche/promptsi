@@ -8,6 +8,7 @@ class InputDecorations {
     Widget? suffixIcon,
   }) {
     return InputDecoration(
+
       labelText: labelText,
       labelStyle: const TextStyle(color: Colors.grey),
       prefix: prefix,

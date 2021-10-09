@@ -19,6 +19,7 @@ class _ReplyFormState extends State<ReplyForm> {
     return Form(
       key: _formKey,
       child: TextFormField(
+        autofocus: true,
         controller: _reply,
         // validator: _validator,
         decoration: InputDecorations.outline(
