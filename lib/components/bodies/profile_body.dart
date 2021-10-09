@@ -47,15 +47,34 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      reverse: true,
+    return Column(
       children: [
-        CarouselPictures(picturesAsync: profile.pictures),
-        if (type == ProfileBodyType.onFeed)
-          ListTile(
-            title: Text('${profile.firstName}, ${profile.age}'),
-            subtitle: const Text('0 Km away (hardcoded)'),
+        Flexible(
+          child: SingleChildScrollView(
+            reverse: true,
+            child: Column(
+              children: [
+                AppStreamBuilder(
+                  stream: profile.promptStream,
+                  builder: (context, List<AppPrompt>? prompts) {
+                    if (prompts == null) {
+                      return const ErrorBody('No prompts yet');
+                    }
+                    return _promptsColumn(prompts);
+                  },
+                ),
+                if (type == ProfileBodyType.onFeed)
+                  ListTile(
+                    title: Text('${profile.firstName}, ${profile.age}'),
+                    subtitle: const Text('0 Km away (hardcoded)'),
+                  ),
+                if (type == ProfileBodyType.onMyProfile)
+                  const SizedBox(height: 16),
+                CarouselPictures(picturesAsync: profile.pictures),
+              ],
+            ),
           ),
+        ),
         if (type == ProfileBodyType.onMyProfile)
           Padding(
             padding: const EdgeInsets.all(8),
@@ -63,15 +82,6 @@ class ProfileBody extends StatelessWidget {
               onPromptSend: PromptsApi(profile.reference).createPrompt,
             ),
           ),
-        AppStreamBuilder(
-          stream: profile.promptStream,
-          builder: (context, List<AppPrompt>? prompts) {
-            if (prompts == null) {
-              return const ErrorBody('No prompts yet');
-            }
-            return _promptsColumn(prompts);
-          },
-        ),
       ],
     );
   }

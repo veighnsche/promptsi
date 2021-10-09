@@ -27,7 +27,7 @@ class _PromptFormState extends State<PromptForm> {
         controller: _reply,
         // validator: _validator,
         decoration: InputDecorations.outline(
-          labelText: 'Prompt',
+          labelText: 'What do you want to ask?',
           suffixIcon: IconButton(
             icon: const Icon(Icons.send),
             onPressed: _onReplySend,

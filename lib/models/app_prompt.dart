@@ -1,3 +1,4 @@
+import 'package:prompts_game/main.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_reply.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';

@@ -14,7 +14,7 @@ class BubbleCurrentUser extends StatelessWidget {
     return Bubble(
       alignment: Alignment.centerRight,
       nip: BubbleNip.rightBottom,
-      color: Colors.blue,
+      color: Colors.blueGrey,
       child: Text(
         text,
         style: const TextStyle(
