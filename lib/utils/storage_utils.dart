@@ -10,7 +10,7 @@ class StorageUtils {
     );
   }
 
-  static Future<String> listRefToBase64(Reference ref) {
+  static Future<String> refToBase64(Reference ref) {
     return ref.getData().then((Uint8List? uint8list) {
       if (uint8list == null) {
         throw 'no uint8list';

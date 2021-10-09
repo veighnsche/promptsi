@@ -37,7 +37,7 @@ class StorageApi {
 
   static Future<String> fetchProfilePictureBase64(String userId) {
     return fetchPictureRef(userId).then((Reference list) {
-      return StorageUtils.listRefToBase64(list);
+      return StorageUtils.refToBase64(list);
     });
   }
 
