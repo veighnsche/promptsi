@@ -23,7 +23,6 @@ class _PromptFormState extends State<PromptForm> {
     return Form(
       key: _formKey,
       child: TextFormField(
-
         controller: _reply,
         // validator: _validator,
         decoration: InputDecorations.outline(

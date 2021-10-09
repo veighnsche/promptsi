@@ -2,13 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bubbles/bubble_current_user.dart';
 import 'package:prompts_game/components/bubbles/bubble_other_user.dart';
-import 'package:prompts_game/components/forms/replies/reply_form.dart';
-import 'package:prompts_game/components/scaffolds/profile_scaffold.dart';
 import 'package:prompts_game/components/widgets/app_future_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
-import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/app_reply.dart';
+import 'package:prompts_game/store/selected_prompt.dart';
+import 'package:provider/provider.dart';
 
 class PromptReplyCard extends StatefulWidget {
   const PromptReplyCard({
@@ -45,33 +44,8 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
     return widget.type == PromptReplierCardType.onProfile;
   }
 
-  bool _isOpen = false;
-  AppReply? _myReply;
-
-  void _goToProfile(AppProfile owner) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return ProfileScaffold(
-            profile: owner,
-          );
-        },
-      ),
-    );
-  }
-
-  void _addReply(String reply) async {
-    await widget.prompt.addReply(reply);
-    setState(() {});
-  }
-
-  void _toggleOpen() {
-    if (_myReply == null) {
-      setState(() {
-        _isOpen = !_isOpen;
-      });
-    }
+  void _selectPrompt() {
+    Provider.of<SelectedPrompt>(context, listen: false).change(widget.prompt);
   }
 
   @override
@@ -83,7 +57,7 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
             const SizedBox(width: 16),
             Flexible(
               child: GestureDetector(
-                onTap: _toggleOpen,
+                onTap: _selectPrompt,
                 child: BubbleOtherUser.onFeed(
                   text: widget.prompt.prompt,
                 ),
@@ -105,20 +79,25 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
           ],
         ),
         AppFutureBuilder(
-          future: widget.prompt.myReply.then((AppReply? myReply) {
-            _myReply = myReply;
-            return myReply;
-          }),
+          future: widget.prompt.myReply,
           builder: (context, AppReply? myReply) {
             if (myReply == null) {
-              if (_isOpen) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ReplyForm(onReplySend: _addReply),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
+              return Consumer<SelectedPrompt>(
+                builder: (context, selected, child) {
+                  if (isThisSelected(selected)) {
+                    selected.prompt!.myReply.then((AppReply? myReply) {
+                      if (myReply != null) {
+                        Provider.of<SelectedPrompt>(context, listen: false)
+                            .change(null);
+                        setState(() {});
+                      }
+                    });
+                  }
+
+                  return child!;
+                },
+                child: const SizedBox.shrink(),
+              );
             }
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -144,6 +123,11 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
         ),
       ],
     );
+  }
+
+  bool isThisSelected(SelectedPrompt selected) {
+    return selected.prompt != null &&
+        selected.prompt!.reference.id == widget.prompt.reference.id;
   }
 }
 

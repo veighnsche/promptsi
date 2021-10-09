@@ -1,4 +1,3 @@
-import 'package:prompts_game/main.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_reply.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
@@ -33,6 +32,14 @@ class AppPrompt with WithDocumentReference {
         return profile;
       },
     );
+  }
+
+  bool get hasMyReply {
+    return _myReply != null;
+  }
+
+  setMyReply(AppReply reply) {
+    _myReply = reply;
   }
 
   /// can be null if user has never replied to this prompt
