@@ -3,22 +3,33 @@ import 'package:prompts_game/services/apis/profile_api.dart';
 
 mixin WithOwner {
   String get ownerId;
+
   AppProfile? _owner;
 
-  Future<String> get ownerPicture {
-    return owner.then((AppProfile profile) => profile.picture);
+  AppProfile? get owner {
+    return _owner;
   }
 
-  Future<List<String>> get ownerPictures {
-    return owner.then((AppProfile profile) => profile.pictures);
+  String? get profilePictureBase64 {
+    return owner?.profilePictureBase64;
   }
 
-  Future<AppProfile> get owner async {
+  Future<String> get profilePictureBase64Async {
+    return ownerAsync.then((AppProfile profile) {
+      return profile.profilePictureBase64Async;
+    });
+  }
+
+  Future<List<String>> get ownerPicturesAsync {
+    return ownerAsync.then((AppProfile profile) => profile.pictures);
+  }
+
+  Future<AppProfile> get ownerAsync async {
     if (_owner != null) {
       return _owner!;
     }
     return _owner = await ProfileApi.fetchProfile(ownerId).then<AppProfile>(
-          (AppProfile? profile) {
+      (AppProfile? profile) {
         if (profile == null) {
           throw 'no owner profile';
         }

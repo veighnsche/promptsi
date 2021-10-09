@@ -3,10 +3,8 @@ import 'package:prompts_game/components/cards/prompt_poster_card.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 
 class PromptsPosterColumn extends StatelessWidget {
-  const PromptsPosterColumn({
-    Key? key,
-    required this.prompts,
-  }) : super(key: key);
+  const PromptsPosterColumn({Key? key, required this.prompts})
+      : super(key: key);
 
   final List<AppPrompt> prompts;
 

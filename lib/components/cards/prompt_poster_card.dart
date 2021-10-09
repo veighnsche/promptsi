@@ -22,6 +22,8 @@ class PromptPosterCard extends StatefulWidget {
 }
 
 class _PromptPosterCardState extends State<PromptPosterCard> {
+  final List<AppReply> __repliesCache = [];
+
   void _goToProfile(AppProfile owner) {
     Navigator.push(
       context,
@@ -33,6 +35,19 @@ class _PromptPosterCardState extends State<PromptPosterCard> {
         },
       ),
     );
+  }
+
+  set _repliesCache(List<AppReply> replies) {
+    final cacheRefs = __repliesCache.map((AppReply p) => p.reference.id);
+    for (var reply in replies) {
+      if (!cacheRefs.contains(reply.reference.id)) {
+        __repliesCache.add(reply);
+      }
+    }
+  }
+
+  List<AppReply> get _repliesCache {
+    return __repliesCache;
   }
 
   @override
@@ -49,44 +64,67 @@ class _PromptPosterCardState extends State<PromptPosterCard> {
         ),
         AppStreamBuilder(
           stream: widget.prompt.replyStream,
+          loader: RepliesColumn(replies: _repliesCache),
           builder: (context, List<AppReply>? replies) {
             if (replies == null) {
               return const SizedBox.shrink();
             }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: replies.map((AppReply reply) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: GestureDetector(
-                    onTap: () {
-                      print('normal tap');
-                    },
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          height: 65,
-                          width: 65,
-                          child: ProfilePicture(
-                            pictureAsync: reply.ownerPicture,
-                          ),
-                        ),
-                        Flexible(
-                          child: BubbleOtherUser.onMyProfile(
-                            text: reply.reply,
-                            profileAsync: reply.owner,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            );
+
+            _repliesCache = replies;
+
+            return RepliesColumn(replies: _repliesCache);
           },
         ),
       ],
+    );
+  }
+}
+
+class RepliesColumn extends StatelessWidget {
+  const RepliesColumn({
+    Key? key,
+    required this.replies,
+  }) : super(key: key);
+
+  final List<AppReply>? replies;
+
+  @override
+  Widget build(BuildContext context) {
+    if (replies == null) {
+      return const SizedBox.shrink();
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: replies!.map((AppReply reply) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: GestureDetector(
+            onTap: () {
+              print('normal tap');
+            },
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 65,
+                  width: 65,
+                  child: ProfilePicture(
+                    pictureBase64Async: reply.profilePictureBase64Async,
+                    pictureBase64: reply.profilePictureBase64,
+                  ),
+                ),
+                Flexible(
+                  child: BubbleOtherUser.onMyProfile(
+                    text: reply.reply,
+                    profile: reply.owner,
+                    profileAsync: reply.ownerAsync,
+                  ),
+                ),
+                const SizedBox(width: 16),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

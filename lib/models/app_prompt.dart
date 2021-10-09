@@ -42,8 +42,12 @@ class AppPrompt with WithDocumentReference {
     _myReply = reply;
   }
 
+  AppReply? get myReply {
+    return _myReply;
+  }
+
   /// can be null if user has never replied to this prompt
-  Future<AppReply?> get myReply async {
+  Future<AppReply?> get myReplyAsync async {
     if (_myReply != null) {
       return _myReply;
     }

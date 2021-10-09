@@ -7,6 +7,16 @@ class AppFutureBuilder<T> extends StatelessWidget {
     required this.builder,
     this.initialData,
     this.loader = const SizedBox.shrink(),
+    this.skipFuture = false,
+  }) : super(key: key);
+
+  const AppFutureBuilder.skipFuture({
+    Key? key,
+    required this.future,
+    required this.builder,
+    required this.initialData,
+    this.loader = const SizedBox.shrink(),
+    this.skipFuture = true,
   }) : super(key: key);
 
   final Future<T> future;
@@ -14,8 +24,13 @@ class AppFutureBuilder<T> extends StatelessWidget {
   final Widget Function(BuildContext, T) builder;
   final Widget loader;
 
+  final bool skipFuture;
+
   @override
   Widget build(BuildContext context) {
+    if (skipFuture && initialData != null) {
+      return builder(context, initialData!);
+    }
     return FutureBuilder(
       future: future,
       initialData: initialData,

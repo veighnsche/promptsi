@@ -10,40 +10,15 @@ import 'package:prompts_game/store/selected_prompt.dart';
 import 'package:provider/provider.dart';
 
 class PromptReplyCard extends StatefulWidget {
-  const PromptReplyCard({
-    Key? key,
-    required this.prompt,
-    required this.type,
-  }) : super(key: key);
-
-  const PromptReplyCard.onFeed({
-    Key? key,
-    required this.prompt,
-    this.type = PromptReplierCardType.onFeed,
-  }) : super(key: key);
-
-  const PromptReplyCard.onProfile({
-    Key? key,
-    required this.prompt,
-    this.type = PromptReplierCardType.onProfile,
-  }) : super(key: key);
+  const PromptReplyCard({Key? key, required this.prompt}) : super(key: key);
 
   final AppPrompt prompt;
-  final PromptReplierCardType type;
 
   @override
   State<PromptReplyCard> createState() => _PromptReplyCardState();
 }
 
 class _PromptReplyCardState extends State<PromptReplyCard> {
-  bool get isOnFeed {
-    return widget.type == PromptReplierCardType.onFeed;
-  }
-
-  bool get isOnProfile {
-    return widget.type == PromptReplierCardType.onProfile;
-  }
-
   void _selectPrompt() {
     Provider.of<SelectedPrompt>(context, listen: false).change(widget.prompt);
   }
@@ -78,14 +53,15 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
             ),
           ],
         ),
-        AppFutureBuilder(
-          future: widget.prompt.myReply,
+        AppFutureBuilder.skipFuture(
+          future: widget.prompt.myReplyAsync,
+          initialData: widget.prompt.myReply,
           builder: (context, AppReply? myReply) {
             if (myReply == null) {
               return Consumer<SelectedPrompt>(
                 builder: (context, selected, child) {
                   if (isThisSelected(selected)) {
-                    selected.prompt!.myReply.then((AppReply? myReply) {
+                    selected.prompt!.myReplyAsync.then((AppReply? myReply) {
                       if (myReply != null) {
                         Provider.of<SelectedPrompt>(context, listen: false)
                             .change(null);
@@ -94,9 +70,8 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
                     });
                   }
 
-                  return child!;
+                  return const SizedBox.shrink();
                 },
-                child: const SizedBox.shrink(),
               );
             }
             return Padding(
@@ -104,16 +79,13 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
               child: Row(
                 children: [
                   const SizedBox(width: 16),
-                  Flexible(
-                    child: BubbleCurrentUser(
-                      text: myReply.reply,
-                    ),
-                  ),
+                  Flexible(child: BubbleCurrentUser(text: myReply.reply)),
                   SizedBox(
                     height: 65,
                     width: 65,
                     child: ProfilePicture(
-                      pictureAsync: myReply.ownerPicture,
+                      pictureBase64Async: myReply.profilePictureBase64Async,
+                      pictureBase64: myReply.profilePictureBase64,
                     ),
                   ),
                 ],
@@ -129,9 +101,4 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
     return selected.prompt != null &&
         selected.prompt!.reference.id == widget.prompt.reference.id;
   }
-}
-
-enum PromptReplierCardType {
-  onFeed,
-  onProfile,
 }

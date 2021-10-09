@@ -16,6 +16,7 @@ class AppProfile with WithDocumentReference {
   final AppGenders gender;
   final List<AppGenders> interestedIn;
 
+  String? _profilePictureBase64;
   List<String>? _pictures;
   List<AppPrompt>? _prompts;
 
@@ -25,13 +26,16 @@ class AppProfile with WithDocumentReference {
 
   PromptsApi get _promptsApi => PromptsApi(reference);
 
-  Future<String> get picture async {
-    if (_pictures == null) {
-      await pictures;
+  String? get profilePictureBase64 {
+    return _profilePictureBase64;
+  }
+
+  Future<String> get profilePictureBase64Async async {
+    if (_profilePictureBase64 == null) {
+      return _profilePictureBase64 =
+          await StorageApi.fetchProfilePictureBase64(reference.id);
     }
-    return _pictures!.isEmpty
-        ? 'https://thesocialstudies.co/wp-content/uploads/2021/06/placeholder-1-1.jpg'
-        : _pictures!.elementAt(0);
+    return _profilePictureBase64!;
   }
 
   Future<List<String>> get pictures async {

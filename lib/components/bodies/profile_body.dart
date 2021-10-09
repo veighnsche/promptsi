@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/error_body.dart';
-import 'package:prompts_game/components/cards/prompt_replier_card.dart';
 import 'package:prompts_game/components/columns/prompts_poster_column.dart';
 import 'package:prompts_game/components/columns/prompts_replier_column.dart';
 import 'package:prompts_game/components/forms/prompts/prompt_form.dart';
@@ -42,6 +41,8 @@ class ProfileBody extends StatefulWidget {
 }
 
 class _ProfileBodyState extends State<ProfileBody> {
+  final List<AppPrompt> __promptsCache = [];
+
   bool get onFeed {
     return widget.type == ProfileBodyType.onFeed;
   }
@@ -52,7 +53,7 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   void _onReplySend(SelectedPrompt selectedPrompt, String reply) {
     ReplyApi(selectedPrompt.prompt!.reference).create(reply).then(
-          (AppReply myReply) {
+      (AppReply myReply) {
         Provider.of<SelectedPrompt>(context, listen: false).change(
           selectedPrompt.prompt!..setMyReply(myReply),
         );
@@ -60,17 +61,31 @@ class _ProfileBodyState extends State<ProfileBody> {
     );
   }
 
-  Widget _promptsColumn(List<AppPrompt> prompts) {
+  Widget _promptsColumn(List<AppPrompt>? prompts) {
+    if (prompts == null) {
+      return const SizedBox.shrink();
+    }
     switch (widget.type) {
       case ProfileBodyType.onMyProfile:
         return PromptsPosterColumn(prompts: prompts);
 
       case ProfileBodyType.onFeed:
-        return PromptsReplierColumn(
-          prompts: prompts,
-          promptCardType: PromptReplierCardType.onFeed,
-        );
+        return PromptsReplierColumn(prompts: prompts);
     }
+  }
+
+  set _promptsCache(List<AppPrompt> prompts) {
+    final cacheRefs = __promptsCache.map((AppPrompt p) => p.reference.id);
+    for (var prompt in prompts) {
+      // if prompt is in cache, then do not add it
+      if (!cacheRefs.contains(prompt.reference.id)) {
+        __promptsCache.add(prompt);
+      }
+    }
+  }
+
+  List<AppPrompt> get _promptsCache {
+    return __promptsCache;
   }
 
   @override
@@ -84,11 +99,15 @@ class _ProfileBodyState extends State<ProfileBody> {
               children: [
                 AppStreamBuilder(
                   stream: widget.profile.promptStream,
+                  loader: _promptsColumn(_promptsCache),
                   builder: (context, List<AppPrompt>? prompts) {
                     if (prompts == null) {
                       return const ErrorBody('No prompts yet');
                     }
-                    return _promptsColumn(prompts);
+
+                    _promptsCache = prompts;
+
+                    return _promptsColumn(_promptsCache);
                   },
                 ),
                 if (onFeed)
