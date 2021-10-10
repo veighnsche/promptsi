@@ -5,12 +5,21 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class Reactions extends StatelessWidget {
   Reactions({
     Key? key,
-    this.reaction,
+    required this.reaction,
     required this.onReact,
+    this.disabled = false,
+  }) : super(key: key);
+
+  Reactions.disabled({
+    Key? key,
+    required this.reaction,
+    this.onReact,
+    this.disabled = true,
   }) : super(key: key);
 
   final int? reaction;
-  final Function(int) onReact;
+  final Function(int)? onReact;
+  final bool disabled;
 
   bool get _hasReaction {
     return reaction != null;
@@ -20,7 +29,7 @@ class Reactions extends StatelessWidget {
     if (!_hasReaction) {
       return null;
     }
-    return _reactions[reaction!];
+    return _reactions.elementAt(reaction!);
   }
 
   final Reaction _emptyReaction = Reaction(
@@ -30,44 +39,47 @@ class Reactions extends StatelessWidget {
     ),
   );
 
-  final List<Reaction> _reactions = [
-    Reaction(
-      icon: const FaIcon(
-        FontAwesomeIcons.solidHeart,
-        color: Colors.red,
-      ),
+  final List<FaIcon> _icons = [
+    const FaIcon(
+      FontAwesomeIcons.solidHeart,
+      color: Colors.red,
     ),
-    Reaction(
-      icon: const FaIcon(
-        FontAwesomeIcons.crown,
-        color: Colors.orange,
-      ),
+    const FaIcon(
+      FontAwesomeIcons.crown,
+      color: Colors.orange,
     ),
-    Reaction(
-      icon: const FaIcon(
-        FontAwesomeIcons.solidLaughSquint,
-        color: Colors.orange,
-      ),
+    const FaIcon(
+      FontAwesomeIcons.solidLaughSquint,
+      color: Colors.orange,
     ),
-    Reaction(
-      icon: const FaIcon(
-        FontAwesomeIcons.solidSadTear,
-        color: Colors.blue,
-      ),
+    const FaIcon(
+      FontAwesomeIcons.solidSadTear,
+      color: Colors.blue,
     ),
-    Reaction(
-      icon: const FaIcon(
-        FontAwesomeIcons.solidFlag,
-        color: Colors.red,
-      ),
+    const FaIcon(
+      FontAwesomeIcons.solidFlag,
+      color: Colors.red,
     ),
   ];
 
+  List<Reaction> get _reactions {
+    return _icons.map((FaIcon icon) {
+      return Reaction(icon: icon);
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (disabled) {
+      if (!_hasReaction) {
+        return const SizedBox.shrink();
+      }
+      return _icons.elementAt(reaction!);
+    }
+
     return FlutterReactionButtonCheck(
       onReactionChanged: (reaction, index, isChecked) {
-        onReact(index);
+        onReact!(index);
       },
       boxItemsSpacing: 16,
       boxPadding: const EdgeInsets.all(16),

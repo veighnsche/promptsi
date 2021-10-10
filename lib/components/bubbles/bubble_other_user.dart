@@ -6,31 +6,31 @@ import 'package:prompts_game/models/app_profile.dart';
 class BubbleOtherUser extends StatelessWidget {
   const BubbleOtherUser({
     Key? key,
+    required this.text,
     required this.profileAsync,
     required this.profile,
-    required this.text,
     required this.type,
   }) : super(key: key);
 
   const BubbleOtherUser.onFeed({
     Key? key,
+    required this.text,
     this.profileAsync,
     this.profile,
-    required this.text,
     this.type = BubbleOtherUserType.onFeed,
   }) : super(key: key);
 
   const BubbleOtherUser.onMyProfile({
     Key? key,
+    required this.text,
     required this.profileAsync,
     required this.profile,
-    required this.text,
     this.type = BubbleOtherUserType.onMyProfile,
   }) : super(key: key);
 
+  final String text;
   final Future<AppProfile>? profileAsync;
   final AppProfile? profile;
-  final String text;
   final BubbleOtherUserType type;
 
   @override

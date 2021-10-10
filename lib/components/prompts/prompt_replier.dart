@@ -4,6 +4,7 @@ import 'package:prompts_game/components/bubbles/bubble_current_user.dart';
 import 'package:prompts_game/components/bubbles/bubble_other_user.dart';
 import 'package:prompts_game/components/widgets/app_future_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
+import 'package:prompts_game/components/widgets/reactions.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/app_reply.dart';
 import 'package:prompts_game/models/store/selected_prompt_store.dart';
@@ -19,6 +20,11 @@ class PromptReply extends StatefulWidget {
 }
 
 class _PromptReplyState extends State<PromptReply> {
+  bool isThisSelected(SelectedPromptStore selected) {
+    return selected.prompt != null &&
+        selected.prompt!.reference.id == widget.prompt.reference.id;
+  }
+
   void _selectPrompt() {
     Provider.of<SelectedPromptStore>(context, listen: false)
         .change(widget.prompt);
@@ -34,9 +40,7 @@ class _PromptReplyState extends State<PromptReply> {
             Flexible(
               child: GestureDetector(
                 onTap: _selectPrompt,
-                child: BubbleOtherUser.onFeed(
-                  text: widget.prompt.prompt,
-                ),
+                child: BubbleOtherUser.onFeed(text: widget.prompt.prompt),
               ),
             ),
             Transform.scale(
@@ -47,8 +51,11 @@ class _PromptReplyState extends State<PromptReply> {
                   color: Colors.black26,
                 ),
                 onPressed: () {
-                  // todo: reprompt
-                  print('reprompt this!');
+                  widget.prompt.rePrompt().whenComplete(() {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('You prompted: ${widget.prompt.prompt}'),
+                    ));
+                  });
                 },
               ),
             ),
@@ -62,11 +69,13 @@ class _PromptReplyState extends State<PromptReply> {
               return Consumer<SelectedPromptStore>(
                 builder: (context, selected, child) {
                   if (isThisSelected(selected)) {
+                    /// needs to be async so it wouldn't rerender during build
                     selected.prompt!.myReplyAsync.then((AppReply? myReply) {
                       if (myReply != null) {
-                        Provider.of<SelectedPromptStore>(context, listen: false)
-                            .change(null);
-                        setState(() {});
+                        setState(() {
+                          Provider.of<SelectedPromptStore>(context, listen: false)
+                              .change(null);
+                        });
                       }
                     });
                   }
@@ -75,31 +84,25 @@ class _PromptReplyState extends State<PromptReply> {
                 },
               );
             }
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Row(
-                children: [
-                  const SizedBox(width: 16),
-                  Flexible(child: BubbleCurrentUser(text: myReply.reply)),
-                  SizedBox(
-                    height: 65,
-                    width: 65,
-                    child: ProfilePicture(
-                      pictureUint8ListAsync: myReply.profilePictureAsync,
-                      pictureUint8List: myReply.profilePicture,
-                    ),
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const SizedBox(width: 16),
+                Reactions.disabled(reaction: myReply.reaction),
+                BubbleCurrentUser(text: myReply.reply),
+                SizedBox(
+                  height: 65,
+                  width: 65,
+                  child: ProfilePicture(
+                    pictureUint8ListAsync: myReply.profilePictureAsync,
+                    pictureUint8List: myReply.profilePicture,
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           },
         ),
       ],
     );
-  }
-
-  bool isThisSelected(SelectedPromptStore selected) {
-    return selected.prompt != null &&
-        selected.prompt!.reference.id == widget.prompt.reference.id;
   }
 }

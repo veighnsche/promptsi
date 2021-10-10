@@ -44,7 +44,6 @@ class RepliesApi {
   }
 
   Stream<List<AppReply>?> get streamReplies {
-    print('start reply stream $promptRef');
     return _repliesRef
         .orderBy('createdOn')
         .snapshots()

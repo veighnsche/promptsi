@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/services/apis/firebase/auth_api.dart';
+import 'package:prompts_game/services/apis/profile_api.dart';
 import 'package:prompts_game/services/cache/prompts_cache.dart';
 
 class PromptsApi {
@@ -9,7 +11,7 @@ class PromptsApi {
   final DocumentReference profileRef;
   final PromptsCache _promptsCache = PromptsCache();
 
-  CollectionReference get _promptsRef {
+  CollectionReference _toCollectionReference(DocumentReference profileRef) {
     return profileRef.collection('prompts').withConverter<AppPrompt>(
           toFirestore: (AppPrompt prompt, _) => prompt.toJson(),
           fromFirestore: (snapshot, _) {
@@ -17,6 +19,10 @@ class PromptsApi {
               ..reference = snapshot.reference;
           },
         );
+  }
+
+  CollectionReference get _promptsRef {
+    return _toCollectionReference(profileRef);
   }
 
   AppPrompt _handleDocumentSnapshot(DocumentSnapshot doc) {
@@ -35,7 +41,6 @@ class PromptsApi {
   }
 
   Stream<List<AppPrompt>?> get promptStream {
-    print('start prompt stream $profileRef');
     /// can be nullable if the user doesn't have any prompts
     return _promptsRef
         .orderBy('createdOn')
@@ -43,9 +48,9 @@ class PromptsApi {
         .map(_handleQuerySnapshot);
   }
 
-  Future<AppPrompt> createPrompt(String promptText, {String? madeById}) {
+  Future<AppPrompt> createPrompt(String promptText, {String? madeBy}) {
     AppPrompt prompt = AppPrompt(
-      madeById: madeById ?? AuthApi.uid,
+      madeById: madeBy ?? AuthApi.uid,
       prompt: promptText,
     );
 
@@ -58,10 +63,18 @@ class PromptsApi {
     );
   }
 
-  Future<AppPrompt> createRePrompt(
+  static Future<AppPrompt> createRePrompt(
     String promptText,
     String madeById,
   ) {
-    return createPrompt(promptText, madeById: madeById);
+    return ProfileApi.fetchProfile(AuthApi.uid).then((AppProfile? profile) {
+      if (profile == null) {
+        throw 'can\'t create rePrompt due to not having found own profile';
+      }
+      return PromptsApi(profile.reference).createPrompt(
+        promptText,
+        madeBy: madeById,
+      );
+    });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:prompts_game/models/app_reply.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
 import 'package:prompts_game/services/apis/firebase/auth_api.dart';
+import 'package:prompts_game/services/apis/prompts_api.dart';
 import 'package:prompts_game/services/apis/replies_api.dart';
 import 'package:prompts_game/services/cache/replies_cache.dart';
 
@@ -51,6 +52,10 @@ class AppPrompt with WithDocumentReference {
 
   Stream<List<AppReply>?> get replyStream {
     return _repliesApi.streamReplies;
+  }
+
+  Future<AppPrompt> rePrompt() async {
+    return PromptsApi.createRePrompt(prompt, madeById);
   }
 
   AppPrompt.fromJson(Map<String, dynamic> json)

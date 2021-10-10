@@ -6,6 +6,7 @@ import 'package:prompts_game/components/prompts/prompt_poster.dart';
 import 'package:prompts_game/components/prompts/prompt_replier.dart';
 import 'package:prompts_game/components/widgets/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/carousel_pictures.dart';
+import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/app_reply.dart';
@@ -83,6 +84,25 @@ class _ProfileBodyState extends State<ProfileBody> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        if (onFeed)
+          Container(
+            decoration: BoxDecoration(color: Colors.white, boxShadow: [
+              BoxShadow(
+                color: Colors.blueGrey.withOpacity(0.5),
+                spreadRadius: 0,
+                blurRadius: 4,
+                offset: const Offset(0, 4), // changes position of shadow
+              ),
+            ]),
+            child: ListTile(
+              leading: ProfilePicture(
+                pictureUint8ListAsync: widget.profile.profilePictureAsync,
+                pictureUint8List: widget.profile.profilePicture,
+              ),
+              title: Text('${widget.profile.firstName}, ${widget.profile.age}'),
+              subtitle: const Text('0 Km away (hardcoded)'),
+            ),
+          ),
         Flexible(
           child: SingleChildScrollView(
             reverse: true,
@@ -98,12 +118,6 @@ class _ProfileBodyState extends State<ProfileBody> {
                     return _promptsColumn(prompts);
                   },
                 ),
-                if (onFeed)
-                  ListTile(
-                    title: Text(
-                        '${widget.profile.firstName}, ${widget.profile.age}'),
-                    subtitle: const Text('0 Km away (hardcoded)'),
-                  ),
                 if (onMyProfile) const SizedBox(height: 16),
                 CarouselPictures(picturesAsync: widget.profile.picturesAsync),
               ],

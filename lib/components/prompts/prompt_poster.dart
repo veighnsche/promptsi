@@ -9,6 +9,7 @@ import 'package:prompts_game/components/widgets/reactions.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/app_reply.dart';
+import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 
 class PromptPoster extends StatelessWidget {
   const PromptPoster({
@@ -24,11 +25,9 @@ class PromptPoster extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.only(right: 16),
-          child: BubbleCurrentUser(
-            text: prompt.prompt,
-          ),
+        BubbleCurrentUser.onMyProfile(
+          text: prompt.prompt,
+          isRePrompt: prompt.madeById != AuthApi.uid,
         ),
         AppStreamBuilder(
           stream: prompt.replyStream,
@@ -37,7 +36,6 @@ class PromptPoster extends StatelessWidget {
             if (replies == null) {
               return const SizedBox.shrink();
             }
-
             return RepliesColumn(replies: replies);
           },
         ),
