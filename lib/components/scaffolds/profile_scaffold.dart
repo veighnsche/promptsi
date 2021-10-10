@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prompts_game/components/bodies/profile_body.dart';
+import 'package:prompts_game/components/bodies/profile_other_body.dart';
 import 'package:prompts_game/models/app_profile.dart';
 
 class ProfileScaffold extends StatelessWidget {
@@ -13,7 +13,7 @@ class ProfileScaffold extends StatelessWidget {
       appBar: AppBar(
         title: Text(profile.firstName),
       ),
-      body: ProfileBody.profile(profile: profile),
+      body: ProfileOtherBody(profile: profile),
     );
   }
 }

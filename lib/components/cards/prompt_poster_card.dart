@@ -9,7 +9,7 @@ import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/app_reply.dart';
 
-class PromptPosterCard extends StatefulWidget {
+class PromptPosterCard extends StatelessWidget {
   const PromptPosterCard({
     Key? key,
     required this.prompt,
@@ -18,10 +18,46 @@ class PromptPosterCard extends StatefulWidget {
   final AppPrompt prompt;
 
   @override
-  State<PromptPosterCard> createState() => _PromptPosterCardState();
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: BubbleCurrentUser(
+            text: prompt.prompt,
+          ),
+        ),
+        AppStreamBuilder(
+          stream: prompt.replyStream,
+          loader: RepliesColumn(replies: prompt.replies),
+          builder: (context, List<AppReply>? replies) {
+            if (replies == null) {
+              return const SizedBox.shrink();
+            }
+
+            return RepliesColumn(replies: replies);
+          },
+        ),
+      ],
+    );
+  }
 }
 
-class _PromptPosterCardState extends State<PromptPosterCard> {
+class RepliesColumn extends StatefulWidget {
+  const RepliesColumn({
+    Key? key,
+    required this.replies,
+  }) : super(key: key);
+
+  final List<AppReply>? replies;
+
+  @override
+  State<RepliesColumn> createState() => _RepliesColumnState();
+}
+
+class _RepliesColumnState extends State<RepliesColumn> {
   void _goToProfile(AppProfile owner) {
     Navigator.push(
       context,
@@ -37,54 +73,16 @@ class _PromptPosterCardState extends State<PromptPosterCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.only(right: 16),
-          child: BubbleCurrentUser(
-            text: widget.prompt.prompt,
-          ),
-        ),
-        AppStreamBuilder(
-          stream: widget.prompt.replyStream,
-          loader: RepliesColumn(replies: widget.prompt.replies),
-          builder: (context, List<AppReply>? replies) {
-            if (replies == null) {
-              return const SizedBox.shrink();
-            }
-
-            return RepliesColumn(replies: replies);
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class RepliesColumn extends StatelessWidget {
-  const RepliesColumn({
-    Key? key,
-    required this.replies,
-  }) : super(key: key);
-
-  final List<AppReply>? replies;
-
-  @override
-  Widget build(BuildContext context) {
-    if (replies == null) {
+    if (widget.replies == null) {
       return const SizedBox.shrink();
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: replies!.map((AppReply reply) {
+      children: widget.replies!.map((AppReply reply) {
         return Padding(
           padding: const EdgeInsets.only(top: 16),
           child: GestureDetector(
-            onTap: () {
-              print('normal tap');
-            },
+            onTap: () => _goToProfile(reply.owner!),
             child: Row(
               children: [
                 SizedBox(

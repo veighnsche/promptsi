@@ -27,7 +27,7 @@ class ProfileBody extends StatefulWidget {
     this.type = ProfileBodyType.onMyProfile,
   }) : super(key: key);
 
-  const ProfileBody.profile({
+  const ProfileBody.onFeed({
     Key? key,
     required this.profile,
     this.type = ProfileBodyType.onFeed,
