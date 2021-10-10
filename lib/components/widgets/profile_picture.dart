@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/widgets/app_future_builder.dart';
@@ -6,12 +6,12 @@ import 'package:prompts_game/components/widgets/app_future_builder.dart';
 class ProfilePicture extends StatelessWidget {
   const ProfilePicture({
     Key? key,
-    required this.pictureBase64Async,
-    required this.pictureBase64,
+    required this.pictureUint8ListAsync,
+    required this.pictureUint8List,
   }) : super(key: key);
 
-  final Future<String> pictureBase64Async;
-  final String? pictureBase64;
+  final Future<Uint8List> pictureUint8ListAsync;
+  final Uint8List? pictureUint8List;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +20,10 @@ class ProfilePicture extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 1,
         child: AppFutureBuilder.skipFuture(
-          future: pictureBase64Async,
-          initialData: pictureBase64,
-          builder: (context, String? pictureBase64) {
-            if (pictureBase64 == null) {
+          future: pictureUint8ListAsync,
+          initialData: pictureUint8List,
+          builder: (context, Uint8List? pictureUint8List) {
+            if (pictureUint8List == null) {
               return const SizedBox.shrink();
             }
 
@@ -32,7 +32,7 @@ class ProfilePicture extends StatelessWidget {
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   image: Image.memory(
-                    base64Decode(pictureBase64),
+                    pictureUint8List,
                     fit: BoxFit.cover,
                   ).image,
                 ),

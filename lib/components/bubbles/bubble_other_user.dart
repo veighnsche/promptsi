@@ -42,9 +42,9 @@ class BubbleOtherUser extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (type == BubbleOtherUserType.onMyProfile)
-            AppFutureBuilder(
+            AppFutureBuilder.skipFuture(
               future: profileAsync!,
-              skipFuture: true,
+              initialData: profile,
               loader: ProfileAsl(profile: profile),
               builder: (context, AppProfile profile) {
                 return ProfileAsl(profile: profile);

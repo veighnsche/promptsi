@@ -10,8 +10,8 @@ import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/app_reply.dart';
 import 'package:prompts_game/services/apis/prompts_api.dart';
-import 'package:prompts_game/services/apis/reply_api.dart';
-import 'package:prompts_game/store/selected_prompt.dart';
+import 'package:prompts_game/services/apis/replies_api.dart';
+import 'package:prompts_game/store/selected_prompt_store.dart';
 import 'package:provider/provider.dart';
 
 class ProfileBody extends StatefulWidget {
@@ -41,8 +41,6 @@ class ProfileBody extends StatefulWidget {
 }
 
 class _ProfileBodyState extends State<ProfileBody> {
-  final List<AppPrompt> __promptsCache = [];
-
   bool get onFeed {
     return widget.type == ProfileBodyType.onFeed;
   }
@@ -51,14 +49,13 @@ class _ProfileBodyState extends State<ProfileBody> {
     return widget.type == ProfileBodyType.onMyProfile;
   }
 
-  void _onReplySend(SelectedPrompt selectedPrompt, String reply) {
-    ReplyApi(selectedPrompt.prompt!.reference).create(reply).then(
-      (AppReply myReply) {
-        Provider.of<SelectedPrompt>(context, listen: false).change(
-          selectedPrompt.prompt!..setMyReply(myReply),
-        );
-      },
-    );
+  void _onReplySend(SelectedPromptStore selectedPrompt, String reply) {
+    RepliesApi(selectedPrompt.prompt!.reference)
+        .create(reply)
+        .then((AppReply myReply) {
+      Provider.of<SelectedPromptStore>(context, listen: false)
+          .change(selectedPrompt.prompt);
+    });
   }
 
   Widget _promptsColumn(List<AppPrompt>? prompts) {
@@ -74,20 +71,6 @@ class _ProfileBodyState extends State<ProfileBody> {
     }
   }
 
-  set _promptsCache(List<AppPrompt> prompts) {
-    final cacheRefs = __promptsCache.map((AppPrompt p) => p.reference.id);
-    for (var prompt in prompts) {
-      // if prompt is in cache, then do not add it
-      if (!cacheRefs.contains(prompt.reference.id)) {
-        __promptsCache.add(prompt);
-      }
-    }
-  }
-
-  List<AppPrompt> get _promptsCache {
-    return __promptsCache;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -99,15 +82,12 @@ class _ProfileBodyState extends State<ProfileBody> {
               children: [
                 AppStreamBuilder(
                   stream: widget.profile.promptStream,
-                  loader: _promptsColumn(_promptsCache),
+                  loader: _promptsColumn(widget.profile.prompts),
                   builder: (context, List<AppPrompt>? prompts) {
                     if (prompts == null) {
                       return const ErrorBody('No prompts yet');
                     }
-
-                    _promptsCache = prompts;
-
-                    return _promptsColumn(_promptsCache);
+                    return _promptsColumn(prompts);
                   },
                 ),
                 if (onFeed)
@@ -117,7 +97,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                     subtitle: const Text('0 Km away (hardcoded)'),
                   ),
                 if (onMyProfile) const SizedBox(height: 16),
-                CarouselPictures(picturesAsync: widget.profile.pictures),
+                CarouselPictures(picturesAsync: widget.profile.picturesAsync),
               ],
             ),
           ),
@@ -130,7 +110,7 @@ class _ProfileBodyState extends State<ProfileBody> {
             ),
           ),
         if (onFeed)
-          Consumer<SelectedPrompt>(
+          Consumer<SelectedPromptStore>(
             builder: (context, selected, child) {
               if (selected.prompt == null || selected.hasMyReply) {
                 return const SizedBox.shrink();

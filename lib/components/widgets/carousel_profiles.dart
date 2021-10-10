@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/profile_body.dart';
 import 'package:prompts_game/models/app_profile.dart';
-import 'package:prompts_game/store/selected_prompt.dart';
+import 'package:prompts_game/store/selected_prompt_store.dart';
 import 'package:provider/provider.dart';
 
 class CarouselProfiles extends StatefulWidget {
@@ -22,7 +22,7 @@ class _CarouselProfilesState extends State<CarouselProfiles> {
       child: CarouselSlider(
         items: widget.profiles.map((AppProfile profile) {
           return ChangeNotifierProvider(
-            create: (context) => SelectedPrompt(),
+            create: (context) => SelectedPromptStore(),
             child: Card(
               child: ProfileBody(
                 profile: profile,

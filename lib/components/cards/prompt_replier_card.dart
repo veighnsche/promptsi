@@ -6,7 +6,7 @@ import 'package:prompts_game/components/widgets/app_future_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/app_reply.dart';
-import 'package:prompts_game/store/selected_prompt.dart';
+import 'package:prompts_game/store/selected_prompt_store.dart';
 import 'package:provider/provider.dart';
 
 class PromptReplyCard extends StatefulWidget {
@@ -20,7 +20,8 @@ class PromptReplyCard extends StatefulWidget {
 
 class _PromptReplyCardState extends State<PromptReplyCard> {
   void _selectPrompt() {
-    Provider.of<SelectedPrompt>(context, listen: false).change(widget.prompt);
+    Provider.of<SelectedPromptStore>(context, listen: false)
+        .change(widget.prompt);
   }
 
   @override
@@ -58,12 +59,12 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
           initialData: widget.prompt.myReply,
           builder: (context, AppReply? myReply) {
             if (myReply == null) {
-              return Consumer<SelectedPrompt>(
+              return Consumer<SelectedPromptStore>(
                 builder: (context, selected, child) {
                   if (isThisSelected(selected)) {
                     selected.prompt!.myReplyAsync.then((AppReply? myReply) {
                       if (myReply != null) {
-                        Provider.of<SelectedPrompt>(context, listen: false)
+                        Provider.of<SelectedPromptStore>(context, listen: false)
                             .change(null);
                         setState(() {});
                       }
@@ -84,8 +85,8 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
                     height: 65,
                     width: 65,
                     child: ProfilePicture(
-                      pictureBase64Async: myReply.profilePictureBase64Async,
-                      pictureBase64: myReply.profilePictureBase64,
+                      pictureUint8ListAsync: myReply.profilePictureAsync,
+                      pictureUint8List: myReply.profilePicture,
                     ),
                   ),
                 ],
@@ -97,7 +98,7 @@ class _PromptReplyCardState extends State<PromptReplyCard> {
     );
   }
 
-  bool isThisSelected(SelectedPrompt selected) {
+  bool isThisSelected(SelectedPromptStore selected) {
     return selected.prompt != null &&
         selected.prompt!.reference.id == widget.prompt.reference.id;
   }

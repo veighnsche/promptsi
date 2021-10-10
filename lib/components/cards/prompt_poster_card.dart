@@ -22,8 +22,6 @@ class PromptPosterCard extends StatefulWidget {
 }
 
 class _PromptPosterCardState extends State<PromptPosterCard> {
-  final List<AppReply> __repliesCache = [];
-
   void _goToProfile(AppProfile owner) {
     Navigator.push(
       context,
@@ -35,19 +33,6 @@ class _PromptPosterCardState extends State<PromptPosterCard> {
         },
       ),
     );
-  }
-
-  set _repliesCache(List<AppReply> replies) {
-    final cacheRefs = __repliesCache.map((AppReply p) => p.reference.id);
-    for (var reply in replies) {
-      if (!cacheRefs.contains(reply.reference.id)) {
-        __repliesCache.add(reply);
-      }
-    }
-  }
-
-  List<AppReply> get _repliesCache {
-    return __repliesCache;
   }
 
   @override
@@ -64,15 +49,13 @@ class _PromptPosterCardState extends State<PromptPosterCard> {
         ),
         AppStreamBuilder(
           stream: widget.prompt.replyStream,
-          loader: RepliesColumn(replies: _repliesCache),
+          loader: RepliesColumn(replies: widget.prompt.replies),
           builder: (context, List<AppReply>? replies) {
             if (replies == null) {
               return const SizedBox.shrink();
             }
 
-            _repliesCache = replies;
-
-            return RepliesColumn(replies: _repliesCache);
+            return RepliesColumn(replies: replies);
           },
         ),
       ],
@@ -108,8 +91,8 @@ class RepliesColumn extends StatelessWidget {
                   height: 65,
                   width: 65,
                   child: ProfilePicture(
-                    pictureBase64Async: reply.profilePictureBase64Async,
-                    pictureBase64: reply.profilePictureBase64,
+                    pictureUint8ListAsync: reply.profilePictureAsync,
+                    pictureUint8List: reply.profilePicture,
                   ),
                 ),
                 Flexible(

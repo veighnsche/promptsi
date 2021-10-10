@@ -41,9 +41,11 @@ class _HomeScaffoldState extends State<HomeScaffold> {
   }
 
   void _setSelectedIndex(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (_selectedIndex != index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override

@@ -1,7 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
 import 'package:prompts_game/services/apis/prompts_api.dart';
 import 'package:prompts_game/services/apis/storage_api.dart';
+import 'package:prompts_game/services/cache/pictures_cache.dart';
+import 'package:prompts_game/services/cache/profile_pictures_cache.dart';
+import 'package:prompts_game/services/cache/prompts_cache.dart';
 
 class AppProfile with WithDocumentReference {
   AppProfile({
@@ -16,40 +21,43 @@ class AppProfile with WithDocumentReference {
   final AppGenders gender;
   final List<AppGenders> interestedIn;
 
-  String? _profilePictureBase64;
-  List<String>? _pictures;
-  List<AppPrompt>? _prompts;
+  final ProfilePicturesCache _profilePicturesCache = ProfilePicturesCache();
+  final PicturesCache _picturesCache = PicturesCache();
+  final PromptsCache _promptsCache = PromptsCache();
+
+  PromptsApi get _promptsApi => PromptsApi(reference);
+
+  Uint8List? get profilePicture {
+    if (!_profilePicturesCache.has(reference.id)) {
+      return null;
+    }
+    return _profilePicturesCache.get(reference.id);
+  }
+
+  Future<Uint8List> get profilePictureAsync async {
+    return StorageApi.fetchProfilePicture(id);
+  }
+
+  List<String>? get pictures {
+    if (!_picturesCache.has(reference.id)) {
+      return null;
+    }
+    return _picturesCache.get(reference.id);
+  }
+
+  Future<List<String>> get picturesAsync async {
+    return StorageApi.fetchPictureUrls(id);
+  }
 
   List<int> get listedInterestedIn {
     return interestedIn.map((AppGenders g) => g.index).toList();
   }
 
-  PromptsApi get _promptsApi => PromptsApi(reference);
-
-  String? get profilePictureBase64 {
-    return _profilePictureBase64;
-  }
-
-  Future<String> get profilePictureBase64Async async {
-    if (_profilePictureBase64 == null) {
-      return _profilePictureBase64 =
-          await StorageApi.fetchProfilePictureBase64(reference.id);
+  List<AppPrompt>? get prompts {
+    if (!_promptsCache.has(id)) {
+      return null;
     }
-    return _profilePictureBase64!;
-  }
-
-  Future<List<String>> get pictures async {
-    if (_pictures == null) {
-      return _pictures = await StorageApi.fetchPictureUrls(reference.id);
-    }
-    return _pictures!;
-  }
-
-  Future<List<AppPrompt>?> get prompts async {
-    if (_prompts == null) {
-      return _prompts = await _promptsApi.prompts;
-    }
-    return _prompts!;
+    return _promptsCache.get(id);
   }
 
   Stream<List<AppPrompt>?> get promptStream {

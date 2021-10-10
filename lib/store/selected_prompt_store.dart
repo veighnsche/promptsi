@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 
-class SelectedPrompt extends ChangeNotifier {
+class SelectedPromptStore extends ChangeNotifier {
   final List<AppPrompt> _prompts = [];
 
   UnmodifiableListView<AppPrompt> get prompts => UnmodifiableListView(_prompts);

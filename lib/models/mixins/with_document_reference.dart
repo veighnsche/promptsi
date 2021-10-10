@@ -3,6 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 mixin WithDocumentReference {
   DocumentReference? _reference;
 
+  String get id {
+    return reference.id;
+  }
+
   set reference(DocumentReference reference) {
     _reference = reference;
   }

@@ -12,7 +12,7 @@ class PictureFormFutureBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: StorageApi.fetchPictureRefs(AuthApi.currentUser.uid),
+      future: StorageApi.fetchPicturesRefs(AuthApi.currentUser.uid),
       builder: (BuildContext context, AsyncSnapshot<List<Reference>> snapshot) {
         if (snapshot.hasError) {
           return ErrorBody(snapshot.error.toString());

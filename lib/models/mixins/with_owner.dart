@@ -1,40 +1,50 @@
+import 'dart:typed_data';
+
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/services/apis/profile_api.dart';
+import 'package:prompts_game/services/cache/profiles_cache.dart';
 
 mixin WithOwner {
   String get ownerId;
 
-  AppProfile? _owner;
+  final ProfilesCache cache = ProfilesCache();
 
   AppProfile? get owner {
-    return _owner;
+    if (!cache.has(ownerId)) {
+      return null;
+    }
+    return cache.get(ownerId);
   }
 
-  String? get profilePictureBase64 {
-    return owner?.profilePictureBase64;
-  }
-
-  Future<String> get profilePictureBase64Async {
-    return ownerAsync.then((AppProfile profile) {
-      return profile.profilePictureBase64Async;
-    });
-  }
-
-  Future<List<String>> get ownerPicturesAsync {
-    return ownerAsync.then((AppProfile profile) => profile.pictures);
+  set owner(AppProfile? profile) {
+    if (profile == null) {
+      throw 'no owner profile in profiles instance';
+    }
+    cache.set(profile);
   }
 
   Future<AppProfile> get ownerAsync async {
-    if (_owner != null) {
-      return _owner!;
+    if (owner != null) {
+      return owner!;
     }
-    return _owner = await ProfileApi.fetchProfile(ownerId).then<AppProfile>(
+
+    return owner = await ProfileApi.fetchProfile(ownerId).then<AppProfile>(
       (AppProfile? profile) {
         if (profile == null) {
-          throw 'no owner profile';
+          throw 'no owner profile from firestore';
         }
         return profile;
       },
     );
+  }
+
+  Uint8List? get profilePicture {
+    return owner?.profilePicture;
+  }
+
+  Future<Uint8List> get profilePictureAsync {
+    return ownerAsync.then((AppProfile profile) {
+      return profile.profilePictureAsync;
+    });
   }
 }

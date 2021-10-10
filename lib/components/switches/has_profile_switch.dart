@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/scaffolds/home_scaffold.dart';
-import 'package:prompts_game/components/scaffolds/loading_scaffold.dart';
 import 'package:prompts_game/components/scaffolds/profile_create_scaffold.dart';
+import 'package:prompts_game/components/widgets/app_future_builder.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/services/apis/profile_api.dart';
 
@@ -25,24 +25,15 @@ class _HasProfileSwitchState extends State<HasProfileSwitch> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      initialData: _profile,
+    return AppFutureBuilder.skipFuture(
       future: ProfileApi.fetchProfile(_user!.uid),
-      builder: (BuildContext context, AsyncSnapshot<AppProfile?> snapshot) {
-        if (snapshot.hasError) {
-          throw snapshot.error!;
-          // return ErrorScaffold(message: snapshot.error.toString());
+      initialData: _profile,
+      builder: (context, AppProfile? profile) {
+        if (profile == null) {
+          return ProfileCreateScaffold(onProfileCreated: setProfile);
+        } else {
+          return HomeScaffold(userProfile: profile);
         }
-
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            return HomeScaffold(userProfile: snapshot.data!);
-          } else {
-            return ProfileCreateScaffold(onProfileCreated: setProfile);
-          }
-        }
-
-        return const LoadingScaffold();
       },
     );
   }
