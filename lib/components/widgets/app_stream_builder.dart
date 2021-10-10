@@ -25,7 +25,6 @@ class AppStreamBuilder<T> extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-
           return loader;
         }
 

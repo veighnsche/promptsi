@@ -44,6 +44,7 @@ class RepliesApi {
   }
 
   Stream<List<AppReply>?> get streamReplies {
+    print('start reply stream $promptRef');
     return _repliesRef
         .orderBy('createdOn')
         .snapshots()
@@ -70,5 +71,9 @@ class RepliesApi {
     AppReply reply = doc.data() as AppReply;
     _repliesCache.add(promptRef.id, reply);
     return reply;
+  }
+
+  static void react(AppReply reply)  {
+    reply.reference.update({'reaction': reply.reaction});
   }
 }

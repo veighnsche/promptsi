@@ -1,5 +1,6 @@
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
 import 'package:prompts_game/models/mixins/with_owner.dart';
+import 'package:prompts_game/services/apis/replies_api.dart';
 
 class AppReply with WithDocumentReference, WithOwner {
   AppReply({required this.reply, this.reaction});
@@ -17,7 +18,7 @@ class AppReply with WithDocumentReference, WithOwner {
   void react(int reactionIdx) {
     if (reaction != reactionIdx) {
       reaction = reactionIdx == -1 ? null : reactionIdx;
-      reference.update({'reaction': reaction});
+      RepliesApi.react(this);
     }
   }
 

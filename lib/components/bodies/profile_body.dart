@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/error_body.dart';
-import 'package:prompts_game/components/columns/prompts_poster_column.dart';
-import 'package:prompts_game/components/columns/prompts_replier_column.dart';
 import 'package:prompts_game/components/forms/prompts/prompt_form.dart';
 import 'package:prompts_game/components/forms/replies/reply_form.dart';
+import 'package:prompts_game/components/prompts/prompt_poster.dart';
+import 'package:prompts_game/components/prompts/prompt_replier.dart';
 import 'package:prompts_game/components/widgets/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/carousel_pictures.dart';
 import 'package:prompts_game/models/app_profile.dart';
@@ -64,10 +64,18 @@ class _ProfileBodyState extends State<ProfileBody> {
     }
     switch (widget.type) {
       case ProfileBodyType.onMyProfile:
-        return PromptsPosterColumn(prompts: prompts);
+        return Column(
+          children: prompts.map((AppPrompt prompt) {
+            return PromptPoster(prompt: prompt);
+          }).toList(),
+        );
 
       case ProfileBodyType.onFeed:
-        return PromptsReplierColumn(prompts: prompts);
+        return Column(
+          children: prompts.map((AppPrompt prompt) {
+            return PromptReply(prompt: prompt);
+          }).toList(),
+        );
     }
   }
 

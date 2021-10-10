@@ -35,6 +35,7 @@ class PromptsApi {
   }
 
   Stream<List<AppPrompt>?> get promptStream {
+    print('start prompt stream $profileRef');
     /// can be nullable if the user doesn't have any prompts
     return _promptsRef
         .orderBy('createdOn')
