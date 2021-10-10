@@ -18,13 +18,15 @@ class RepliesCache {
   }
 
   bool canAddReply(String promptId, AppReply reply) {
+    final AppReply cached = _replies[promptId]![reply.id]!;
     return !exists(promptId, reply.id) ||
-        _replies[promptId]![reply.id]!.reply != reply.reply;
+        cached.reply != reply.reply ||
+        cached.reaction != reply.reaction;
   }
 
   void add(String promptId, AppReply reply) {
     if (!has(promptId)) {
-      _replies[promptId] = {reply.id:reply};
+      _replies[promptId] = {reply.id: reply};
     } else if (canAddReply(promptId, reply)) {
       _replies[promptId]![reply.id] = reply;
     }

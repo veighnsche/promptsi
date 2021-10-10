@@ -9,16 +9,16 @@ import 'package:prompts_game/models/app_reply.dart';
 import 'package:prompts_game/models/store/selected_prompt_store.dart';
 import 'package:provider/provider.dart';
 
-class PromptReplyCard extends StatefulWidget {
-  const PromptReplyCard({Key? key, required this.prompt}) : super(key: key);
+class PromptReply extends StatefulWidget {
+  const PromptReply({Key? key, required this.prompt}) : super(key: key);
 
   final AppPrompt prompt;
 
   @override
-  State<PromptReplyCard> createState() => _PromptReplyCardState();
+  State<PromptReply> createState() => _PromptReplyState();
 }
 
-class _PromptReplyCardState extends State<PromptReplyCard> {
+class _PromptReplyState extends State<PromptReply> {
   void _selectPrompt() {
     Provider.of<SelectedPromptStore>(context, listen: false)
         .change(widget.prompt);

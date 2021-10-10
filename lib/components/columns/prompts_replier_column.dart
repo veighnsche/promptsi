@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prompts_game/components/cards/prompt_replier_card.dart';
+import 'package:prompts_game/components/prompts/prompt_replier.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 
 class PromptsReplierColumn extends StatelessWidget {
@@ -12,7 +12,7 @@ class PromptsReplierColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: prompts.map((AppPrompt prompt) {
-        return PromptReplyCard(prompt: prompt);
+        return PromptReply(prompt: prompt);
       }).toList(),
     );
   }

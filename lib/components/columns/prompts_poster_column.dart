@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prompts_game/components/cards/prompt_poster_card.dart';
+import 'package:prompts_game/components/prompts/prompt_poster.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 
 class PromptsPosterColumn extends StatelessWidget {
@@ -12,7 +12,7 @@ class PromptsPosterColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: prompts.map((AppPrompt prompt) {
-        return PromptPosterCard(prompt: prompt);
+        return PromptPoster(prompt: prompt);
       }).toList(),
     );
   }
