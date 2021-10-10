@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:prompts_game/components/forms/profile/profile_form.dart';
 import 'package:prompts_game/components/scaffolds/loading_scaffold.dart';
 import 'package:prompts_game/models/app_profile.dart';
-import 'package:prompts_game/services/apis/auth_api.dart';
+import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 import 'package:prompts_game/services/apis/profile_api.dart';
 import 'package:prompts_game/utils/string_utils.dart';
 

@@ -1,5 +1,5 @@
 import 'package:prompts_game/models/app_reply.dart';
-import 'package:prompts_game/services/apis/auth_api.dart';
+import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 
 class RepliesCache {
   factory RepliesCache() => _instance;

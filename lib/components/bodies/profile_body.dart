@@ -9,9 +9,9 @@ import 'package:prompts_game/components/widgets/carousel_pictures.dart';
 import 'package:prompts_game/models/app_profile.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/app_reply.dart';
+import 'package:prompts_game/models/store/selected_prompt_store.dart';
 import 'package:prompts_game/services/apis/prompts_api.dart';
 import 'package:prompts_game/services/apis/replies_api.dart';
-import 'package:prompts_game/store/selected_prompt_store.dart';
 import 'package:provider/provider.dart';
 
 class ProfileBody extends StatefulWidget {

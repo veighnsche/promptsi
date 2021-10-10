@@ -6,7 +6,7 @@ import 'package:prompts_game/components/widgets/app_future_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/app_reply.dart';
-import 'package:prompts_game/store/selected_prompt_store.dart';
+import 'package:prompts_game/models/store/selected_prompt_store.dart';
 import 'package:provider/provider.dart';
 
 class PromptReplyCard extends StatefulWidget {

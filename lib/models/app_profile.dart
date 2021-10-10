@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
 import 'package:prompts_game/services/apis/prompts_api.dart';
-import 'package:prompts_game/services/apis/storage_api.dart';
+import 'package:prompts_game/services/apis/firebase/storage_api.dart';
 import 'package:prompts_game/services/cache/pictures_cache.dart';
 import 'package:prompts_game/services/cache/profile_pictures_cache.dart';
 import 'package:prompts_game/services/cache/prompts_cache.dart';

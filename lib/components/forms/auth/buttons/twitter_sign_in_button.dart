@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:prompts_game/services/apis/auth_api.dart';
+import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 
 class TwitterSignInButton extends StatelessWidget {
   const TwitterSignInButton({Key? key}) : super(key: key);

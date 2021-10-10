@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/scaffolds/sign_in_scaffold.dart';
 import 'package:prompts_game/components/switches/has_profile_switch.dart';
-import 'package:prompts_game/services/apis/auth_api.dart';
+import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 
 class IsSignedInSwitch extends StatefulWidget {
   const IsSignedInSwitch({Key? key}) : super(key: key);

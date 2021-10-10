@@ -6,7 +6,7 @@ import 'package:prompts_game/components/forms/auth/buttons/google_sign_in_button
 import 'package:prompts_game/components/forms/auth/buttons/twitter_sign_in_button.dart';
 import 'package:prompts_game/components/forms/auth/sign_in_form.dart';
 import 'package:prompts_game/components/widgets/divider_text.dart';
-import 'package:prompts_game/services/apis/auth_api.dart';
+import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 
 class SignInScaffold extends StatefulWidget {
   const SignInScaffold({Key? key}) : super(key: key);

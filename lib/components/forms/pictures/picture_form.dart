@@ -2,8 +2,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prompts_game/components/forms/pictures/picture_field.dart';
-import 'package:prompts_game/services/apis/auth_api.dart';
-import 'package:prompts_game/services/apis/storage_api.dart';
+import 'package:prompts_game/services/apis/firebase/auth_api.dart';
+import 'package:prompts_game/services/apis/firebase/storage_api.dart';
 
 class PictureForm extends StatefulWidget {
   const PictureForm({Key? key, required this.pictureRefs}) : super(key: key);

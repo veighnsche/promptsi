@@ -1,6 +1,6 @@
 import 'package:prompts_game/models/app_reply.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
-import 'package:prompts_game/services/apis/auth_api.dart';
+import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 import 'package:prompts_game/services/apis/replies_api.dart';
 import 'package:prompts_game/services/cache/replies_cache.dart';
 

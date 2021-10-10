@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/app_prompt.dart';
-import 'package:prompts_game/services/apis/auth_api.dart';
+import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 import 'package:prompts_game/services/cache/prompts_cache.dart';
 
 class PromptsApi {
