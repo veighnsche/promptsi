@@ -30,6 +30,11 @@ class AppPrompt with WithDocumentReference {
   }
 
   /// can be null if user has never replied to this prompt
+  Stream<AppReply?> get myReplyStream {
+    return _repliesApi.streamMyReply;
+  }
+
+  /// can be null if user has never replied to this prompt
   Future<AppReply?> get myReplyAsync async {
     return _repliesApi.fetchMyReply;
   }

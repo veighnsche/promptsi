@@ -19,7 +19,7 @@ class AppStreamBuilder<T> extends StatelessWidget {
     return StreamBuilder(
       stream: stream,
       initialData: initialData,
-      builder: (context, AsyncSnapshot<T> snapshot) {
+      builder: (context, AsyncSnapshot<T?> snapshot) {
         if (snapshot.hasError) {
           throw snapshot.error.toString();
         }

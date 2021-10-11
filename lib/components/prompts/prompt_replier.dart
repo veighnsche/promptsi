@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bubbles/bubble_current_user.dart';
 import 'package:prompts_game/components/bubbles/bubble_other_user.dart';
-import 'package:prompts_game/components/widgets/app_future_builder.dart';
+import 'package:prompts_game/components/widgets/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/components/widgets/reactions.dart';
 import 'package:prompts_game/models/app_prompt.dart';
@@ -61,25 +61,16 @@ class _PromptReplyState extends State<PromptReply> {
             ),
           ],
         ),
-        AppFutureBuilder.skipFuture(
-          future: widget.prompt.myReplyAsync,
-          initialData: widget.prompt.myReply,
+        AppStreamBuilder(
+          stream: widget.prompt.myReplyStream,
           builder: (context, AppReply? myReply) {
             if (myReply == null) {
               return Consumer<SelectedPromptStore>(
                 builder: (context, selected, child) {
-                  if (isThisSelected(selected)) {
-                    /// needs to be async so it wouldn't rerender during build
-                    selected.prompt!.myReplyAsync.then((AppReply? myReply) {
-                      if (myReply != null) {
-                        setState(() {
-                          Provider.of<SelectedPromptStore>(context, listen: false)
-                              .change(null);
-                        });
-                      }
-                    });
+                  if (isThisSelected(selected) && selected.hasMyReply) {
+                    Provider.of<SelectedPromptStore>(context, listen: false)
+                        .change(null);
                   }
-
                   return const SizedBox.shrink();
                 },
               );
