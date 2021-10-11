@@ -14,7 +14,6 @@ abstract class NestedMapCache<T> {
   }
 
   void add(String parentId, T value, {String? id}) {
-
     // todo: optimize
 
     if (!parentHas(parentId)) {
@@ -44,5 +43,10 @@ abstract class NestedMapCache<T> {
     return _nestedMap[parentId]![id]!;
   }
 
-  bool canReplace(String parentId, T value, Map<String, Map<String, T>> nestedMap, {String? id});
+  bool canReplace(
+    String parentId,
+    T value,
+    NestedMap<T> nestedMap, {
+    String? id,
+  });
 }
