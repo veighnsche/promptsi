@@ -42,7 +42,7 @@ class Reactions extends StatelessWidget {
   final List<FaIcon> _icons = [
     const FaIcon(
       FontAwesomeIcons.solidHeart,
-      color: Colors.red,
+      color: Colors.pink,
     ),
     const FaIcon(
       FontAwesomeIcons.crown,
@@ -50,7 +50,7 @@ class Reactions extends StatelessWidget {
     ),
     const FaIcon(
       FontAwesomeIcons.solidLaughSquint,
-      color: Colors.orange,
+      color: Colors.amber,
     ),
     const FaIcon(
       FontAwesomeIcons.solidSadTear,
