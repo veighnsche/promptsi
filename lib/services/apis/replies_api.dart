@@ -15,8 +15,7 @@ class RepliesApi {
     return promptRef.collection('replies').withConverter<AppReply>(
           toFirestore: (AppReply reply, _) => reply.toJson(),
           fromFirestore: (snapshot, _) {
-            return AppReply.fromJson(snapshot.data()!)
-              ..reference = snapshot.reference;
+            return AppReply.fromJson(snapshot.reference, snapshot.data()!);
           },
         );
   }
@@ -51,13 +50,13 @@ class RepliesApi {
   }
 
   Future<List<AppReply>?> get fetchReplies async {
-    if (!_repliesCache.has(promptRef.id)) {
+    if (!_repliesCache.parentHas(promptRef.id)) {
       return _repliesRef
           .orderBy('createdOn')
           .get()
           .then(_handleListQuerySnapshot);
     }
-    return _repliesCache.get(promptRef.id);
+    return _repliesCache.toList(promptRef.id);
   }
 
   Stream<List<AppReply>?> get streamReplies {

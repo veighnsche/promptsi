@@ -1,34 +1,38 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/app_prompt.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
-import 'package:prompts_game/services/apis/prompts_api.dart';
 import 'package:prompts_game/services/apis/firebase/storage_api.dart';
+import 'package:prompts_game/services/apis/prompts_api.dart';
 import 'package:prompts_game/services/cache/pictures_cache.dart';
 import 'package:prompts_game/services/cache/profile_pictures_cache.dart';
 import 'package:prompts_game/services/cache/prompts_cache.dart';
 
-class AppProfile with WithDocumentReference {
-  AppProfile({
+class AppProfile extends WithDocumentReference {
+  AppProfile(
+    DocumentReference reference, {
     required this.firstName,
     required this.age,
     required this.gender,
     required this.interestedIn,
-  });
+  }) : super(reference);
 
   final String firstName;
   final String age;
   final AppGenders gender;
   final List<AppGenders> interestedIn;
 
-  final ProfilePicturesCache _profilePicturesCache = ProfilePicturesCache();
-  final PicturesCache _picturesCache = PicturesCache();
-  final PromptsCache _promptsCache = PromptsCache();
+  ProfilePicturesCache get _profilePicturesCache => ProfilePicturesCache();
+
+  PicturesCache get _picturesCache => PicturesCache();
+
+  PromptsCache get _promptsCache => PromptsCache();
 
   PromptsApi get _promptsApi => PromptsApi(reference);
 
   Uint8List? get profilePicture {
-    if (!_profilePicturesCache.has(reference.id)) {
+    if (!_profilePicturesCache.exists(reference.id)) {
       return null;
     }
     return _profilePicturesCache.get(reference.id);
@@ -39,7 +43,7 @@ class AppProfile with WithDocumentReference {
   }
 
   List<String>? get pictures {
-    if (!_picturesCache.has(reference.id)) {
+    if (!_picturesCache.exists(reference.id)) {
       return null;
     }
     return _picturesCache.get(reference.id);
@@ -54,10 +58,10 @@ class AppProfile with WithDocumentReference {
   }
 
   List<AppPrompt>? get prompts {
-    if (!_promptsCache.has(id)) {
+    if (!_promptsCache.parentHas(id)) {
       return null;
     }
-    return _promptsCache.get(id);
+    return _promptsCache.toList(id);
   }
 
   Stream<List<AppPrompt>?> get promptStream {
@@ -72,7 +76,8 @@ class AppProfile with WithDocumentReference {
   })  : firstName = firstName ?? '',
         age = age ?? '',
         gender = gender ?? AppGenders.undefined,
-        interestedIn = interestedIn ?? [];
+        interestedIn = interestedIn ?? [],
+        super(null);
 
   AppProfile.edit(
     AppProfile profile, {
@@ -83,15 +88,17 @@ class AppProfile with WithDocumentReference {
   })  : firstName = firstName ?? profile.firstName,
         age = age ?? profile.age,
         gender = gender ?? profile.gender,
-        interestedIn = interestedIn ?? profile.interestedIn;
+        interestedIn = interestedIn ?? profile.interestedIn,
+        super(profile.reference);
 
-  AppProfile.fromJson(Map<String, dynamic> json)
+  AppProfile.fromJson(DocumentReference reference, Map<String, dynamic> json)
       : firstName = json['firstName'],
         age = json['age'] ?? '',
         gender = AppGenders.values.elementAt(json['gender'] ?? 0),
         interestedIn = (json['interestedIn'] ?? [])
             .map<AppGenders>((val) => AppGenders.values.elementAt(val))
-            .toList();
+            .toList(),
+        super(reference);
 
   Map<String, dynamic> toJson() => {
         'firstName': firstName,

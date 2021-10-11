@@ -1,42 +1,27 @@
 import 'package:prompts_game/models/app_reply.dart';
 import 'package:prompts_game/services/apis/firebase/auth_api.dart';
+import 'package:prompts_game/services/cache/mixins/nested_map_cache.dart';
 
-class RepliesCache {
+class RepliesCache extends NestedMapCache<AppReply> {
   factory RepliesCache() => _instance;
   static final RepliesCache _instance = RepliesCache._internal();
 
   RepliesCache._internal();
 
-  final Map<String, Map<String, AppReply>> _replies = {};
-
-  bool has(String promptId) {
-    return _replies[promptId] != null;
-  }
-
-  bool exists(String promptId, String replyId) {
-    return _replies[promptId]?[replyId] != null;
-  }
-
-  bool canAddReply(String promptId, AppReply reply) {
-    final AppReply cached = _replies[promptId]![reply.id]!;
-    return !exists(promptId, reply.id) ||
-        cached.reply != reply.reply ||
-        cached.reaction != reply.reaction;
-  }
-
-  void add(String promptId, AppReply reply) {
-    if (!has(promptId)) {
-      _replies[promptId] = {reply.id: reply};
-    } else if (canAddReply(promptId, reply)) {
-      _replies[promptId]![reply.id] = reply;
-    }
-  }
-
-  List<AppReply> get(String promptId) {
-    return _replies[promptId]!.values.toList();
+  @override
+  bool canReplace(
+    String parentId,
+    AppReply map,
+    NestedMap<AppReply> nestedMap, {
+    String? id,
+  }) {
+    final AppReply cached = nestedMap[parentId]![map.id]!;
+    return !exists(parentId, map.id) ||
+        cached.reply != map.reply ||
+        cached.reaction != map.reaction;
   }
 
   AppReply getMyReply(String promptId) {
-    return _replies[promptId]![AuthApi.uid]!;
+    return get(promptId, AuthApi.uid);
   }
 }

@@ -15,8 +15,7 @@ class PromptsApi {
     return profileRef.collection('prompts').withConverter<AppPrompt>(
           toFirestore: (AppPrompt prompt, _) => prompt.toJson(),
           fromFirestore: (snapshot, _) {
-            return AppPrompt.fromJson(snapshot.data()!)
-              ..reference = snapshot.reference;
+            return AppPrompt.fromJson(snapshot.reference, snapshot.data()!);
           },
         );
   }
@@ -49,7 +48,7 @@ class PromptsApi {
   }
 
   Future<AppPrompt> createPrompt(String promptText, {String? madeBy}) {
-    AppPrompt prompt = AppPrompt(
+    AppPrompt prompt = AppPrompt.create(
       madeById: madeBy ?? AuthApi.uid,
       prompt: promptText,
     );

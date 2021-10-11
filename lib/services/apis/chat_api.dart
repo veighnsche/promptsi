@@ -10,16 +10,16 @@ class ChatApi {
 
   CollectionReference get _chatHeaderRef {
     return profileRef.collection('chatHeaders').withConverter<AppChatHeader>(
-      toFirestore: (AppChatHeader chatHeader, _) => chatHeader.json,
-      fromFirestore: (snapshot, options) {
-        return AppChatHeader.fromJson(snapshot.data()!)
-          ..reference = snapshot.reference;
-      },
-    );
+          toFirestore: (AppChatHeader chatHeader, _) => chatHeader.json,
+          fromFirestore: (snapshot, options) {
+            return AppChatHeader.fromJson(snapshot.reference, snapshot.data()!);
+          },
+        );
   }
 
   Stream<List<AppChatHeader>?> get streamChatList {
-    return _chatHeaderRef.orderBy('updatedOn', descending: true)
+    return _chatHeaderRef
+        .orderBy('updatedOn', descending: true)
         .snapshots()
         .map((QuerySnapshot snapshot) {
       if (snapshot.docs.isEmpty) {

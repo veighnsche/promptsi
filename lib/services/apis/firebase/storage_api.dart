@@ -43,10 +43,10 @@ class StorageApi {
   }
 
   static Future<Uint8List> fetchProfilePicture(String userId) async {
-    if (!_profilePicturesCache.has(userId)) {
+    if (!_profilePicturesCache.exists(userId)) {
       return _fetchProfilePictureRef(userId).then((Reference list) async {
         Uint8List profilePicture = await StorageUtils.refToUint8list(list);
-        _profilePicturesCache.set(userId, profilePicture);
+        _profilePicturesCache.add(profilePicture, id: userId);
         return profilePicture;
       });
     }
@@ -54,10 +54,10 @@ class StorageApi {
   }
 
   static Future<List<String>> fetchPictureUrls(String userId) async {
-    if (!_picturesCache.has(userId)) {
+    if (!_picturesCache.exists(userId)) {
       return fetchPicturesRefs(userId).then((List<Reference> list) async {
         List<String> pictures = await StorageUtils.listRefsToUrls(list);
-        _picturesCache.set(userId, pictures);
+        _picturesCache.add(pictures, id: userId);
         return pictures;
       });
     }

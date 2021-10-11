@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
 import 'package:prompts_game/models/mixins/with_owner.dart';
 import 'package:prompts_game/services/apis/replies_api.dart';
 
-class AppReply with WithDocumentReference, WithOwner {
-  AppReply({required this.reply, this.reaction});
+class AppReply extends WithDocumentReference with WithOwner {
+  AppReply(DocumentReference reference, {required this.reply, this.reaction})
+      : super(reference);
 
-  AppReply.create(this.reply);
+  AppReply.create(this.reply) : super(null);
 
   final String reply;
   int? reaction;
@@ -20,9 +22,10 @@ class AppReply with WithDocumentReference, WithOwner {
     }
   }
 
-  AppReply.fromJson(Map<String, dynamic> json)
+  AppReply.fromJson(DocumentReference reference, Map<String, dynamic> json)
       : reply = json['reply'],
-        reaction = json['reaction'];
+        reaction = json['reaction'],
+        super(reference);
 
   Map<String, dynamic> toJson() => {
         'reply': reply,

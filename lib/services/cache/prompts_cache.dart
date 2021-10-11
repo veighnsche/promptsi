@@ -1,6 +1,7 @@
 import 'package:prompts_game/models/app_prompt.dart';
+import 'package:prompts_game/services/cache/mixins/nested_map_cache.dart';
 
-class PromptsCache {
+class PromptsCache extends NestedMapCache<AppPrompt> {
   factory PromptsCache() => _instance;
   static final PromptsCache _instance = PromptsCache._internal();
 
@@ -8,28 +9,14 @@ class PromptsCache {
 
   final Map<String, Map<String, AppPrompt>> _prompts = {};
 
-  bool has(String profileId) {
-    return _prompts[profileId] != null;
-  }
-
-  bool exists(String profileId, String promptId) {
-    return _prompts[profileId]?[promptId] != null;
-  }
-
-  bool canAddPrompt(String profileId, AppPrompt prompt) {
-    return !exists(profileId, prompt.id) ||
-        _prompts[profileId]![prompt.id]!.prompt != prompt.prompt;
-  }
-
-  void add(String profileId, AppPrompt prompt) {
-    if (!has(profileId)) {
-      _prompts[profileId] = {prompt.id: prompt};
-    } else if (canAddPrompt(profileId, prompt)) {
-      _prompts[profileId]![prompt.id] = prompt;
-    }
-  }
-
-  List<AppPrompt> get(String profileId) {
-    return _prompts[profileId]!.values.toList();
+  @override
+  bool canReplace(
+    String parentId,
+    AppPrompt map,
+    NestedMap<AppPrompt> nestedMap, {
+    String? id,
+  }) {
+    return !exists(parentId, map.id) ||
+        _prompts[parentId]![map.id]!.prompt != map.prompt;
   }
 }

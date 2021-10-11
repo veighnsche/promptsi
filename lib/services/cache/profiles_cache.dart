@@ -1,27 +1,12 @@
 import 'package:prompts_game/models/app_profile.dart';
+import 'package:prompts_game/services/cache/mixins/map_cache.dart';
 
-class ProfilesCache {
+class ProfilesCache extends MapCache<AppProfile> {
   factory ProfilesCache() => _instance;
   static final ProfilesCache _instance = ProfilesCache._internal();
 
   ProfilesCache._internal();
 
-  final Map<String, AppProfile> _profiles = {};
-
-  bool has(String profileId) {
-    return _profiles[profileId] != null;
-  }
-
-  void add(AppProfile profile) {
-    if (!has(profile.id) || canSet()) {
-      print('setting profile ${profile.id}');
-      _profiles[profile.id] = profile;
-    }
-  }
-
-  AppProfile get(String profileId) {
-    return _profiles[profileId]!;
-  }
-
-  bool canSet() => false;
+  @override
+  bool canReplace(AppProfile map, {String? id}) => false;
 }

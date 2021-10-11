@@ -10,7 +10,7 @@ mixin WithOwner {
   final ProfilesCache cache = ProfilesCache();
 
   AppProfile? get owner {
-    if (!cache.has(ownerId)) {
+    if (!cache.exists(ownerId)) {
       return null;
     }
     return cache.get(ownerId);

@@ -12,19 +12,18 @@ class ProfileApi {
       .withConverter<AppProfile>(
         toFirestore: (AppProfile profile, _) => profile.toJson(),
         fromFirestore: (snapshot, _) {
-          return AppProfile.fromJson(snapshot.data()!)
-            ..reference = snapshot.reference;
+          return AppProfile.fromJson(snapshot.reference, snapshot.data()!);
         },
       );
 
   static AppProfile _handleSnapshot(DocumentSnapshot snapshot) {
     AppProfile profile = snapshot.data() as AppProfile;
-    _profilesCache.add(profile);
+    _profilesCache.add(profile, id: profile.id);
     return profile;
   }
 
   static Future<AppProfile?> fetchProfile(String profileId) async {
-    if (!_profilesCache.has(profileId)) {
+    if (!_profilesCache.exists(profileId)) {
       print('fetching profile $profileId');
       return _profilesRef.doc(profileId).get().then(
         (DocumentSnapshot snapshot) {
