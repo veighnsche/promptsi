@@ -11,9 +11,7 @@ class AppReply with WithDocumentReference, WithOwner {
   int? reaction;
 
   @override
-  get ownerId {
-    return reference.id;
-  }
+  get ownerId => id;
 
   void react(int reactionIdx) {
     if (reaction != reactionIdx) {

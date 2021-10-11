@@ -12,8 +12,8 @@ class ProfilesCache {
     return _profiles[profileId] != null;
   }
 
-  void set(AppProfile profile) {
-    if (!has(profile.id)) {
+  void add(AppProfile profile) {
+    if (!has(profile.id) || canSet()) {
       print('setting profile ${profile.id}');
       _profiles[profile.id] = profile;
     }
@@ -22,4 +22,6 @@ class ProfilesCache {
   AppProfile get(String profileId) {
     return _profiles[profileId]!;
   }
+
+  bool canSet() => false;
 }

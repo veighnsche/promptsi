@@ -20,7 +20,7 @@ mixin WithOwner {
     if (profile == null) {
       throw 'no owner profile in profiles instance';
     }
-    cache.set(profile);
+    cache.add(profile);
   }
 
   Future<AppProfile> get ownerAsync async {

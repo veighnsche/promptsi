@@ -10,16 +10,16 @@ class ProfileApi {
   static final CollectionReference _profilesRef = FirebaseFirestore.instance
       .collection('profiles')
       .withConverter<AppProfile>(
+        toFirestore: (AppProfile profile, _) => profile.toJson(),
         fromFirestore: (snapshot, _) {
           return AppProfile.fromJson(snapshot.data()!)
             ..reference = snapshot.reference;
         },
-        toFirestore: (AppProfile profile, _) => profile.toJson(),
       );
 
   static AppProfile _handleSnapshot(DocumentSnapshot snapshot) {
     AppProfile profile = snapshot.data() as AppProfile;
-    _profilesCache.set(profile);
+    _profilesCache.add(profile);
     return profile;
   }
 

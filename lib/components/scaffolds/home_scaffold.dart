@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:prompts_game/components/bodies/chat_list_body.dart';
 import 'package:prompts_game/components/bodies/home_body.dart';
-import 'package:prompts_game/components/bodies/messages_body.dart';
 import 'package:prompts_game/components/bodies/profile_body.dart';
 import 'package:prompts_game/components/scaffolds/profile_edit_scaffold.dart';
 import 'package:prompts_game/models/app_profile.dart';
@@ -16,7 +16,7 @@ class HomeScaffold extends StatefulWidget {
 }
 
 class _HomeScaffoldState extends State<HomeScaffold> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   late AppProfile _profile;
 
@@ -90,7 +90,6 @@ class _HomeScaffoldState extends State<HomeScaffold> {
         title: const Text('promptsi'),
         actions: const [
           // todo: _onCreatePromptClick
-
         ],
       ),
       AppBar(title: const Text("Messages")),
@@ -107,7 +106,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
 
     final _bodyOptions = <Widget>[
       HomeBody(profile: _profile),
-      const MessagesBody(),
+      ChatListBody(profile: _profile),
       ProfileBody.onMyProfile(profile: _profile),
     ];
 
@@ -125,7 +124,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
             ),
             BottomNavigationBarItem(
               icon: FaIcon(Icons.message),
-              label: 'Messages',
+              label: 'Chat',
             ),
             BottomNavigationBarItem(
               icon: FaIcon(Icons.account_circle),

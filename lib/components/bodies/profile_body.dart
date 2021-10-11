@@ -85,15 +85,9 @@ class _ProfileBodyState extends State<ProfileBody> {
     return Column(
       children: [
         if (onFeed)
-          Container(
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [
-              BoxShadow(
-                color: Colors.blueGrey.withOpacity(0.5),
-                spreadRadius: 0,
-                blurRadius: 4,
-                offset: const Offset(0, 4), // changes position of shadow
-              ),
-            ]),
+          PhysicalModel(
+            color: Colors.white,
+            elevation: 2,
             child: ListTile(
               leading: ProfilePicture(
                 pictureUint8ListAsync: widget.profile.profilePictureAsync,
