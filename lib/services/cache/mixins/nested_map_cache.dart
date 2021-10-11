@@ -13,25 +13,25 @@ abstract class NestedMapCache<T> {
     return _nestedMap[parentId]?[id] != null;
   }
 
-  void add(String parentId, T map, {String? id}) {
+  void add(String parentId, T value, {String? id}) {
 
     // todo: optimize
 
     if (!parentHas(parentId)) {
-      if (map is WithDocumentReference) {
-        _nestedMap[parentId] = {map.id: map};
+      if (value is WithDocumentReference) {
+        _nestedMap[parentId] = {value.id: value};
       } else if (id == null) {
-        throw '$map is not an instance of WithDocumentReference, or you forgot to add id';
+        throw '$value is not an instance of WithDocumentReference, or you forgot to add id';
       } else {
-        _nestedMap[parentId] = {id: map};
+        _nestedMap[parentId] = {id: value};
       }
-    } else if (canReplace(parentId, map, _nestedMap)) {
-      if (map is WithDocumentReference) {
-        _nestedMap[parentId]![map.id] = map;
+    } else if (canReplace(parentId, value, _nestedMap)) {
+      if (value is WithDocumentReference) {
+        _nestedMap[parentId]![value.id] = value;
       } else if (id == null) {
-        throw '$map is not an instance of WithDocumentReference, or you forgot to add id';
+        throw '$value is not an instance of WithDocumentReference, or you forgot to add id';
       } else {
-        _nestedMap[parentId]![id] = map;
+        _nestedMap[parentId]![id] = value;
       }
     }
   }
@@ -44,5 +44,5 @@ abstract class NestedMapCache<T> {
     return _nestedMap[parentId]![id]!;
   }
 
-  bool canReplace(String parentId, T map, Map<String, Map<String, T>> nestedMap, {String? id});
+  bool canReplace(String parentId, T value, Map<String, Map<String, T>> nestedMap, {String? id});
 }

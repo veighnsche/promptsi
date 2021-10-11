@@ -8,5 +8,5 @@ class ProfilesCache extends MapCache<AppProfile> {
   ProfilesCache._internal();
 
   @override
-  bool canReplace(AppProfile map, {String? id}) => false;
+  bool canReplace(AppProfile value, {String? id}) => false;
 }

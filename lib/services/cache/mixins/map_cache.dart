@@ -7,16 +7,16 @@ abstract class MapCache<T> {
     return _map[id] != null;
   }
 
-  void add(T map, {String? id}) {
+  void add(T value, {String? id}) {
 
     // todo: optimize
 
-    if (map is WithDocumentReference && (!exists(map.id) || canReplace(map))) {
-      _map[map.id] = map;
+    if (value is WithDocumentReference && (!exists(value.id) || canReplace(value))) {
+      _map[value.id] = value;
     } else if (id == null) {
-      throw '$map is not an instance of WithDocumentReference, or you forgot to add id';
-    } else if (!exists(id) || canReplace(map, id: id)) {
-      _map[id] = map;
+      throw '$value is not an instance of WithDocumentReference, or you forgot to add id';
+    } else if (!exists(id) || canReplace(value, id: id)) {
+      _map[id] = value;
     }
   }
 
@@ -24,5 +24,5 @@ abstract class MapCache<T> {
     return _map[id]!;
   }
 
-  bool canReplace(T map, {String? id});
+  bool canReplace(T value, {String? id});
 }

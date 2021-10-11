@@ -12,11 +12,11 @@ class PromptsCache extends NestedMapCache<AppPrompt> {
   @override
   bool canReplace(
     String parentId,
-    AppPrompt map,
+    AppPrompt value,
     NestedMap<AppPrompt> nestedMap, {
     String? id,
   }) {
-    return !exists(parentId, map.id) ||
-        _prompts[parentId]![map.id]!.prompt != map.prompt;
+    return !exists(parentId, value.id) ||
+        _prompts[parentId]![value.id]!.prompt != value.prompt;
   }
 }
