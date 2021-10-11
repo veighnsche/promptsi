@@ -10,7 +10,7 @@ class Reactions extends StatelessWidget {
     this.disabled = false,
   }) : super(key: key);
 
-  Reactions.disabled({
+  Reactions.iconOnly({
     Key? key,
     required this.reaction,
     this.onReact,

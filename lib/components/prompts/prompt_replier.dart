@@ -79,15 +79,27 @@ class _PromptReplyState extends State<PromptReply> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 const SizedBox(width: 16),
-                Reactions.disabled(reaction: myReply.reaction),
                 BubbleCurrentUser(text: myReply.reply),
-                SizedBox(
-                  height: 65,
-                  width: 65,
-                  child: ProfilePicture(
-                    pictureUint8ListAsync: myReply.profilePictureAsync,
-                    pictureUint8List: myReply.profilePicture,
-                  ),
+                Stack(
+                  children: [
+                    SizedBox(
+                      height: 65,
+                      width: 65,
+                      child: ProfilePicture(
+                        pictureUint8ListAsync: myReply.profilePictureAsync,
+                        pictureUint8List: myReply.profilePicture,
+                      ),
+                    ),
+                    Container(
+                      height: 24,
+                      width: 23,
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle
+                      ),
+                    ),
+                    Reactions.iconOnly(reaction: myReply.reaction),
+                  ],
                 ),
               ],
             );
