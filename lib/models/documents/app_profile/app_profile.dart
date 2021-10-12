@@ -55,7 +55,7 @@ class AppProfile extends WithDocumentReference
             .toList(),
         super(reference);
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> get json => {
         'firstName': firstName,
         'age': age,
         'gender': gender.index,

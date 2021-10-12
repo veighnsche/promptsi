@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bubbles/bubble_current_user.dart';
 import 'package:prompts_game/components/bubbles/bubble_other_user.dart';
-import 'package:prompts_game/components/widgets/app_stream_builder.dart';
+import 'package:prompts_game/components/builders/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/components/widgets/reactions.dart';
 import 'package:prompts_game/models/documents/app_prompt/app_prompt.dart';

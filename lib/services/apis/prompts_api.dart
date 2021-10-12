@@ -13,7 +13,7 @@ class PromptsApi {
 
   CollectionReference _toCollectionReference(DocumentReference profileRef) {
     return profileRef.collection('prompts').withConverter<AppPrompt>(
-          toFirestore: (AppPrompt prompt, _) => prompt.toJson(),
+          toFirestore: (AppPrompt prompt, _) => prompt.json,
           fromFirestore: (snapshot, _) {
             return AppPrompt.fromJson(snapshot.reference, snapshot.data()!);
           },

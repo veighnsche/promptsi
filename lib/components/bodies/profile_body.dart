@@ -4,7 +4,7 @@ import 'package:prompts_game/components/forms/prompts/prompt_form.dart';
 import 'package:prompts_game/components/forms/replies/reply_form.dart';
 import 'package:prompts_game/components/prompts/prompt_poster.dart';
 import 'package:prompts_game/components/prompts/prompt_replier.dart';
-import 'package:prompts_game/components/widgets/app_stream_builder.dart';
+import 'package:prompts_game/components/builders/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/carousel_pictures.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/models/documents/app_profile/app_profile.dart';

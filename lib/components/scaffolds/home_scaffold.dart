@@ -106,7 +106,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
 
     final _bodyOptions = <Widget>[
       HomeBody(profile: _profile),
-      ChatListBody(profile: _profile),
+      const ChatListBody(),
       ProfileBody.onMyProfile(profile: _profile),
     ];
 

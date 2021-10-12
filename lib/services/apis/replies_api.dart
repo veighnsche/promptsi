@@ -13,7 +13,7 @@ class RepliesApi {
 
   CollectionReference get _repliesRef {
     return promptRef.collection('replies').withConverter<AppReply>(
-          toFirestore: (AppReply reply, _) => reply.toJson(),
+          toFirestore: (AppReply reply, _) => reply.json,
           fromFirestore: (snapshot, _) {
             return AppReply.fromJson(snapshot.reference, snapshot.data()!);
           },

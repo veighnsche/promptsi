@@ -1,9 +1,9 @@
-import 'package:prompts_game/models/documents/app_chat/app_chat.dart';
+import 'package:prompts_game/models/documents/app_chat_tile/app_chat_tile.dart';
 import 'package:prompts_game/services/cache/mixins/map_cache.dart';
 
-class ChatHeaderCache extends MapCache<AppChatHeader> {
-  factory ChatHeaderCache() => _instance;
-  static final ChatHeaderCache _instance = ChatHeaderCache._internal();
+class ChatTilesCache extends MapCache<AppChatTile> {
+  factory ChatTilesCache() => _instance;
+  static final ChatTilesCache _instance = ChatTilesCache._internal();
 
-  ChatHeaderCache._internal();
+  ChatTilesCache._internal();
 }

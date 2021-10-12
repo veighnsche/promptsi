@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
 import 'package:prompts_game/models/mixins/with_owner.dart';
+import 'package:prompts_game/services/apis/chats_api.dart';
 import 'package:prompts_game/services/apis/replies_api.dart';
 
 class AppReply extends WithDocumentReference with WithOwner {
@@ -17,8 +18,10 @@ class AppReply extends WithDocumentReference with WithOwner {
 
   void react(int reactionIdx) {
     if (reaction != reactionIdx) {
-      reaction = reactionIdx == -1 ? null : reactionIdx;
-      RepliesApi.react(this);
+      ChatsApi.startChatNotExists(id).whenComplete(() {
+        reaction = reactionIdx == -1 ? null : reactionIdx;
+        RepliesApi.react(this);
+      });
     }
   }
 
@@ -27,7 +30,7 @@ class AppReply extends WithDocumentReference with WithOwner {
         reaction = json['reaction'],
         super(reference);
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> get json => {
         'reply': reply,
         'reaction': reaction,
         'createdOn': DateTime.now().millisecondsSinceEpoch,

@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:prompts_game/components/widgets/app_future_builder.dart';
+import 'package:prompts_game/components/builders/app_future_builder.dart';
 
 class CarouselPictures extends StatefulWidget {
   const CarouselPictures({

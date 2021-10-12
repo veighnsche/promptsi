@@ -26,7 +26,7 @@ class AppPrompt extends WithDocumentReference with WithMyReply, WithReplies {
         prompt = json['prompt'],
         super(reference);
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> get json => {
         'madeById': madeById,
         'prompt': prompt,
         'createdOn': DateTime.now().millisecondsSinceEpoch,

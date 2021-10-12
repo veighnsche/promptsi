@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
+import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 import 'package:prompts_game/services/cache/profiles_cache.dart';
 
 class ProfileApi {
@@ -10,16 +11,14 @@ class ProfileApi {
   static final CollectionReference _profilesRef = FirebaseFirestore.instance
       .collection('profiles')
       .withConverter<AppProfile>(
-        toFirestore: (AppProfile profile, _) => profile.toJson(),
+        toFirestore: (AppProfile profile, _) => profile.json,
         fromFirestore: (snapshot, _) {
           return AppProfile.fromJson(snapshot.reference, snapshot.data()!);
         },
       );
 
-  static AppProfile _handleSnapshot(DocumentSnapshot snapshot) {
-    AppProfile profile = snapshot.data() as AppProfile;
-    _profilesCache.add(profile, id: profile.id);
-    return profile;
+  static AppProfile get myProfile {
+    return _profilesCache.get(AuthApi.uid);
   }
 
   static Future<AppProfile?> fetchProfile(String profileId) async {
@@ -65,7 +64,13 @@ class ProfileApi {
   }
 
   static Future<AppProfile> edit(AppProfile profile) async {
-    await profile.reference.update(profile.toJson());
+    await profile.reference.update(profile.json);
     return fetchProfile(profile.reference.id) as AppProfile;
+  }
+
+  static AppProfile _handleSnapshot(DocumentSnapshot snapshot) {
+    AppProfile profile = snapshot.data() as AppProfile;
+    _profilesCache.add(profile, id: profile.id);
+    return profile;
   }
 }
