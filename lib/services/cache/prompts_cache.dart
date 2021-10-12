@@ -10,13 +10,7 @@ class PromptsCache extends NestedMapCache<AppPrompt> {
   final Map<String, Map<String, AppPrompt>> _prompts = {};
 
   @override
-  bool canReplace(
-    String parentId,
-    AppPrompt value,
-    NestedMap<AppPrompt> nestedMap, {
-    String? id,
-  }) {
-    return !exists(parentId, value.id) ||
-        _prompts[parentId]![value.id]!.prompt != value.prompt;
+  bool canReplace(String parentId, String id, AppPrompt value) {
+    return _prompts[parentId]![id]!.prompt != value.prompt;
   }
 }

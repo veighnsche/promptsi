@@ -9,16 +9,9 @@ class RepliesCache extends NestedMapCache<AppReply> {
   RepliesCache._internal();
 
   @override
-  bool canReplace(
-    String parentId,
-    AppReply value,
-    NestedMap<AppReply> nestedMap, {
-    String? id,
-  }) {
-    final AppReply cached = nestedMap[parentId]![value.id]!;
-    return !exists(parentId, value.id) ||
-        cached.reply != value.reply ||
-        cached.reaction != value.reaction;
+  bool canReplace(String parentId, String id, AppReply value) {
+    final AppReply cached = nestedMap[parentId]![id]!;
+    return cached.reply != value.reply || cached.reaction != value.reaction;
   }
 
   AppReply getMyReply(String promptId) {

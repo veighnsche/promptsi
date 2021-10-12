@@ -3,50 +3,39 @@ import 'package:prompts_game/models/mixins/with_document_reference.dart';
 typedef NestedMap<T> = Map<String, Map<String, T>>;
 
 abstract class NestedMapCache<T> {
-  final NestedMap<T> _nestedMap = {};
+  final NestedMap<T> nestedMap = {};
 
   bool parentHas(String parentId) {
-    return _nestedMap[parentId] != null;
+    return nestedMap[parentId] != null;
   }
 
   bool exists(String parentId, String id) {
-    return _nestedMap[parentId]?[id] != null;
+    return nestedMap[parentId]?[id] != null;
   }
 
   void add(String parentId, T value, {String? id}) {
-    // todo: optimize
+    if (id == null) {
+      if (value is! WithDocumentReference) {
+        throw '$value is not an instance of WithDocumentReference, or you forgot to add id';
+      } else {
+        id = value.id;
+      }
+    }
 
     if (!parentHas(parentId)) {
-      if (value is WithDocumentReference) {
-        _nestedMap[parentId] = {value.id: value};
-      } else if (id == null) {
-        throw '$value is not an instance of WithDocumentReference, or you forgot to add id';
-      } else {
-        _nestedMap[parentId] = {id: value};
-      }
-    } else if (canReplace(parentId, value, _nestedMap)) {
-      if (value is WithDocumentReference) {
-        _nestedMap[parentId]![value.id] = value;
-      } else if (id == null) {
-        throw '$value is not an instance of WithDocumentReference, or you forgot to add id';
-      } else {
-        _nestedMap[parentId]![id] = value;
-      }
+      nestedMap[parentId] = {id: value};
+    } else if (!exists(parentId, id) || canReplace(parentId, id, value)) {
+      nestedMap[parentId]![id] = value;
     }
   }
 
   List<T> toList(String parentId) {
-    return _nestedMap[parentId]!.values.toList();
+    return nestedMap[parentId]!.values.toList();
   }
 
   T get(String parentId, String id) {
-    return _nestedMap[parentId]![id]!;
+    return nestedMap[parentId]![id]!;
   }
 
-  bool canReplace(
-    String parentId,
-    T value,
-    NestedMap<T> nestedMap, {
-    String? id,
-  });
+  bool canReplace(String parentId, String id, T value);
 }

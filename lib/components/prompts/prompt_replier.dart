@@ -63,6 +63,7 @@ class _PromptReplyState extends State<PromptReply> {
         ),
         AppStreamBuilder(
           stream: widget.prompt.myReplyStream,
+          loader: MyReplyRow(myReply: widget.prompt.myReply),
           builder: (context, AppReply? myReply) {
             if (myReply == null) {
               return Consumer<SelectedPromptStore>(
@@ -75,33 +76,51 @@ class _PromptReplyState extends State<PromptReply> {
                 },
               );
             }
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const SizedBox(width: 16),
-                BubbleCurrentUser(text: myReply.reply),
-                Stack(
-                  children: [
-                    SizedBox(
-                      height: 65,
-                      width: 65,
-                      child: ProfilePicture(
-                        pictureUint8ListAsync: myReply.profilePictureAsync,
-                        pictureUint8List: myReply.profilePicture,
-                      ),
-                    ),
-                    Container(
-                      height: 24,
-                      width: 23,
-                      decoration: const BoxDecoration(
-                          color: Colors.white, shape: BoxShape.circle),
-                    ),
-                    Reactions.iconOnly(reaction: myReply.reaction),
-                  ],
-                ),
-              ],
-            );
+            return MyReplyRow(myReply: myReply);
           },
+        ),
+      ],
+    );
+  }
+}
+
+class MyReplyRow extends StatelessWidget {
+  const MyReplyRow({
+    Key? key,
+    required this.myReply,
+  }) : super(key: key);
+
+  final AppReply? myReply;
+
+  @override
+  Widget build(BuildContext context) {
+    if (myReply == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        const SizedBox(width: 16),
+        BubbleCurrentUser(text: myReply!.reply),
+        Stack(
+          children: [
+            SizedBox(
+              height: 65,
+              width: 65,
+              child: ProfilePicture(
+                pictureUint8ListAsync: myReply!.profilePictureAsync,
+                pictureUint8List: myReply!.profilePicture,
+              ),
+            ),
+            Container(
+              height: 24,
+              width: 23,
+              decoration: const BoxDecoration(
+                  color: Colors.white, shape: BoxShape.circle),
+            ),
+            Reactions.iconOnly(reaction: myReply!.reaction),
+          ],
         ),
       ],
     );

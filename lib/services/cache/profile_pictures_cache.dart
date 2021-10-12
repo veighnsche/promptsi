@@ -10,5 +10,5 @@ class ProfilePicturesCache extends MapCache<Uint8List> {
   ProfilePicturesCache._internal();
 
   @override
-  bool canReplace(Uint8List value, {String? id}) => false;
+  bool canReplace(String id, Uint8List value) => false;
 }
