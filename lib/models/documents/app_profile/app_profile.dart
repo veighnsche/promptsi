@@ -1,15 +1,11 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:prompts_game/models/app_prompt.dart';
+import 'package:prompts_game/models/documents/app_profile/with_pictures.dart';
+import 'package:prompts_game/models/documents/app_profile/with_profile_picture.dart';
+import 'package:prompts_game/models/documents/app_profile/with_prompts.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
-import 'package:prompts_game/services/apis/firebase/storage_api.dart';
-import 'package:prompts_game/services/apis/prompts_api.dart';
-import 'package:prompts_game/services/cache/pictures_cache.dart';
-import 'package:prompts_game/services/cache/profile_pictures_cache.dart';
-import 'package:prompts_game/services/cache/prompts_cache.dart';
 
-class AppProfile extends WithDocumentReference {
+class AppProfile extends WithDocumentReference
+    with WithProfilePicture, WithPictures, WithPrompts {
   AppProfile(
     DocumentReference reference, {
     required this.firstName,
@@ -23,49 +19,8 @@ class AppProfile extends WithDocumentReference {
   final AppGenders gender;
   final List<AppGenders> interestedIn;
 
-  ProfilePicturesCache get _profilePicturesCache => ProfilePicturesCache();
-
-  PicturesCache get _picturesCache => PicturesCache();
-
-  PromptsCache get _promptsCache => PromptsCache();
-
-  PromptsApi get _promptsApi => PromptsApi(reference);
-
-  Uint8List? get profilePicture {
-    if (!_profilePicturesCache.exists(reference.id)) {
-      return null;
-    }
-    return _profilePicturesCache.get(reference.id);
-  }
-
-  Future<Uint8List> get profilePictureAsync async {
-    return StorageApi.fetchProfilePicture(id);
-  }
-
-  List<String>? get pictures {
-    if (!_picturesCache.exists(reference.id)) {
-      return null;
-    }
-    return _picturesCache.get(reference.id);
-  }
-
-  Future<List<String>> get picturesAsync async {
-    return StorageApi.fetchPictureUrls(id);
-  }
-
   List<int> get listedInterestedIn {
     return interestedIn.map((AppGenders g) => g.index).toList();
-  }
-
-  List<AppPrompt>? get prompts {
-    if (!_promptsCache.parentHas(id)) {
-      return null;
-    }
-    return _promptsCache.toList(id);
-  }
-
-  Stream<List<AppPrompt>?> get promptStream {
-    return _promptsApi.promptStream;
   }
 
   AppProfile.create({

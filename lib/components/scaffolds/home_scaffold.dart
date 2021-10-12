@@ -4,7 +4,7 @@ import 'package:prompts_game/components/bodies/chat_list_body.dart';
 import 'package:prompts_game/components/bodies/home_body.dart';
 import 'package:prompts_game/components/bodies/profile_body.dart';
 import 'package:prompts_game/components/scaffolds/profile_edit_scaffold.dart';
-import 'package:prompts_game/models/app_profile.dart';
+import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 
 class HomeScaffold extends StatefulWidget {
   const HomeScaffold({Key? key, required this.userProfile}) : super(key: key);

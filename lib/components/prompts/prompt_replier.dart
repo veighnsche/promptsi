@@ -5,8 +5,8 @@ import 'package:prompts_game/components/bubbles/bubble_other_user.dart';
 import 'package:prompts_game/components/widgets/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/components/widgets/reactions.dart';
-import 'package:prompts_game/models/app_prompt.dart';
-import 'package:prompts_game/models/app_reply.dart';
+import 'package:prompts_game/models/documents/app_prompt/app_prompt.dart';
+import 'package:prompts_game/models/documents/app_reply/app_reply.dart';
 import 'package:prompts_game/models/store/selected_prompt_store.dart';
 import 'package:provider/provider.dart';
 
@@ -94,9 +94,7 @@ class _PromptReplyState extends State<PromptReply> {
                       height: 24,
                       width: 23,
                       decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle
-                      ),
+                          color: Colors.white, shape: BoxShape.circle),
                     ),
                     Reactions.iconOnly(reaction: myReply.reaction),
                   ],

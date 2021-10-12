@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prompts_game/models/app_profile.dart';
+import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 
 class ProfileGender extends StatelessWidget {
   const ProfileGender({

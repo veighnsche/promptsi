@@ -11,5 +11,4 @@ class LoadingScaffold extends StatelessWidget {
       body: const LoadingBody(),
     );
   }
-
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/profile_body.dart';
-import 'package:prompts_game/models/app_profile.dart';
+import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 import 'package:prompts_game/models/store/selected_prompt_store.dart';
 import 'package:provider/provider.dart';
 

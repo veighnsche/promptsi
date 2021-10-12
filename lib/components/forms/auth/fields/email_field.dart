@@ -10,7 +10,8 @@ class EmailField extends StatelessWidget {
     if (value!.isEmpty) {
       return 'Please enter your email';
     }
-    if(!value.contains(RegExp(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'))) {
+    if (!value.contains(
+        RegExp(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'))) {
       return 'Please enter a valid email';
     }
     return null;

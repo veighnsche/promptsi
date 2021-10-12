@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/utils/decorations/input_decorations.dart';
-import 'package:prompts_game/models/app_prompt.dart';
+import 'package:prompts_game/models/documents/app_prompt/app_prompt.dart';
 
 class ReplyForm extends StatefulWidget {
   const ReplyForm({

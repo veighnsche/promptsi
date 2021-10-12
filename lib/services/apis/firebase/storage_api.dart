@@ -12,13 +12,14 @@ class StorageApi {
 
   static ProfilePicturesCache get _profilePicturesCache =>
       ProfilePicturesCache();
+
   static PicturesCache get _picturesCache => PicturesCache();
 
   static Future<Reference> uploadPicture(String userId, XFile pictureFile) {
     final String refPath = 'profiles/$userId/${DateTime.now()}.jpg';
     return _storage.ref().child(refPath).putFile(File(pictureFile.path)).then(
           (TaskSnapshot snapshot) => snapshot.ref,
-    );
+        );
   }
 
   static Future<void> deletePicture(Reference ref) {
@@ -36,7 +37,7 @@ class StorageApi {
 
   static Future<List<Reference>> fetchPicturesRefs(String userId) {
     return _storage.ref().child('profiles').child(userId).listAll().then(
-          (ListResult list) {
+      (ListResult list) {
         return list.items;
       },
     );

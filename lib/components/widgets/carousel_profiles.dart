@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/profile_other_body.dart';
-import 'package:prompts_game/models/app_profile.dart';
+import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 
 class CarouselProfiles extends StatefulWidget {
   const CarouselProfiles({Key? key, required this.profiles}) : super(key: key);

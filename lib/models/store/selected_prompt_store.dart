@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:prompts_game/models/app_prompt.dart';
+import 'package:prompts_game/models/documents/app_prompt/app_prompt.dart';
 
 class SelectedPromptStore extends ChangeNotifier {
   final List<AppPrompt> _prompts = [];

@@ -1,4 +1,4 @@
-import 'package:prompts_game/models/app_prompt.dart';
+import 'package:prompts_game/models/documents/app_prompt/app_prompt.dart';
 import 'package:prompts_game/services/cache/mixins/nested_map_cache.dart';
 
 class PromptsCache extends NestedMapCache<AppPrompt> {

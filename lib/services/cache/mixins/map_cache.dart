@@ -8,10 +8,10 @@ abstract class MapCache<T> {
   }
 
   void add(T value, {String? id}) {
-
     // todo: optimize
 
-    if (value is WithDocumentReference && (!exists(value.id) || canReplace(value))) {
+    if (value is WithDocumentReference &&
+        (!exists(value.id) || canReplace(value))) {
       _map[value.id] = value;
     } else if (id == null) {
       throw '$value is not an instance of WithDocumentReference, or you forgot to add id';

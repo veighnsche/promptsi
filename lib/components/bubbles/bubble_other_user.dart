@@ -1,7 +1,7 @@
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/widgets/app_future_builder.dart';
-import 'package:prompts_game/models/app_profile.dart';
+import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 
 class BubbleOtherUser extends StatelessWidget {
   const BubbleOtherUser({

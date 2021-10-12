@@ -6,9 +6,9 @@ import 'package:prompts_game/components/scaffolds/profile_scaffold.dart';
 import 'package:prompts_game/components/widgets/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/components/widgets/reactions.dart';
-import 'package:prompts_game/models/app_profile.dart';
-import 'package:prompts_game/models/app_prompt.dart';
-import 'package:prompts_game/models/app_reply.dart';
+import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
+import 'package:prompts_game/models/documents/app_prompt/app_prompt.dart';
+import 'package:prompts_game/models/documents/app_reply/app_reply.dart';
 import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 
 class PromptPoster extends StatelessWidget {

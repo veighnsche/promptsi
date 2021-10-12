@@ -1,4 +1,4 @@
-import 'package:prompts_game/models/app_chat.dart';
+import 'package:prompts_game/models/documents/app_chat/app_chat.dart';
 import 'package:prompts_game/services/cache/mixins/map_cache.dart';
 
 class ChatHeaderCache extends MapCache<AppChatHeader> {

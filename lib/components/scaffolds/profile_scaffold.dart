@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/profile_other_body.dart';
-import 'package:prompts_game/models/app_profile.dart';
+import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 
 class ProfileScaffold extends StatelessWidget {
   const ProfileScaffold({Key? key, required this.profile}) : super(key: key);

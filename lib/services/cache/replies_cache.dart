@@ -1,4 +1,4 @@
-import 'package:prompts_game/models/app_reply.dart';
+import 'package:prompts_game/models/documents/app_reply/app_reply.dart';
 import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 import 'package:prompts_game/services/cache/mixins/nested_map_cache.dart';
 
