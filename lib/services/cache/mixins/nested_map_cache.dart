@@ -3,14 +3,14 @@ import 'package:prompts_game/models/mixins/with_document_reference.dart';
 typedef NestedMap<T> = Map<String, Map<String, T>>;
 
 abstract class NestedMapCache<T> {
-  final NestedMap<T> nestedMap = {};
+  final NestedMap<T> _nestedMap = {};
 
   bool parentHas(String parentId) {
-    return nestedMap[parentId] != null;
+    return _nestedMap[parentId] != null;
   }
 
   bool exists(String parentId, String id) {
-    return nestedMap[parentId]?[id] != null;
+    return _nestedMap[parentId]?[id] != null;
   }
 
   void add(String parentId, T value, {String? id}) {
@@ -23,19 +23,25 @@ abstract class NestedMapCache<T> {
     }
 
     if (!parentHas(parentId)) {
-      nestedMap[parentId] = {id: value};
-    } else if (!exists(parentId, id) || canReplace(parentId, id, value)) {
-      nestedMap[parentId]![id] = value;
+      _nestedMap[parentId] = {id: value};
+    } else if (!exists(parentId, id) ||
+        canReplace(
+          parentId,
+          id,
+          value,
+          get(parentId, id),
+        )) {
+      _nestedMap[parentId]![id] = value;
     }
   }
 
   List<T> toList(String parentId) {
-    return nestedMap[parentId]!.values.toList();
+    return _nestedMap[parentId]!.values.toList();
   }
 
   T get(String parentId, String id) {
-    return nestedMap[parentId]![id]!;
+    return _nestedMap[parentId]![id]!;
   }
 
-  bool canReplace(String parentId, String id, T value);
+  bool canReplace(String parentId, String id, T value, T cache) => false;
 }

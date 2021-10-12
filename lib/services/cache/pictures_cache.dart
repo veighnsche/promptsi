@@ -5,7 +5,4 @@ class PicturesCache extends MapCache<List<String>> {
   static final PicturesCache _instance = PicturesCache._internal();
 
   PicturesCache._internal();
-
-  @override
-  bool canReplace(String id, List<String> value) => false;
 }

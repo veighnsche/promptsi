@@ -6,7 +6,4 @@ class ProfilesCache extends MapCache<AppProfile> {
   static final ProfilesCache _instance = ProfilesCache._internal();
 
   ProfilesCache._internal();
-
-  @override
-  bool canReplace(String id, AppProfile value) => false;
 }

@@ -6,7 +6,4 @@ class ChatHeaderCache extends MapCache<AppChatHeader> {
   static final ChatHeaderCache _instance = ChatHeaderCache._internal();
 
   ChatHeaderCache._internal();
-
-  @override
-  bool canReplace(String id, AppChatHeader value) => false;
 }

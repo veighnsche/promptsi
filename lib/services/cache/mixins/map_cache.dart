@@ -16,7 +16,7 @@ abstract class MapCache<T> {
       }
     }
 
-    if (!exists(id) || canReplace(id, value)) {
+    if (!exists(id) || canReplace(id, value, get(id))) {
       _map[id] = value;
     }
   }
@@ -25,5 +25,5 @@ abstract class MapCache<T> {
     return _map[id]!;
   }
 
-  bool canReplace(String id, T value);
+  bool canReplace(String id, T value, T cache) => false;
 }
