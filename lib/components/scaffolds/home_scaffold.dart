@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:prompts_game/components/bodies/chat_list_body.dart';
+import 'package:prompts_game/components/bodies/chat_tiles_body.dart';
 import 'package:prompts_game/components/bodies/home_body.dart';
 import 'package:prompts_game/components/bodies/profile_body.dart';
 import 'package:prompts_game/components/scaffolds/profile_edit_scaffold.dart';
@@ -106,7 +106,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
 
     final _bodyOptions = <Widget>[
       HomeBody(profile: _profile),
-      const ChatListBody(),
+      const ChatTilesBody(),
       ProfileBody.onMyProfile(profile: _profile),
     ];
 

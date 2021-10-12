@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/utils/decorations/input_decorations.dart';
 
-class PromptForm extends StatefulWidget {
-  const PromptForm({Key? key, required this.onPromptSend}) : super(key: key);
+class ChatForm extends StatefulWidget {
+  const ChatForm({Key? key, required this.onMessageSend}) : super(key: key);
 
-  final Future<void> Function(String) onPromptSend;
+  final Future<void> Function(String) onMessageSend;
 
   @override
-  State<PromptForm> createState() => _PromptFormState();
+  State<ChatForm> createState() => _ChatFormState();
 }
 
-class _PromptFormState extends State<PromptForm> {
+class _ChatFormState extends State<ChatForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _prompt = TextEditingController();
+  final TextEditingController _message = TextEditingController();
 
-  void _onReplySend() {
-    widget.onPromptSend(_prompt.text).whenComplete(() => _prompt.clear());
+  void _onMessageSend() {
+    widget.onMessageSend(_message.text).whenComplete(() => _message.clear());
   }
 
   @override
@@ -23,13 +23,13 @@ class _PromptFormState extends State<PromptForm> {
     return Form(
       key: _formKey,
       child: TextFormField(
-        controller: _prompt,
+        controller: _message,
         // validator: _validator,
         decoration: InputDecorations.outline(
-          labelText: 'What do you want to ask?',
+          labelText: '',
           suffixIcon: IconButton(
             icon: const Icon(Icons.send),
-            onPressed: _onReplySend,
+            onPressed: _onMessageSend,
           ),
         ),
         keyboardType: TextInputType.text,
