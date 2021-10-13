@@ -25,7 +25,7 @@ class BubbleOtherUser extends StatelessWidget {
     required this.text,
     this.profileAsync,
     this.profile,
-    this.type = BubbleOtherUserType.onFeed,
+    this.type = BubbleOtherUserType.onChat,
   }) : super(key: key);
 
   const BubbleOtherUser.onMyProfile({
@@ -43,32 +43,35 @@ class BubbleOtherUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Text _text = Text(
+      text,
+      textAlign: TextAlign.start,
+      style: const TextStyle(
+        fontWeight: FontWeight.w400,
+      ),
+    );
+
+    Column _column = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (type == BubbleOtherUserType.onMyProfile)
+          AppFutureBuilder.skipFuture(
+            future: profileAsync!,
+            initialData: profile,
+            loader: ProfileAsl(profile: profile),
+            builder: (context, AppProfile profile) {
+              return ProfileAsl(profile: profile);
+            },
+          ),
+        const SizedBox(height: 4),
+        _text,
+      ],
+    );
+
     return Bubble(
       nip: BubbleNip.leftTop,
       color: Colors.white38,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (type == BubbleOtherUserType.onMyProfile)
-            AppFutureBuilder.skipFuture(
-              future: profileAsync!,
-              initialData: profile,
-              loader: ProfileAsl(profile: profile),
-              builder: (context, AppProfile profile) {
-                return ProfileAsl(profile: profile);
-              },
-            ),
-          const SizedBox(height: 4),
-          Text(
-            text,
-            textAlign: TextAlign.start,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ],
-      ),
+      child: type == BubbleOtherUserType.onChat ? _text : _column,
     );
   }
 }
@@ -133,4 +136,5 @@ class ProfileAsl extends StatelessWidget {
 enum BubbleOtherUserType {
   onMyProfile,
   onFeed,
+  onChat,
 }

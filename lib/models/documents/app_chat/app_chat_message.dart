@@ -1,27 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:prompts_game/models/documents/app_chat/app_chat.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
 
 class AppChatMessage extends WithDocumentReference {
   AppChatMessage(
     DocumentReference<Object?>? reference, {
-    this.user1Message,
-    this.user2Message,
+    required this.message,
   }) : super(reference);
 
-  final String? user1Message;
-  final String? user2Message;
+  final Map<Iam, String?> message;
+
+  AppChatMessage.create(this.message) : super(null);
 
   AppChatMessage.fromJson(
     DocumentReference<Object?>? reference,
     Map<String, dynamic> json,
-  )   : user1Message = json['user1'],
-        user2Message = json['user2'],
+  )   : message = {Iam.user1: json['user1'], Iam.user2: json['user2']},
         super(reference);
 
   Map<String, dynamic> get json {
-    return {
-      'user1': user1Message,
-      'user2': user2Message,
-    };
+    return {'user1': message[Iam.user1], 'user2': message[Iam.user2]};
   }
 }

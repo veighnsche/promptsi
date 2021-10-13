@@ -66,15 +66,7 @@ class _PromptReplyState extends State<PromptReply> {
           loader: MyReplyRow(myReply: widget.prompt.myReply),
           builder: (context, AppReply? myReply) {
             if (myReply == null) {
-              return Consumer<SelectedPromptStore>(
-                builder: (context, selected, child) {
-                  if (isThisSelected(selected) && selected.hasMyReply) {
-                    Provider.of<SelectedPromptStore>(context, listen: false)
-                        .change(null);
-                  }
-                  return const SizedBox.shrink();
-                },
-              );
+              return const SizedBox.shrink();
             }
             return MyReplyRow(myReply: myReply);
           },
