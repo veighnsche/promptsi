@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:prompts_game/models/documents/app_chat_tile/app_chat_tile.dart';
+import 'package:prompts_game/models/documents/app_chat/app_chat_tile.dart';
 import 'package:prompts_game/services/apis/profile_api.dart';
-import 'package:prompts_game/services/cache/chat_header_cache.dart';
+import 'package:prompts_game/services/cache/chat_tiles_cache.dart';
 
 class ChatTilesApi {
   static ChatTilesCache get _chatTilesCache => ChatTilesCache();

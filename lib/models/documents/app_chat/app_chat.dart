@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:prompts_game/models/documents/app_chat/app_chat_message.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
+import 'package:prompts_game/services/apis/chat_messages_api.dart';
 
 class AppChat extends WithDocumentReference {
   AppChat(
@@ -10,6 +12,10 @@ class AppChat extends WithDocumentReference {
 
   final String user1;
   final String user2;
+
+  Stream<List<AppChatMessage>?> get messagesStream {
+    return ChatMessagesApi(reference).streamMessages;
+  }
 
   AppChat.create({required this.user1, required this.user2}) : super(null);
 

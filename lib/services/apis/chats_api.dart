@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/documents/app_chat/app_chat.dart';
-import 'package:prompts_game/models/documents/app_chat_tile/app_chat_tile.dart';
+import 'package:prompts_game/models/documents/app_chat/app_chat_tile.dart';
 import 'package:prompts_game/services/apis/chat_tiles_api.dart';
 import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 import 'package:prompts_game/services/cache/chats_cache.dart';

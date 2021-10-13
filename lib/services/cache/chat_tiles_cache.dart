@@ -1,4 +1,4 @@
-import 'package:prompts_game/models/documents/app_chat_tile/app_chat_tile.dart';
+import 'package:prompts_game/models/documents/app_chat/app_chat_tile.dart';
 import 'package:prompts_game/services/cache/mixins/map_cache.dart';
 
 class ChatTilesCache extends MapCache<AppChatTile> {

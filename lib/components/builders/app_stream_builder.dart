@@ -11,7 +11,7 @@ class AppStreamBuilder<T> extends StatelessWidget {
 
   final Stream<T> stream;
   final T? initialData;
-  final Widget Function(BuildContext, T) builder;
+  final Widget Function(BuildContext context, T value) builder;
   final Widget loader;
 
   @override

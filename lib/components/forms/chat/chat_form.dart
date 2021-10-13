@@ -4,7 +4,7 @@ import 'package:prompts_game/components/utils/decorations/input_decorations.dart
 class ChatForm extends StatefulWidget {
   const ChatForm({Key? key, required this.onMessageSend}) : super(key: key);
 
-  final Future<void> Function(String) onMessageSend;
+  final Future<void> Function(String message) onMessageSend;
 
   @override
   State<ChatForm> createState() => _ChatFormState();

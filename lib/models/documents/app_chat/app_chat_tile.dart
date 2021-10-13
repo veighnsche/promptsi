@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:prompts_game/models/documents/app_chat/app_chat.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
 import 'package:prompts_game/models/mixins/with_owner.dart';
+import 'package:prompts_game/services/apis/chats_api.dart';
 import 'package:prompts_game/utils/date_utils.dart';
 
 class AppChatTile extends WithDocumentReference with WithOwner {
@@ -17,6 +19,10 @@ class AppChatTile extends WithDocumentReference with WithOwner {
   String get ownerId => id;
 
   String get timeAgo => AppDateUtils(updatedOn).timeAgo;
+
+  Future<AppChat> get chatAsync {
+    return ChatsApi.fetchChat(chatId);
+  }
 
   AppChatTile.create({required this.chatId, required this.updatedOn})
       : super(null);

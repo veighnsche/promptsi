@@ -20,6 +20,14 @@ class BubbleOtherUser extends StatelessWidget {
     this.type = BubbleOtherUserType.onFeed,
   }) : super(key: key);
 
+  const BubbleOtherUser.onChat({
+    Key? key,
+    required this.text,
+    this.profileAsync,
+    this.profile,
+    this.type = BubbleOtherUserType.onFeed,
+  }) : super(key: key);
+
   const BubbleOtherUser.onMyProfile({
     Key? key,
     required this.text,

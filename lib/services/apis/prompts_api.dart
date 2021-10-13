@@ -24,21 +24,6 @@ class PromptsApi {
     return _toCollectionReference(profileRef);
   }
 
-  AppPrompt _handleDocumentSnapshot(DocumentSnapshot doc) {
-    AppPrompt prompt = doc.data() as AppPrompt;
-    _promptsCache.add(profileRef.id, prompt);
-    return prompt;
-  }
-
-  List<AppPrompt>? _handleQuerySnapshot(QuerySnapshot snapshot) {
-    if (snapshot.docs.isEmpty) {
-      /// can be nullable
-      return null;
-    }
-
-    return snapshot.docs.map(_handleDocumentSnapshot).toList();
-  }
-
   Stream<List<AppPrompt>?> get promptStream {
     /// can be nullable if the user doesn't have any prompts
     return _promptsRef
@@ -75,5 +60,20 @@ class PromptsApi {
         madeBy: madeById,
       );
     });
+  }
+
+  List<AppPrompt>? _handleQuerySnapshot(QuerySnapshot snapshot) {
+    if (snapshot.docs.isEmpty) {
+      /// can be nullable
+      return null;
+    }
+
+    return snapshot.docs.map(_handleDocumentSnapshot).toList();
+  }
+
+  AppPrompt _handleDocumentSnapshot(DocumentSnapshot doc) {
+    AppPrompt prompt = doc.data() as AppPrompt;
+    _promptsCache.add(profileRef.id, prompt);
+    return prompt;
   }
 }

@@ -21,7 +21,7 @@ class AppFutureBuilder<T> extends StatelessWidget {
 
   final Future<T> future;
   final T? initialData;
-  final Widget Function(BuildContext, T) builder;
+  final Widget Function(BuildContext context, T value) builder;
   final Widget loader;
 
   final bool skipFuture;

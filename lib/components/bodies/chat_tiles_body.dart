@@ -4,7 +4,7 @@ import 'package:prompts_game/components/builders/app_future_builder.dart';
 import 'package:prompts_game/components/builders/app_stream_builder.dart';
 import 'package:prompts_game/components/scaffolds/chat_scaffold.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
-import 'package:prompts_game/models/documents/app_chat_tile/app_chat_tile.dart';
+import 'package:prompts_game/models/documents/app_chat/app_chat_tile.dart';
 import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 import 'package:prompts_game/services/apis/chat_tiles_api.dart';
 
