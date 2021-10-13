@@ -105,12 +105,13 @@ class MyReplyRow extends StatelessWidget {
                 pictureUint8List: myReply!.profilePicture,
               ),
             ),
-            Container(
-              height: 24,
-              width: 23,
-              decoration: const BoxDecoration(
-                  color: Colors.white, shape: BoxShape.circle),
-            ),
+            if (myReply?.reaction != null)
+              Container(
+                height: 24,
+                width: 23,
+                decoration: const BoxDecoration(
+                    color: Colors.white, shape: BoxShape.circle),
+              ),
             Reactions.iconOnly(reaction: myReply!.reaction),
           ],
         ),

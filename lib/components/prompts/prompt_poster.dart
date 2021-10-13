@@ -2,14 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bubbles/bubble_current_user.dart';
 import 'package:prompts_game/components/bubbles/bubble_other_user.dart';
-import 'package:prompts_game/components/scaffolds/profile_scaffold.dart';
 import 'package:prompts_game/components/builders/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/components/widgets/reactions.dart';
-import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 import 'package:prompts_game/models/documents/app_prompt/app_prompt.dart';
 import 'package:prompts_game/models/documents/app_reply/app_reply.dart';
 import 'package:prompts_game/services/apis/firebase/auth_api.dart';
+import 'package:prompts_game/utils/navigator_utils.dart';
 
 class PromptPoster extends StatelessWidget {
   const PromptPoster({
@@ -79,19 +78,6 @@ class ReplierRow extends StatefulWidget {
 }
 
 class _ReplierRowState extends State<ReplierRow> {
-  void _goToProfile(AppProfile owner) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return ProfileScaffold(
-            profile: owner,
-          );
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -100,7 +86,10 @@ class _ReplierRowState extends State<ReplierRow> {
           height: 65,
           width: 65,
           child: GestureDetector(
-            onTap: () => _goToProfile(widget.reply.owner!),
+            onTap: () => NavigatorUtils.goToProfile(
+              context,
+              widget.reply.owner!,
+            ),
             child: ProfilePicture(
               pictureUint8ListAsync: widget.reply.profilePictureAsync,
               pictureUint8List: widget.reply.profilePicture,

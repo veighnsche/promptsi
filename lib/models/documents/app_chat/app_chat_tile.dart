@@ -20,9 +20,7 @@ class AppChatTile extends WithDocumentReference with WithOwner {
 
   String get timeAgo => AppDateUtils(updatedOn).timeAgo;
 
-  Future<AppChat> get chatAsync {
-    return ChatsApi.fetchChat(chatId);
-  }
+  Future<AppChat> get chatAsync => ChatsApi.fetchChat(chatId);
 
   AppChatTile.create({required this.chatId, required this.updatedOn})
       : super(null);

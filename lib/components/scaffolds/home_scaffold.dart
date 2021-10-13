@@ -16,7 +16,7 @@ class HomeScaffold extends StatefulWidget {
 }
 
 class _HomeScaffoldState extends State<HomeScaffold> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   late AppProfile _profile;
 
