@@ -4,30 +4,30 @@ import 'package:prompts_game/components/builders/app_future_builder.dart';
 import 'package:prompts_game/components/builders/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/models/documents/app_chat/app_chat.dart';
-import 'package:prompts_game/models/documents/app_chat/app_chat_tile.dart';
+import 'package:prompts_game/models/documents/app_match/app_match.dart';
 import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
-import 'package:prompts_game/services/apis/chat_tiles_api.dart';
+import 'package:prompts_game/services/apis/matches_api.dart';
 import 'package:prompts_game/utils/navigator_utils.dart';
 
-class ChatTilesBody extends StatelessWidget {
-  const ChatTilesBody({Key? key}) : super(key: key);
+class MatchesBody extends StatelessWidget {
+  const MatchesBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppStreamBuilder(
-      stream: ChatTilesApi.streamChatTiles,
-      builder: (context, List<AppChatTile>? chatList) {
-        if (chatList == null) {
-          return const ErrorBody('No chats yet!');
+      stream: MatchesApi.streamMatches,
+      builder: (context, List<AppMatch>? matchList) {
+        if (matchList == null) {
+          return const ErrorBody('No matches yet!');
         }
         return ListView(
-          children: chatList.map((AppChatTile chatTile) {
+          children: matchList.map((AppMatch match) {
             return ListTile(
               onTap: () {
                 Future.wait([
-                  chatTile.ownerAsync,
-                  chatTile.chatAsync,
+                  match.ownerAsync,
+                  match.chatAsync,
                 ]).then((List<WithDocumentReference> tuple) {
                   NavigatorUtils.openChat(
                     context,
@@ -37,18 +37,18 @@ class ChatTilesBody extends StatelessWidget {
                 });
               },
               leading: ProfilePicture(
-                pictureUint8ListAsync: chatTile.profilePictureAsync,
-                pictureUint8List: chatTile.profilePicture,
+                pictureUint8ListAsync: match.profilePictureAsync,
+                pictureUint8List: match.profilePicture,
               ),
               trailing: Text(
-                chatTile.timeAgo,
+                match.timeAgo,
                 style: TextStyle(
                   color: Colors.black.withOpacity(0.5),
                 ),
               ),
               title: AppFutureBuilder.skipFuture(
-                future: chatTile.ownerAsync,
-                initialData: chatTile.owner,
+                future: match.ownerAsync,
+                initialData: match.owner,
                 builder: (context, AppProfile owner) {
                   return Text(owner.firstName);
                 },

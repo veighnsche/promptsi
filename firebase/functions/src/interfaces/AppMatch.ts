@@ -1,4 +1,4 @@
-interface AppChatTile {
+interface AppMatch {
   chatId: string;
   updatedOn: number;
 }

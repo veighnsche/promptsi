@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/documents/app_chat/app_chat.dart';
-import 'package:prompts_game/models/documents/app_chat/app_chat_tile.dart';
-import 'package:prompts_game/services/apis/chat_tiles_api.dart';
+import 'package:prompts_game/models/documents/app_match/app_match.dart';
+import 'package:prompts_game/services/apis/matches_api.dart';
 import 'package:prompts_game/services/apis/firebase/auth_api.dart';
 import 'package:prompts_game/services/cache/chats_cache.dart';
 
@@ -18,9 +18,9 @@ class ChatsApi {
   static ChatsCache get _chatsCache => ChatsCache();
 
   static Future<void> createChatNotExists(String profileId) async {
-    await ChatTilesApi.fetchChatTile(profileId).then(
-      (AppChatTile? chatTile) async {
-        if (chatTile == null) {
+    await MatchesApi.fetchMatch(profileId).then(
+      (AppMatch? match) async {
+        if (match == null) {
           await createChat(profileId);
         }
       },
@@ -35,12 +35,12 @@ class ChatsApi {
   }
 
   static Future<AppChat?> fetchProfileChat(String profileId) async {
-    return ChatTilesApi.fetchChatTile(profileId).then(
-      (AppChatTile? chatTile) async {
-        if (chatTile == null) {
+    return MatchesApi.fetchMatch(profileId).then(
+      (AppMatch? match) async {
+        if (match == null) {
           return null;
         }
-        return fetchChat(chatTile.chatId);
+        return fetchChat(match.chatId);
       },
     );
   }

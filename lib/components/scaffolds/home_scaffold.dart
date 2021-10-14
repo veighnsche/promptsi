@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:prompts_game/components/bodies/chat_tiles_body.dart';
+import 'package:prompts_game/components/bodies/matches_body.dart';
 import 'package:prompts_game/components/bodies/home_body.dart';
 import 'package:prompts_game/components/bodies/profile_body.dart';
 import 'package:prompts_game/components/scaffolds/profile_edit_scaffold.dart';
@@ -92,7 +92,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
           // todo: _onCreatePromptClick
         ],
       ),
-      AppBar(title: const Text("Messages")),
+      AppBar(title: const Text("Chats")),
       AppBar(
         title: Text(_profile.firstName),
         actions: [
@@ -106,7 +106,7 @@ class _HomeScaffoldState extends State<HomeScaffold> {
 
     final _bodyOptions = <Widget>[
       HomeBody(profile: _profile),
-      const ChatTilesBody(),
+      const MatchesBody(),
       ProfileBody.onMyProfile(profile: _profile),
     ];
 
@@ -117,18 +117,18 @@ class _HomeScaffoldState extends State<HomeScaffold> {
         appBar: _appBarOptions.elementAt(_selectedIndex),
         body: _bodyOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+          items: const [
             BottomNavigationBarItem(
               icon: FaIcon(FontAwesomeIcons.home),
-              label: 'Home',
+              label: '',
             ),
             BottomNavigationBarItem(
               icon: FaIcon(Icons.message),
-              label: 'Chat',
+              label: '',
             ),
             BottomNavigationBarItem(
               icon: FaIcon(Icons.account_circle),
-              label: 'Profile',
+              label: '',
             ),
           ],
           currentIndex: _selectedIndex,
