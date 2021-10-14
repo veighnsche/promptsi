@@ -1,17 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:prompts_game/components/bodies/chat_body.dart';
-import 'package:prompts_game/components/builders/app_future_builder.dart';
 import 'package:prompts_game/components/forms/chat/chat_form.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/models/documents/app_chat/app_chat.dart';
-import 'package:prompts_game/models/documents/app_chat/app_chat_tile.dart';
 import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 import 'package:prompts_game/utils/navigator_utils.dart';
 
-class ChatScaffold extends StatelessWidget {
-  const ChatScaffold({Key? key, required this.chatTile}) : super(key: key);
+class ChatScaffold extends StatefulWidget {
+  const ChatScaffold({Key? key, required this.profile, this.chat})
+      : super(key: key);
 
-  final AppChatTile chatTile;
+  final AppProfile profile;
+  final AppChat? chat;
+
+  @override
+  State<ChatScaffold> createState() => _ChatScaffoldState();
+}
+
+class _ChatScaffoldState extends State<ChatScaffold> {
+  AppChat? _chat;
+
+  AppChat? get chat {
+    return widget.chat ?? _chat;
+  }
+
+  set chat(AppChat? chat) {
+    _chat = chat;
+  }
+
+  Future<void> _onMessageSend(String message) {
+    if (chat == null) {
+      return widget.profile.startChat.then((AppChat newChat) {
+        newChat.sendMessage(message).whenComplete(() {
+          setState(() {
+            chat = newChat;
+          });
+        });
+      });
+    }
+    return chat!.sendMessage(message);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,49 +48,62 @@ class ChatScaffold extends StatelessWidget {
       appBar: AppBar(
         title: Transform.translate(
           offset: const Offset(-35, 0),
-          child: AppFutureBuilder.skipFuture(
-            future: chatTile.ownerAsync,
-            initialData: chatTile.owner,
-            builder: (context, AppProfile owner) {
-              return GestureDetector(
-                onTap: () => NavigatorUtils.goToProfile(context, owner),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 55,
-                      width: 55,
-                      child: ProfilePicture(
-                        pictureUint8ListAsync: owner.profilePictureAsync,
-                        pictureUint8List: owner.profilePicture,
-                      ),
-                    ),
-                    Text(owner.firstName),
-                  ],
+          child: GestureDetector(
+            onTap: () => NavigatorUtils.goToProfile(context, widget.profile),
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 55,
+                  width: 55,
+                  child: ProfilePicture(
+                    pictureUint8ListAsync: widget.profile.profilePictureAsync,
+                    pictureUint8List: widget.profile.profilePicture,
+                  ),
                 ),
-              );
-            },
+                Text(widget.profile.firstName),
+              ],
+            ),
           ),
         ),
       ),
-      body: AppFutureBuilder(
-        future: chatTile.chatAsync,
-        builder: (context, AppChat chat) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Flexible(child: ChatBody(chat: chat)),
-              Padding(
-                padding: const EdgeInsets.only(right: 8, left: 8, bottom: 8),
-                child: ChatForm(
-                  onMessageSend: (String message) {
-                    return chat.sendMessage(message);
-                  },
-                ),
-              )
-            ],
-          );
-        },
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Flexible(
+            child: chat == null ? const LockedChat() : ChatBody(chat: chat!),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8, left: 8, bottom: 8),
+            child: ChatForm(
+              onMessageSend: _onMessageSend,
+            ),
+          )
+        ],
       ),
+    );
+  }
+}
+
+class LockedChat extends StatelessWidget {
+  const LockedChat({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        FaIcon(
+          FontAwesomeIcons.lock,
+          color: Colors.blueGrey.withOpacity(0.5),
+          size: 64,
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'Send a message to unlock each others profiles',
+        ),
+      ],
     );
   }
 }

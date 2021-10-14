@@ -7,7 +7,7 @@ admin.initializeApp();
 // https://firebase.google.com/docs/functions/typescript
 
 export const onChatCreate = functions.firestore.document('chats/{chatId}')
- .onCreate((snapshot, context) => {
+ .onCreate(snapshot => {
    const chatId: string = snapshot.id;
 
    const {user1, user2}: AppChat = snapshot.data() as AppChat;
@@ -18,7 +18,15 @@ export const onChatCreate = functions.firestore.document('chats/{chatId}')
    return Promise.all([
      profilesRef.doc(user1).collection('chat tiles').doc(user2).set(chatTile),
      profilesRef.doc(user2).collection('chat tiles').doc(user1).set(chatTile),
-   ]).catch(() => {
-     functions.logger.error('failed to write to chat tile', {structuredData: true});
-   });
+   ]);
+ });
+
+export const onChatDelete = functions.firestore.document('chats/{chatId}')
+ .onDelete(snapshot => {
+   const {user1, user2}: AppChat = snapshot.data() as AppChat;
+   const profilesRef = admin.firestore().collection('profiles');
+   return Promise.all([
+     profilesRef.doc(user1).collection('chat tiles').doc(user2).delete(),
+     profilesRef.doc(user2).collection('chat tiles').doc(user1).delete(),
+   ]);
  });

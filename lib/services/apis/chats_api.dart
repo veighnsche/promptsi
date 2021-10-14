@@ -17,11 +17,11 @@ class ChatsApi {
 
   static ChatsCache get _chatsCache => ChatsCache();
 
-  static Future<void> startChatNotExists(String user2Id) async {
-    await ChatTilesApi.fetchChatTile(user2Id).then(
+  static Future<void> createChatNotExists(String profileId) async {
+    await ChatTilesApi.fetchChatTile(profileId).then(
       (AppChatTile? chatTile) async {
         if (chatTile == null) {
-          await createChat(user2Id);
+          await createChat(profileId);
         }
       },
     );
@@ -32,6 +32,17 @@ class ChatsApi {
       return _chatsRef.doc(chatId).get().then(_handleSnapshot);
     }
     return _chatsCache.get(chatId);
+  }
+
+  static Future<AppChat?> fetchProfileChat(String profileId) async {
+    return ChatTilesApi.fetchChatTile(profileId).then(
+      (AppChatTile? chatTile) async {
+        if (chatTile == null) {
+          return null;
+        }
+        return fetchChat(chatTile.chatId);
+      },
+    );
   }
 
   static Future<AppChat> createChat(String user2Id) {

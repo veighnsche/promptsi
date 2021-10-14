@@ -5,6 +5,7 @@ import 'package:prompts_game/components/bubbles/bubble_other_user.dart';
 import 'package:prompts_game/components/builders/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/components/widgets/reactions.dart';
+import 'package:prompts_game/models/documents/app_chat/app_chat.dart';
 import 'package:prompts_game/models/documents/app_prompt/app_prompt.dart';
 import 'package:prompts_game/models/documents/app_reply/app_reply.dart';
 import 'package:prompts_game/services/apis/firebase/auth_api.dart';
@@ -97,10 +98,21 @@ class _ReplierRowState extends State<ReplierRow> {
           ),
         ),
         Flexible(
-          child: BubbleOtherUser.onMyProfile(
-            text: widget.reply.reply,
-            profile: widget.reply.owner,
-            profileAsync: widget.reply.ownerAsync,
+          child: GestureDetector(
+            onTap: () => {
+              widget.reply.owner!.chatAsync.then((AppChat? chat) {
+                NavigatorUtils.openChat(
+                  context,
+                  profile: widget.reply.owner!,
+                  chat: chat,
+                );
+              })
+            },
+            child: BubbleOtherUser.onMyProfile(
+              text: widget.reply.reply,
+              profile: widget.reply.owner,
+              profileAsync: widget.reply.ownerAsync,
+            ),
           ),
         ),
         Reactions(
