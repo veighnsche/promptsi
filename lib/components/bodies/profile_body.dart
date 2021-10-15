@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/bodies/error_body.dart';
+import 'package:prompts_game/components/builders/app_stream_builder.dart';
 import 'package:prompts_game/components/forms/prompts/prompt_form.dart';
 import 'package:prompts_game/components/forms/replies/reply_form.dart';
 import 'package:prompts_game/components/prompts/prompt_poster.dart';
 import 'package:prompts_game/components/prompts/prompt_replier.dart';
-import 'package:prompts_game/components/builders/app_stream_builder.dart';
 import 'package:prompts_game/components/widgets/carousel_pictures.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
 import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
@@ -89,10 +89,7 @@ class _ProfileBodyState extends State<ProfileBody> {
             color: Colors.white,
             elevation: 2,
             child: ListTile(
-              leading: ProfilePicture(
-                pictureUint8ListAsync: widget.profile.profilePictureAsync,
-                pictureUint8List: widget.profile.profilePicture,
-              ),
+              leading: ProfilePicture(profile: widget.profile),
               title: Text('${widget.profile.firstName}, ${widget.profile.age}'),
               subtitle: const Text('0 Km away (hardcoded)'),
             ),
@@ -113,7 +110,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                   },
                 ),
                 if (onMyProfile) const SizedBox(height: 16),
-                CarouselPictures(picturesAsync: widget.profile.picturesAsync),
+                CarouselPictures(profile: widget.profile),
               ],
             ),
           ),

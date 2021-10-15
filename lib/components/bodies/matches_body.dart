@@ -37,8 +37,8 @@ class MatchesBody extends StatelessWidget {
                 });
               },
               leading: ProfilePicture(
-                pictureUint8ListAsync: match.profilePictureAsync,
-                pictureUint8List: match.profilePicture,
+                profile: match.owner,
+                profileAsync: match.ownerAsync,
               ),
               trailing: Text(
                 match.timeAgo,

@@ -6,13 +6,13 @@ class AppStreamBuilder<T> extends StatelessWidget {
     required this.stream,
     required this.builder,
     this.initialData,
-    this.loader = const SizedBox.shrink(),
+    this.loader,
   }) : super(key: key);
 
   final Stream<T> stream;
   final T? initialData;
   final Widget Function(BuildContext context, T value) builder;
-  final Widget loader;
+  final Widget? loader;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class AppStreamBuilder<T> extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return loader;
+          return loader ?? const SizedBox.shrink();
         }
 
         return builder(context, snapshot.data as T);

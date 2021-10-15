@@ -17,16 +17,6 @@ class ChatsApi {
 
   static ChatsCache get _chatsCache => ChatsCache();
 
-  static Future<void> createChatNotExists(String profileId) async {
-    await MatchesApi.fetchMatch(profileId).then(
-      (AppMatch? match) async {
-        if (match == null) {
-          await createChat(profileId);
-        }
-      },
-    );
-  }
-
   static Future<AppChat> fetchChat(String chatId) async {
     if (!_chatsCache.exists(chatId)) {
       return _chatsRef.doc(chatId).get().then(_handleSnapshot);
@@ -41,6 +31,16 @@ class ChatsApi {
           return null;
         }
         return fetchChat(match.chatId);
+      },
+    );
+  }
+
+  static Future<void> createChatNotExists(String profileId) async {
+    await MatchesApi.fetchMatch(profileId).then(
+      (AppMatch? match) async {
+        if (match == null) {
+          await createChat(profileId);
+        }
       },
     );
   }

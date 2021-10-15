@@ -2,16 +2,18 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:prompts_game/components/builders/app_future_builder.dart';
+import 'package:prompts_game/components/widgets/blur_layer.dart';
+import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 
 class ProfilePicture extends StatelessWidget {
   const ProfilePicture({
     Key? key,
-    required this.pictureUint8ListAsync,
-    required this.pictureUint8List,
+    required this.profile,
+    this.profileAsync,
   }) : super(key: key);
 
-  final Future<Uint8List> pictureUint8ListAsync;
-  final Uint8List? pictureUint8List;
+  final AppProfile? profile;
+  final Future<AppProfile?>? profileAsync;
 
   @override
   Widget build(BuildContext context) {
@@ -20,27 +22,67 @@ class ProfilePicture extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 1,
         child: AppFutureBuilder.skipFuture(
-          future: pictureUint8ListAsync,
-          initialData: pictureUint8List,
-          builder: (context, Uint8List? pictureUint8List) {
-            if (pictureUint8List == null) {
+          future: profileAsync,
+          initialData: profile,
+          builder: (context, AppProfile? profile) {
+            if (profile == null) {
               return const SizedBox.shrink();
             }
 
-            return Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: Image.memory(
-                    pictureUint8List,
-                    fit: BoxFit.cover,
-                  ).image,
-                ),
-              ),
+            return AppFutureBuilder.skipFuture(
+              future: profile.hasMatchAsync,
+              initialData: profile.hasMatch,
+              builder: (context, bool hasMatch) {
+                return ProfilePictureImage(
+                  profile: profile,
+                  withBlur: !hasMatch,
+                );
+              },
             );
           },
         ),
       ),
+    );
+  }
+}
+
+class ProfilePictureImage extends StatelessWidget {
+  const ProfilePictureImage(
+      {Key? key, required this.profile, this.withBlur = false})
+      : super(key: key);
+
+  final AppProfile profile;
+  final bool withBlur;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppFutureBuilder.skipFuture(
+      future: profile.profilePictureAsync,
+      initialData: profile.profilePicture,
+      builder: (context, Uint8List? pictureUint8List) {
+        if (pictureUint8List == null) {
+          return const SizedBox.shrink();
+        }
+
+        return ClipOval(
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: Image.memory(
+                      pictureUint8List,
+                      fit: BoxFit.cover,
+                    ).image,
+                  ),
+                ),
+              ),
+              if (withBlur) const BlurLayer(sigma: 4)
+            ],
+          ),
+        );
+      },
     );
   }
 }

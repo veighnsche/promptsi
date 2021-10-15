@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:prompts_game/models/documents/app_chat/app_chat.dart';
+import 'package:prompts_game/models/documents/app_profile/with_chat.dart';
+import 'package:prompts_game/models/documents/app_profile/with_match.dart';
 import 'package:prompts_game/models/documents/app_profile/with_pictures.dart';
 import 'package:prompts_game/models/documents/app_profile/with_profile_picture.dart';
 import 'package:prompts_game/models/documents/app_profile/with_prompts.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
-import 'package:prompts_game/services/apis/chats_api.dart';
 
 class AppProfile extends WithDocumentReference
-    with WithProfilePicture, WithPictures, WithPrompts {
+    with WithProfilePicture, WithPictures, WithPrompts, WithChat, WithMatch {
   AppProfile(
     DocumentReference reference, {
     required this.firstName,
@@ -23,18 +23,6 @@ class AppProfile extends WithDocumentReference
 
   List<int> get listedInterestedIn {
     return interestedIn.map((AppGenders g) => g.index).toList();
-  }
-
-  Future<void> get startChatNotExists {
-    return ChatsApi.createChatNotExists(id);
-  }
-
-  Future<AppChat> get startChat {
-    return ChatsApi.createChat(id);
-  }
-
-  Future<AppChat?> get chatAsync {
-    return ChatsApi.fetchProfileChat(id);
   }
 
   AppProfile.create({

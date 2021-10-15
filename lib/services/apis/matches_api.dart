@@ -34,16 +34,20 @@ class MatchesApi {
     });
   }
 
-  static Future<AppMatch?> fetchMatch(String profile) async {
-    if (!_matchesCache.exists(profile)) {
-      return _matchesRef.doc(profile).get().then((DocumentSnapshot snapshot) {
+  static bool hasMatch(String profileId) {
+    return _matchesCache.exists(profileId);
+  }
+
+  static Future<AppMatch?> fetchMatch(String profileId) async {
+    if (!hasMatch(profileId)) {
+      return _matchesRef.doc(profileId).get().then((DocumentSnapshot snapshot) {
         if (!snapshot.exists) {
           return null;
         }
         return _handleSnapshot(snapshot);
       });
     }
-    return _matchesCache.get(profile);
+    return _matchesCache.get(profileId);
   }
 
   static AppMatch _handleSnapshot(DocumentSnapshot snapshot) {

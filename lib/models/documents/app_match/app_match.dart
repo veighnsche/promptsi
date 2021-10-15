@@ -9,29 +9,35 @@ class AppMatch extends WithDocumentReference with WithOwner {
   AppMatch(
     DocumentReference reference, {
     required this.chatId,
+    required this.createdOn,
     required this.updatedOn,
   }) : super(reference);
 
   final String chatId;
+  final int createdOn;
   final int updatedOn;
 
   @override
   String get ownerId => id;
 
-  String get timeAgo => AppDateUtils(updatedOn).timeAgo;
+  String get timeAgo => AppDateUtils(createdOn).timeAgo;
 
   Future<AppChat> get chatAsync => ChatsApi.fetchChat(chatId);
 
-  AppMatch.create({required this.chatId, required this.updatedOn})
-      : super(null);
+  AppMatch.create({required this.createdOn})
+      : updatedOn = createdOn,
+        chatId = '',
+        super(null);
 
   AppMatch.fromJson(DocumentReference reference, Map<String, dynamic> json)
       : chatId = json['chatId'],
+        createdOn = json['createdOn'],
         updatedOn = json['updatedOn'],
         super(reference);
 
   Map<String, dynamic> get json => {
         'updatedOn': updatedOn,
+        'createdOn': createdOn,
         'chatId': chatId,
       };
 }

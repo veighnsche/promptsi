@@ -3,14 +3,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:prompts_game/components/builders/app_future_builder.dart';
+import 'package:prompts_game/components/widgets/blur_layer.dart';
+import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 
 class CarouselPictures extends StatefulWidget {
-  const CarouselPictures({
-    Key? key,
-    required this.picturesAsync,
-  }) : super(key: key);
+  const CarouselPictures({Key? key, required this.profile}) : super(key: key);
 
-  final Future<List<String>> picturesAsync;
+  final AppProfile profile;
 
   @override
   State<CarouselPictures> createState() => _CarouselPicturesState();
@@ -31,39 +30,52 @@ class _CarouselPicturesState extends State<CarouselPictures> {
     return SizedBox(
       width: width,
       height: width + 20,
-      child: AppFutureBuilder(
-        future: widget.picturesAsync,
-        builder: (context, List<String> pictures) {
-          return Column(
-            children: [
-              CarouselSlider(
-                items: pictures.map((url) {
-                  return CachedNetworkImage(imageUrl: url);
-                }).toList(),
-                options: CarouselOptions(
-                  // scrollDirection: Axis.vertical,
-                  aspectRatio: 1,
-                  viewportFraction: 1,
-                  enableInfiniteScroll: false,
-                  onPageChanged: _onPageChanged,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  pictures.length,
-                  (index) {
-                    return FaIcon(
-                      position == index
-                          ? Icons.radio_button_checked
-                          : Icons.radio_button_unchecked,
-                      size: 12,
-                    );
-                  },
-                ),
-              ),
-            ],
+      child: AppFutureBuilder.skipFuture(
+        future: widget.profile.hasMatchAsync,
+        initialData: widget.profile.hasMatch,
+        builder: (context, bool hasMatch) {
+          return AppFutureBuilder.skipFuture(
+            future: widget.profile.picturesAsync,
+            initialData: widget.profile.pictures,
+            builder: (context, List<String> pictures) {
+              return Column(
+                children: [
+                  CarouselSlider(
+                    items: pictures.map((url) {
+                      return ClipRect(
+                        child: Stack(
+                          children: [
+                            CachedNetworkImage(imageUrl: url),
+                            if (!hasMatch) const BlurLayer(sigma: 16),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                      aspectRatio: 1,
+                      viewportFraction: 1,
+                      enableInfiniteScroll: false,
+                      onPageChanged: _onPageChanged,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      pictures.length,
+                      (index) {
+                        return FaIcon(
+                          position == index
+                              ? Icons.radio_button_checked
+                              : Icons.radio_button_unchecked,
+                          size: 12,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),

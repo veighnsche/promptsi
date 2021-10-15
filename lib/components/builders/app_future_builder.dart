@@ -12,14 +12,14 @@ class AppFutureBuilder<T> extends StatelessWidget {
 
   const AppFutureBuilder.skipFuture({
     Key? key,
-    required this.future,
+    this.future,
     required this.builder,
     required this.initialData,
     this.loader = const SizedBox.shrink(),
     this.skipFuture = true,
   }) : super(key: key);
 
-  final Future<T> future;
+  final Future<T>? future;
   final T? initialData;
   final Widget Function(BuildContext context, T value) builder;
   final Widget loader;
@@ -31,6 +31,11 @@ class AppFutureBuilder<T> extends StatelessWidget {
     if (skipFuture && initialData != null) {
       return builder(context, initialData!);
     }
+
+    if (future == null) {
+      throw 'initialData is null & future is null, that shouldn\'t be possible';
+    }
+
     return FutureBuilder(
       future: future,
       initialData: initialData,

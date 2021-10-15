@@ -55,10 +55,7 @@ class _ChatScaffoldState extends State<ChatScaffold> {
                 SizedBox(
                   height: 55,
                   width: 55,
-                  child: ProfilePicture(
-                    pictureUint8ListAsync: widget.profile.profilePictureAsync,
-                    pictureUint8List: widget.profile.profilePicture,
-                  ),
+                  child: ProfilePicture(profile: widget.profile),
                 ),
                 Text(widget.profile.firstName),
               ],

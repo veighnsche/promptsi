@@ -31,7 +31,7 @@ class BubbleOtherUser extends StatelessWidget {
   const BubbleOtherUser.onMyProfile({
     Key? key,
     required this.text,
-    required this.profileAsync,
+    this.profileAsync,
     required this.profile,
     this.type = BubbleOtherUserType.onMyProfile,
   }) : super(key: key);
@@ -56,7 +56,7 @@ class BubbleOtherUser extends StatelessWidget {
       children: [
         if (type == BubbleOtherUserType.onMyProfile)
           AppFutureBuilder.skipFuture(
-            future: profileAsync!,
+            future: profileAsync,
             initialData: profile,
             loader: ProfileAsl(profile: profile),
             builder: (context, AppProfile profile) {
