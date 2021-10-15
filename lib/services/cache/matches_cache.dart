@@ -6,4 +6,8 @@ class MatchesCache extends MapCache<AppMatch> {
   static final MatchesCache _instance = MatchesCache._internal();
 
   MatchesCache._internal();
+
+  List<AppMatch> get toList {
+    return map.values.toList();
+  }
 }

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:prompts_game/components/builders/app_future_builder.dart';
 import 'package:prompts_game/components/widgets/blur_layer.dart';
 import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
+import 'package:prompts_game/models/store/matches_store.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePicture extends StatelessWidget {
   const ProfilePicture({
@@ -29,13 +31,11 @@ class ProfilePicture extends StatelessWidget {
               return const SizedBox.shrink();
             }
 
-            return AppFutureBuilder.skipFuture(
-              future: profile.hasMatchAsync,
-              initialData: profile.hasMatch,
-              builder: (context, bool hasMatch) {
+            return Consumer<MatchesStore>(
+              builder: (context, MatchesStore matchesStore, child) {
                 return ProfilePictureImage(
                   profile: profile,
-                  withBlur: !hasMatch,
+                  withBlur: !matchesStore.hasMatch(profile.id),
                 );
               },
             );

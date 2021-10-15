@@ -10,7 +10,12 @@ const profilesRef = admin.firestore().collection('profiles');
 export const onChatCreate = functions.firestore.document('chats/{chatId}')
  .onCreate(snapshot => {
    const {user1, user2}: AppChat = snapshot.data() as AppChat;
-   const match: AppMatch = {chatId: snapshot.id, updatedOn: Date.now().valueOf()};
+   const now = Date.now().valueOf();
+   const match: AppMatch = {
+     chatId: snapshot.id,
+     createdOn: now,
+     updatedOn: now,
+   };
    return Promise.all([
      profilesRef.doc(user1).collection('matches').doc(user2).set(match),
      profilesRef.doc(user2).collection('matches').doc(user1).set(match),

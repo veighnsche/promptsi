@@ -5,6 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:prompts_game/components/builders/app_future_builder.dart';
 import 'package:prompts_game/components/widgets/blur_layer.dart';
 import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
+import 'package:prompts_game/models/store/matches_store.dart';
+import 'package:provider/provider.dart';
 
 class CarouselPictures extends StatefulWidget {
   const CarouselPictures({Key? key, required this.profile}) : super(key: key);
@@ -30,10 +32,8 @@ class _CarouselPicturesState extends State<CarouselPictures> {
     return SizedBox(
       width: width,
       height: width + 20,
-      child: AppFutureBuilder.skipFuture(
-        future: widget.profile.hasMatchAsync,
-        initialData: widget.profile.hasMatch,
-        builder: (context, bool hasMatch) {
+      child: Consumer<MatchesStore>(
+        builder: (context, MatchesStore matchesStore, child) {
           return AppFutureBuilder.skipFuture(
             future: widget.profile.picturesAsync,
             initialData: widget.profile.pictures,
@@ -46,7 +46,8 @@ class _CarouselPicturesState extends State<CarouselPictures> {
                         child: Stack(
                           children: [
                             CachedNetworkImage(imageUrl: url),
-                            if (!hasMatch) const BlurLayer(sigma: 16),
+                            if (!matchesStore.hasMatch(widget.profile.id))
+                              const BlurLayer(sigma: 16),
                           ],
                         ),
                       );

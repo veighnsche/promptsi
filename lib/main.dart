@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:prompts_game/components/scaffolds/error_scaffold.dart';
-import 'package:prompts_game/components/scaffolds/loading_scaffold.dart';
+import 'package:prompts_game/components/builders/app_future_builder.dart';
 import 'package:prompts_game/components/switches/is_signed_in_switch.dart';
 import 'package:prompts_game/theme.dart';
 
@@ -26,18 +25,10 @@ class _AppState extends State<App> {
     return MaterialApp(
       title: 'Promptsi',
       theme: themeData,
-      home: FutureBuilder(
+      home: AppFutureBuilder(
         future: _initialization,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const ErrorScaffold(message: 'Error loading FlutterFire');
-          }
-
-          if (snapshot.connectionState == ConnectionState.done) {
-            return const IsSignedInSwitch();
-          }
-
-          return const LoadingScaffold();
+        builder: (context, _) {
+          return const IsSignedInSwitch();
         },
       ),
     );

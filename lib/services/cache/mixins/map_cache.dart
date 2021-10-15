@@ -1,10 +1,10 @@
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
 
 abstract class MapCache<T> {
-  final Map<String, T> _map = {};
+  final Map<String, T> map = {};
 
   bool exists(String id) {
-    return _map[id] != null;
+    return map[id] != null;
   }
 
   void add(T value, {String? id}) {
@@ -17,12 +17,12 @@ abstract class MapCache<T> {
     }
 
     if (!exists(id) || canReplace(id, value, get(id))) {
-      _map[id] = value;
+      map[id] = value;
     }
   }
 
   T get(String id) {
-    return _map[id]!;
+    return map[id]!;
   }
 
   bool canReplace(String id, T value, T cache) => false;

@@ -4,7 +4,9 @@ import 'package:prompts_game/components/scaffolds/home_scaffold.dart';
 import 'package:prompts_game/components/scaffolds/profile_create_scaffold.dart';
 import 'package:prompts_game/components/builders/app_future_builder.dart';
 import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
+import 'package:prompts_game/models/store/matches_store.dart';
 import 'package:prompts_game/services/apis/profile_api.dart';
+import 'package:provider/provider.dart';
 
 class HasProfileSwitch extends StatefulWidget {
   const HasProfileSwitch({Key? key}) : super(key: key);
@@ -32,7 +34,10 @@ class _HasProfileSwitchState extends State<HasProfileSwitch> {
         if (profile == null) {
           return ProfileCreateScaffold(onProfileCreated: setProfile);
         } else {
-          return HomeScaffold(userProfile: profile);
+          return ChangeNotifierProvider(
+            create: (context) => MatchesStore(),
+            child: HomeScaffold(userProfile: profile),
+          );
         }
       },
     );

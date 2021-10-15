@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:prompts_game/components/bodies/matches_body.dart';
 import 'package:prompts_game/components/bodies/home_body.dart';
+import 'package:prompts_game/components/bodies/matches_body.dart';
 import 'package:prompts_game/components/bodies/profile_body.dart';
 import 'package:prompts_game/components/scaffolds/profile_edit_scaffold.dart';
+import 'package:prompts_game/models/documents/app_match/app_match.dart';
 import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
+import 'package:prompts_game/models/store/matches_store.dart';
+import 'package:prompts_game/services/apis/matches_api.dart';
+import 'package:provider/provider.dart';
 
 class HomeScaffold extends StatefulWidget {
   const HomeScaffold({Key? key, required this.userProfile}) : super(key: key);
@@ -52,6 +56,10 @@ class _HomeScaffoldState extends State<HomeScaffold> {
   void initState() {
     super.initState();
     _profile = widget.userProfile;
+
+    MatchesApi.streamMatches.listen((List<AppMatch>? matches) {
+      Provider.of<MatchesStore>(context, listen: false).setMatches(matches);
+    });
   }
 
   Future<bool> _onWillPop() async {

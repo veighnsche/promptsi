@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prompts_game/models/documents/app_profile/with_chat.dart';
-import 'package:prompts_game/models/documents/app_profile/with_match.dart';
 import 'package:prompts_game/models/documents/app_profile/with_pictures.dart';
 import 'package:prompts_game/models/documents/app_profile/with_profile_picture.dart';
 import 'package:prompts_game/models/documents/app_profile/with_prompts.dart';
 import 'package:prompts_game/models/mixins/with_document_reference.dart';
 
 class AppProfile extends WithDocumentReference
-    with WithProfilePicture, WithPictures, WithPrompts, WithChat, WithMatch {
+    with WithProfilePicture, WithPictures, WithPrompts, WithChat {
   AppProfile(
     DocumentReference reference, {
     required this.firstName,
