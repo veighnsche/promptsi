@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:prompts_game/components/bodies/home_body.dart';
@@ -21,6 +23,8 @@ class HomeScaffold extends StatefulWidget {
 
 class _HomeScaffoldState extends State<HomeScaffold> {
   int _selectedIndex = 0;
+
+  StreamSubscription? matchesStream;
 
   late AppProfile _profile;
 
@@ -57,9 +61,15 @@ class _HomeScaffoldState extends State<HomeScaffold> {
     super.initState();
     _profile = widget.userProfile;
 
-    MatchesApi.streamMatches.listen((List<AppMatch>? matches) {
+    matchesStream = MatchesApi.streamMatches.listen((List<AppMatch>? matches) {
       Provider.of<MatchesStore>(context, listen: false).setMatches(matches);
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    matchesStream?.cancel();
   }
 
   Future<bool> _onWillPop() async {

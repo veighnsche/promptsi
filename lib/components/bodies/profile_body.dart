@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:prompts_game/components/bodies/error_body.dart';
 import 'package:prompts_game/components/builders/app_stream_builder.dart';
 import 'package:prompts_game/components/forms/prompts/prompt_form.dart';
@@ -7,12 +8,16 @@ import 'package:prompts_game/components/prompts/prompt_poster.dart';
 import 'package:prompts_game/components/prompts/prompt_replier.dart';
 import 'package:prompts_game/components/widgets/carousel_pictures.dart';
 import 'package:prompts_game/components/widgets/profile_picture.dart';
+import 'package:prompts_game/models/documents/app_chat/app_chat.dart';
 import 'package:prompts_game/models/documents/app_profile/app_profile.dart';
 import 'package:prompts_game/models/documents/app_prompt/app_prompt.dart';
 import 'package:prompts_game/models/documents/app_reply/app_reply.dart';
+import 'package:prompts_game/models/store/matches_store.dart';
 import 'package:prompts_game/models/store/selected_prompt_store.dart';
+import 'package:prompts_game/services/apis/chats_api.dart';
 import 'package:prompts_game/services/apis/prompts_api.dart';
 import 'package:prompts_game/services/apis/replies_api.dart';
+import 'package:prompts_game/utils/navigator_utils.dart';
 import 'package:provider/provider.dart';
 
 class ProfileBody extends StatefulWidget {
@@ -59,6 +64,18 @@ class _ProfileBodyState extends State<ProfileBody> {
     });
   }
 
+  void _openChat(MatchesStore matchesStore) {
+    final String chatId = matchesStore.get(widget.profile.id).chatId;
+
+    ChatsApi.fetchChat(chatId).then((AppChat chat) {
+      NavigatorUtils.openChat(
+        context,
+        profile: widget.profile,
+        chat: chat,
+      );
+    });
+  }
+
   Widget _promptsColumn(List<AppPrompt>? prompts) {
     if (prompts == null) {
       return const SizedBox.shrink();
@@ -92,6 +109,17 @@ class _ProfileBodyState extends State<ProfileBody> {
               leading: ProfilePicture(profile: widget.profile),
               title: Text('${widget.profile.firstName}, ${widget.profile.age}'),
               subtitle: const Text('0 Km away (hardcoded)'),
+              trailing: Consumer<MatchesStore>(
+                builder: (context, MatchesStore matchesStore, child) {
+                  if (!matchesStore.hasMatch(widget.profile.id)) {
+                    return const SizedBox.shrink();
+                  }
+                  return IconButton(
+                    icon: const FaIcon(Icons.message),
+                    onPressed: () => _openChat(matchesStore),
+                  );
+                },
+              ),
             ),
           ),
         Flexible(
